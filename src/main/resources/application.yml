@@ -1,0 +1,31 @@
+#??
+server:
+  port: 9080
+  tomcat:
+    basedir: /home/temp
+
+#??mybatis
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql:///catering_sharing_system
+    username: root
+    password: root
+    type: com.alibaba.druid.pool.DruidDataSource
+  servlet:
+    multipart:
+      #?????????????????MB???KB??????????????
+      max-file-size: 100MB
+      #?????????mb????kb
+      max-request-size: 100MB
+#  servlet:
+#    multipart:
+#      max-file-size: 10MB
+
+mybatis-plus:
+  global-config:
+    db-config:
+      logic-delete-field: isdel
+      logic-not-delete-value: 0
+      logic-delete-value: 1
+      capital-mode: true
