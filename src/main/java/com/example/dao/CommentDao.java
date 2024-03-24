@@ -3,6 +3,9 @@ package com.example.dao;
 import com.example.domain.Comment;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 /**
  * <p>
@@ -15,4 +18,6 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface CommentDao extends BaseMapper<Comment> {
 
+    @Select("select * from comment where userID = #{userID}")
+    List<Comment> selectBuUserID(String userID);
 }

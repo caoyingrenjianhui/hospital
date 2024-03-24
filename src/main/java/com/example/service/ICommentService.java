@@ -1,5 +1,6 @@
 package com.example.service;
 
+import com.example.controller.Result;
 import com.example.domain.Comment;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -13,4 +14,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ICommentService extends IService<Comment> {
 
+    Result add(Comment comment);
+
+    Result selectBuUserID();
+
+    Result deleteById(Integer id);
 }

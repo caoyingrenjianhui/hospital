@@ -67,8 +67,8 @@ public class UserController {
     }
 
     @PutMapping("updatePassword")
-    public Result updatePassword(@RequestBody User user){
-        return userService.updatePassword(user);
+    public Result updatePassword(@RequestBody User user,@RequestHeader("Authorization") String token){
+        return userService.updatePassword(user,token);
     }
 }
 

@@ -2,6 +2,7 @@ package com.example.service.impl;
 
 import com.example.controller.Code;
 import com.example.controller.Result;
+import com.example.domain.Complaint;
 import com.example.domain.Orderitem;
 import com.example.dao.OrderitemDao;
 import com.example.service.IOrderitemService;
@@ -49,8 +50,33 @@ public class OrderitemServiceImpl extends ServiceImpl<OrderitemDao, Orderitem> i
         orderitem.setModifyTime(LocalDate.now().toString());
         int i = orderitemDao.updateById(orderitem);
         if (i == 0) {
-            return new Result(orderitem, Code.SAVE_ERR, "新增失败");
+            return new Result(orderitem, Code.SAVE_ERR, "修改失败");
         }
-        return new Result(orderitem, Code.SAVE_OK, "新增成功");
+        return new Result(orderitem, Code.SAVE_OK, "修改成功");
+    }
+
+    @Override
+    public Result receive(Integer id) {
+        Orderitem orderitem = orderitemDao.selectById(id);
+        orderitem.setStatus("1");
+        orderitem.setModifyTime(LocalDate.now().toString());
+        int i = orderitemDao.updateById(orderitem);
+        if (i == 0) {
+            return new Result(orderitem, Code.SAVE_ERR, "修改失败");
+        }
+        return new Result(orderitem, Code.SAVE_OK, "修改成功");
+    }
+
+    @Override
+    public Result delete(Integer id) {
+        Orderitem orderitem = orderitemDao.selectById(id);
+        orderitem.setModifyTime(LocalDate.now().toString());
+        orderitem.setIsdel(0);
+        int i = orderitemDao.updateById(orderitem);
+        if (i != 0) {
+            return new Result(null, Code.DELETE_OK, "删除成功");
+        } else {
+            return new Result(null, Code.DELETE_ERR, "删除失败");
+        }
     }
 }

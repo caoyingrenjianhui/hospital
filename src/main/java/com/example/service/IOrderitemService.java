@@ -17,4 +17,8 @@ public interface IOrderitemService extends IService<Orderitem> {
     Result add(Orderitem orderitem);
 
     Result finish(Integer id);
+
+    Result receive(Integer id);
+
+    Result delete(Integer id);
 }

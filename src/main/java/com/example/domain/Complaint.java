@@ -24,15 +24,19 @@ public class Complaint implements Serializable {
     @TableId(value = "complaintID", type = IdType.AUTO)
     private Integer complaintID;
 
-    private Integer userID;
+    private String userID;
 
     private Integer merchantID;
 
     private String content;
 
-    private String timestamp;
+    private String createTime;
+
+    private String modifyTime;
 
     private String status;
+
+    private String handleID;
 
     @TableLogic
     private Integer isdel;

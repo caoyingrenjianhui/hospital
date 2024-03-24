@@ -33,6 +33,9 @@ public class Orderitem implements Serializable {
 
     private BigDecimal totalPrice;
 
+    /**
+     * 是否接单
+     */
     private String status;
 
     private String createTime;

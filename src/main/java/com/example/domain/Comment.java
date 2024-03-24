@@ -24,11 +24,14 @@ public class Comment implements Serializable {
     @TableId(value = "commentID", type = IdType.AUTO)
     private Integer commentID;
 
-    private Integer userID;
+    private String userID;
 
     private Integer dishID;
 
-    private Integer rating;//等级
+    /**
+     * 登记，没有就是一级，有就是谁的回复
+     */
+    private Integer rating;
 
     private String content;
 
