@@ -1,9 +1,10 @@
 package com.example.controller;
 
 
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RestController;
+import com.example.domain.Doctor;
+import com.example.service.IDoctorsService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -17,5 +18,27 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/doctor")
 public class DoctorController {
 
+    @Autowired
+    private IDoctorsService doctorsService;
+
+    @PostMapping("/add")
+    public Result add(@RequestBody Doctor doctor){
+        return doctorsService.add(doctor);
+    }
+
+    @PutMapping("/update")
+    public Result update(@RequestBody Doctor doctor){
+        return doctorsService.update(doctor);
+    }
+
+    @GetMapping("/getAll")
+    public Result getAll() {
+        return doctorsService.getAll();
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public Result delete(@PathVariable Integer id){
+        return doctorsService.delete(id);
+    }
 }
 

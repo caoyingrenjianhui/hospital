@@ -83,8 +83,8 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
         claims.put("username", user.getUsername());
         String token = JwtUtil.genToken(claims);
 //        把token存储到redis中
-        ValueOperations<String, String> opsForValue = stringRedisTemplate.opsForValue();
-        opsForValue.set(token,token,1, TimeUnit.HOURS);
+//        ValueOperations<String, String> opsForValue = stringRedisTemplate.opsForValue();
+//        opsForValue.set(token,token,1, TimeUnit.HOURS);
         return new Result(token, Code.GET_OK, "登录成功");
     }
 
