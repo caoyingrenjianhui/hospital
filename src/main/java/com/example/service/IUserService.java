@@ -9,7 +9,7 @@ import com.example.domain.User;
  *  服务类
  * </p>
  *
- * @author 尹洪运
+ * @author 戴金磊
  * @since 2024-02-29
  */
 public interface IUserService extends IService<User> {
