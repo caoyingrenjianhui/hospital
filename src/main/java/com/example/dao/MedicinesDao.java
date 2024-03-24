@@ -1,6 +1,6 @@
 package com.example.dao;
 
-import com.example.domain.Comment;
+import com.example.domain.Medicines;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -12,12 +12,12 @@ import java.util.List;
  *  Mapper 接口
  * </p>
  *
- * @author 尹洪运
- * @since 2024-02-29
+ * @author 戴金磊
+ * @since 2024-03-24
  */
 @Mapper
-public interface CommentDao extends BaseMapper<Comment> {
+public interface MedicinesDao extends BaseMapper<Medicines> {
 
-    @Select("select * from comment where userID = #{userID}")
-    List<Comment> selectBuUserID(String userID);
+    @Select("select * from Medicines")
+    List<Medicines> getAll();
 }

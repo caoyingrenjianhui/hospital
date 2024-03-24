@@ -1,6 +1,7 @@
 package com.example.domain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import java.time.LocalDate;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -14,8 +15,8 @@ import lombok.EqualsAndHashCode;
  * 
  * </p>
  *
- * @author 尹洪运
- * @since 2024-03-07
+ * @author 戴金磊
+ * @since 2024-03-24
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -36,14 +37,16 @@ public class User implements Serializable {
 
     private String address;
 
-    private String createTime;
+    private String create_time;
 
-    private String modifyTime;
+    private String modify_time;
 
-    private Integer userType;
+    private Integer user_type;
 
     @TableLogic
     private Integer isdel;
+
+    private Integer identity;
 
     private String photo;
 
@@ -52,14 +55,4 @@ public class User implements Serializable {
 
     @TableField(exist = false)
     private String rePassword;
-
-    @TableField(exist = false)
-    private String userLat;//精度
-
-    @TableField(exist = false)
-    private String userLng;//维度
-
-    @TableField(exist = false)
-    private String maxDistance;//最大距离
-
 }

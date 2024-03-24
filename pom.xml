@@ -10,10 +10,10 @@
     </parent>
 
     <groupId>com.example</groupId>
-    <artifactId>catering_sharing_system</artifactId>
+    <artifactId>hospital</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>catering_sharing_system</name>
-    <description>catering_sharing_system</description>
+    <name>hospital</name>
+    <description>hospital</description>
 
     <properties>
         <java.version>17</java.version>

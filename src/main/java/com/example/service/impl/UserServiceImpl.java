@@ -51,7 +51,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
             return new Result(user, Code.SAVE_ERR, "密码加密失败");
         }
         user.setPassword(md5String);
-        user.setCreateTime(LocalDate.now().toString());
+        user.setCreate_time(LocalDate.now().toString());
         int insert = userDao.insert(user);
         if (insert != 0) {
             return new Result(user, Code.SAVE_OK, "注册成功");
@@ -98,7 +98,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
 
     @Override
     public Result update(User user) {
-        user.setModifyTime(LocalDate.now().toString());
+        user.setModify_time(LocalDate.now().toString());
         userDao.update(user);
         return new Result(user, Code.UPDATE_OK, "修改成功");
     }

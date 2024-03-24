@@ -14,7 +14,7 @@ public class Generator {
 //        配置数据库
         DataSourceConfig dataSource = new DataSourceConfig();
         dataSource.setDriverName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql:///catering_sharing_system?serverTimezone=UTC");
+        dataSource.setUrl("jdbc:mysql:///hospital?serverTimezone=UTC");
         dataSource.setUsername("root");
         dataSource.setPassword("root");
         autoGenerator.setDataSource(dataSource);
@@ -27,7 +27,7 @@ public class Generator {
 //        设置完毕后是否打开生成代码所在的目录
         globalConfig.setOpen(false);
 //        设置作者
-        globalConfig.setAuthor("尹洪运");
+        globalConfig.setAuthor("戴金磊");
 //        设置是否覆盖原始生成的文件
         globalConfig.setFileOverride(false);
 //        设置数据层接口名，%为占位符，指代模块名称
