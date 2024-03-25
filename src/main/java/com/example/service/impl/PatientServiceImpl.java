@@ -6,13 +6,11 @@ import com.example.domain.Patient;
 import com.example.dao.PatientDao;
 import com.example.service.IPatientService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.utils.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
@@ -31,8 +29,6 @@ public class PatientServiceImpl extends ServiceImpl<PatientDao, Patient> impleme
     @Override
     public Result add(Patient patient) {
         patient.setCreate_time(LocalDate.now().toString());
-        Map<String, Object> map = ThreadLocalUtil.get();
-        patient.setUserID((String) map.get("userID"));
         int insert = patientDao.insert(patient);
         if (insert != 0) {
             return new Result(patient, Code.SAVE_OK, "新增成功");
@@ -62,7 +58,7 @@ public class PatientServiceImpl extends ServiceImpl<PatientDao, Patient> impleme
 
     @Override
     public Result update(Patient patient) {
-        Patient selectById = patientDao.selectById(patient.getDoctorID());
+        Patient selectById = patientDao.selectById(patient.getPatientID());
         if (selectById == null) {
             return new Result(null, Code.UPDATE_ERR, "无此病人的病例");
         }

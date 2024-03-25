@@ -36,6 +36,10 @@ public class MedicinesController {
         return medicinesService.getAll();
     }
 
+    @DeleteMapping("/delete/{id}")
+    public Result delete(@PathVariable Integer id){
+        return medicinesService.delete(id);
+    }
 
 }
 

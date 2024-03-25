@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import java.time.LocalDate;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
+
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -42,6 +44,9 @@ public class Medicines implements Serializable {
     private String modify_time;
 
     private BigDecimal price;
+
+    @TableLogic
+    private Integer isdel;
 
 
 }

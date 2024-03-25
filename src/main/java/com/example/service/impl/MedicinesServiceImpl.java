@@ -2,6 +2,7 @@ package com.example.service.impl;
 
 import com.example.controller.Code;
 import com.example.controller.Result;
+import com.example.domain.Doctor;
 import com.example.domain.Medicines;
 import com.example.dao.MedicinesDao;
 import com.example.service.IMedicinesService;
@@ -16,7 +17,7 @@ import java.util.Map;
 
 /**
  * <p>
- *  服务实现类
+ * 服务实现类
  * </p>
  *
  * @author 戴金磊
@@ -58,5 +59,18 @@ public class MedicinesServiceImpl extends ServiceImpl<MedicinesDao, Medicines> i
     public Result getAll() {
         List<Medicines> list = medicinesDao.getAll();
         return new Result(list, Code.GET_OK, "查询成功");
+    }
+
+    @Override
+    public Result delete(Integer id) {
+        Medicines medicines = medicinesDao.selectById(id);
+        medicines.setModify_time(LocalDate.now().toString());
+        medicines.setIsdel(0);
+        int i = medicinesDao.updateById(medicines);
+        if (i != 0) {
+            return new Result(null, Code.DELETE_OK, "删除成功");
+        } else {
+            return new Result(null, Code.DELETE_ERR, "删除失败");
+        }
     }
 }

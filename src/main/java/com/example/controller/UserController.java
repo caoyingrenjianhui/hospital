@@ -1,6 +1,5 @@
 package com.example.controller;
 
-
 import com.example.domain.User;
 import com.example.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,8 +66,8 @@ public class UserController {
     }
 
     @PutMapping("updatePassword")
-    public Result updatePassword(@RequestBody User user,@RequestHeader("Authorization") String token){
-        return userService.updatePassword(user,token);
+    public Result updatePassword(@RequestBody User user, @RequestHeader("Authorization") String token) {
+        return userService.updatePassword(user, token);
     }
 }
 

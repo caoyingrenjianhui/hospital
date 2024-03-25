@@ -19,4 +19,6 @@ public interface IMedicinesService extends IService<Medicines> {
     Result update(Medicines medicines);
 
     Result getAll();
+
+    Result delete(Integer id);
 }
