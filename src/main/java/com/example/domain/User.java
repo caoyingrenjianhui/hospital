@@ -37,11 +37,11 @@ public class User implements Serializable {
 
     private String address;
 
-    private String create_time;
+    private String createTime;
 
-    private String modify_time;
+    private String modifyTime;
 
-    private Integer user_type;
+    private Integer userType;
 
     @TableLogic
     private Integer isdel;

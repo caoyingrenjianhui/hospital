@@ -27,36 +27,17 @@ public class Doctor implements Serializable {
     @TableId(value = "doctorID", type = IdType.ASSIGN_ID)
     private Integer doctorID;
 
+    @TableField(value = "userID")
     private String userID;
 
     private String department;
 
     private String specialization;
 
-    private String doctor_name;
+    private String createTime;
 
-    private String password;
-
-    private String email;
-
-    private String phone;
-
-    private String address;
-
-    private String create_time;
-
-    private String modify_time;
+    private String modifyTime;
 
     @TableLogic
     private Integer isdel;
-
-    private Integer identity;
-
-    private String photo;
-
-    @TableField(exist = false)
-    private String oldPassword;
-
-    @TableField(exist = false)
-    private String rePassword;
 }

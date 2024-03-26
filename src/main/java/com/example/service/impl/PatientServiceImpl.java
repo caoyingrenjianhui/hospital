@@ -28,7 +28,7 @@ public class PatientServiceImpl extends ServiceImpl<PatientDao, Patient> impleme
 
     @Override
     public Result add(Patient patient) {
-        patient.setCreate_time(LocalDate.now().toString());
+        patient.setCreateTime(LocalDate.now().toString());
         int insert = patientDao.insert(patient);
         if (insert != 0) {
             return new Result(patient, Code.SAVE_OK, "新增成功");
@@ -46,7 +46,7 @@ public class PatientServiceImpl extends ServiceImpl<PatientDao, Patient> impleme
     @Override
     public Result delete(Integer id) {
         Patient patient = patientDao.selectById(id);
-        patient.setModify_time(LocalDate.now().toString());
+        patient.setModifyTime(LocalDate.now().toString());
         patient.setIsdel(0);
         int i = patientDao.updateById(patient);
         if (i != 0) {
@@ -62,7 +62,7 @@ public class PatientServiceImpl extends ServiceImpl<PatientDao, Patient> impleme
         if (selectById == null) {
             return new Result(null, Code.UPDATE_ERR, "无此病人的病例");
         }
-        patient.setModify_time(LocalDate.now().toString());
+        patient.setModifyTime(LocalDate.now().toString());
         patientDao.updateById(patient);
         return new Result(patient, Code.UPDATE_OK, "修改成功");
     }

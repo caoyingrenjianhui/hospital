@@ -31,7 +31,7 @@ public class MedicinesServiceImpl extends ServiceImpl<MedicinesDao, Medicines> i
 
     @Override
     public Result add(Medicines medicines) {
-        medicines.setCreate_time(LocalDate.now().toString());
+        medicines.setCreateTime(LocalDate.now().toString());
         Map<String, Object> map = ThreadLocalUtil.get();
         medicines.setUserID((String) map.get("userID"));
         int insert = medicinesDao.insert(medicines);
@@ -48,7 +48,7 @@ public class MedicinesServiceImpl extends ServiceImpl<MedicinesDao, Medicines> i
         if (selectById == null) {
             return new Result(null, Code.UPDATE_ERR, "无此药品");
         }
-        medicines.setModify_time(LocalDate.now().toString());
+        medicines.setModifyTime(LocalDate.now().toString());
         Map<String, Object> map = ThreadLocalUtil.get();
         medicines.setUserID((String) map.get("userID"));
         medicinesDao.updateById(medicines);
@@ -64,7 +64,7 @@ public class MedicinesServiceImpl extends ServiceImpl<MedicinesDao, Medicines> i
     @Override
     public Result delete(Integer id) {
         Medicines medicines = medicinesDao.selectById(id);
-        medicines.setModify_time(LocalDate.now().toString());
+        medicines.setModifyTime(LocalDate.now().toString());
         medicines.setIsdel(0);
         int i = medicinesDao.updateById(medicines);
         if (i != 0) {

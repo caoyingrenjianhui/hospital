@@ -31,7 +31,7 @@ public class Medicines implements Serializable {
 
     private Integer count;
 
-    private Integer use_count;
+    private Integer useCount;
 
     private String address;
 
@@ -39,9 +39,9 @@ public class Medicines implements Serializable {
 
     private String userID;
 
-    private String create_time;
+    private String createTime;
 
-    private String modify_time;
+    private String modifyTime;
 
     private BigDecimal price;
 

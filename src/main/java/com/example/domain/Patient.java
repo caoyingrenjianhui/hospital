@@ -3,6 +3,8 @@ package com.example.domain;
 import java.math.BigDecimal;
 import com.baomidou.mybatisplus.annotation.IdType;
 import java.time.LocalDate;
+
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 
@@ -27,17 +29,19 @@ public class Patient implements Serializable {
     @TableId(value = "patientID", type = IdType.ASSIGN_ID)
     private Integer patientID;
 
+    @TableField(value = "userID")
     private String userID;
 
+    @TableField(value = "doctorID")
     private Integer doctorID;
 
     private String symptoms;
 
     private String medicine;
 
-    private String create_time;
+    private String createTime;
 
-    private String modify_time;
+    private String modifyTime;
 
     private BigDecimal cost;
 
