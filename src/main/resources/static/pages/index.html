@@ -72,6 +72,7 @@
                 <li>
                     <a class="nav-link" href="login.html">登录</a>
                 </li>
+                <li><span class="nav-link" id="username"></span></li>
             </ul>
         </div>
     </nav>
@@ -461,6 +462,15 @@
         });
 
     });
+    // 从 localStorage 中获取用户名
+    const username = localStorage.getItem('name');
+    console.log(localStorage.getItem('name'))
+    // 显示用户名在页面上
+    if (username!=null) {
+        document.getElementById('username').textContent = username;
+    } else {
+        document.getElementById('username').textContent = 'Guest';
+    }
 </script>
 <script src="../js/SmoothScroll.min.js"></script>
 <!-- //smooth-scrolling-of-move-up -->

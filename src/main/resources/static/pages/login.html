@@ -46,9 +46,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Login</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <a href="index.html" type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
-                </button>
+                </a>
             </div>
             <div class="modal-body">
                 <div class="form-group">
@@ -185,7 +185,8 @@
                     address: '',
                     userType: '',
                     photo: '',
-                    rePassword: ''
+                    rePassword: '',
+                    token:''
                 },
             }
         },
@@ -197,14 +198,14 @@
                 } else if (this.user.password.length == 0) {
                     alert("请输入您的密码")
                 } else {
-                    localStorage.setItem("password", this.password)
-                    localStorage.setItem("name", this.name);
                     axios.post("/user/login", this.user).then((res) => {
                         if (res.data.code == 20041) {
                             console.log("成功")
                             this.user = res.data.data
-                            console.log(this.user)
-                            localStorage.setItem("token", res.data.data)
+                            localStorage.setItem("password", this.user.password)
+                            localStorage.setItem("name", this.user.username)
+                            localStorage.setItem("token", res.data.token)
+                            location.href = "index.html"
                             if (this.user.userType == 0) {
                                 //如果是管理员
                                 console.log("患者")

@@ -55,4 +55,7 @@ public class User implements Serializable {
 
     @TableField(exist = false)
     private String rePassword;
+
+    @TableField(exist = false)
+    private String token;
 }
