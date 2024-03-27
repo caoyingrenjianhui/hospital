@@ -64,7 +64,7 @@
                            required="">
                 </div>
                 <div class="right-w3l">
-                    <input @click="login()" type="submit" class="form-control" value="Login">
+                    <input @click="login()" type="submit" class="form-control" value="登录">
                 </div>
                 <div class="row sub-w3l my-3">
                     <div class="col sub-agile">
@@ -150,7 +150,7 @@
     </div>
 </div>
 <!--//Register-->
-<div style="margin-top: 100px" id="exampleModalCenter3" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="exampleModalCenter3" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -173,7 +173,7 @@
                            required="">
                 </div>
                 <div class="right-w3l">
-                    <input @click="login()" type="submit" class="form-control" value="立即重置">
+                    <input @click="reset()" type="submit" class="form-control" value="立即重置">
                 </div>
             </div>
         </div>
@@ -289,6 +289,49 @@
                     } else {
                         axios.post("/user/register", this.user).then((res) => {
                             if (res.data.code == 20011) {
+                                //将输入框清空
+                                this.name = "";
+                                this.password = "";
+                                alert(res.data.msg);
+                                location.href = "login.html"
+                            } else {
+                                alert(res.data.msg);
+                            }
+                        })
+                    }
+                }
+            }
+        }
+    })
+    new Vue({
+        el: "#exampleModalCenter3",
+        data() {
+            return {
+                user: {
+                    userID: '',
+                    username: '',
+                    password: '',
+                    phone: '',
+                    email: '',
+                    address: '',
+                    userType: '',
+                    photo: '',
+                    rePassword: ''
+                },
+                name: "",
+            }
+        },
+        methods: {
+            /*重置按钮按钮的方法*/
+            reset() {
+                if (this.user != null) {
+                    if (this.user.userID.length == 0) {
+                        alert("请您输入您的身份证号！")
+                    } else if (this.user.phone.length == 0) {
+                        alert("请您输入手机号！")
+                    } else {
+                        axios.post("/user/reset", this.user).then((res) => {
+                            if (res.data.code == 20031) {
                                 //将输入框清空
                                 this.name = "";
                                 this.password = "";

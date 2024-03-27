@@ -27,4 +27,6 @@ public interface IUserService extends IService<User> {
     Result updatePhoto(String photo);
 
     Result updatePassword(User user,String token);
+
+    Result reset(User user);
 }

@@ -69,5 +69,10 @@ public class UserController {
     public Result updatePassword(@RequestBody User user, @RequestHeader("Authorization") String token) {
         return userService.updatePassword(user, token);
     }
+
+    @PostMapping("/reset")
+    public Result reset(@RequestBody @Validated User user) {
+        return userService.reset(user);
+    }
 }
 
