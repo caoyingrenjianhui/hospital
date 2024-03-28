@@ -2,8 +2,10 @@ package com.example.service.impl;
 
 import com.example.controller.Code;
 import com.example.controller.Result;
+import com.example.dao.UserDao;
 import com.example.domain.Patient;
 import com.example.dao.PatientDao;
+import com.example.domain.User;
 import com.example.service.IPatientService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +16,7 @@ import java.util.List;
 
 /**
  * <p>
- *  服务实现类
+ * 服务实现类
  * </p>
  *
  * @author 戴金磊
@@ -25,6 +27,8 @@ public class PatientServiceImpl extends ServiceImpl<PatientDao, Patient> impleme
 
     @Autowired
     private PatientDao patientDao;
+    @Autowired
+    private UserDao userDao;
 
     @Override
     public Result add(Patient patient) {
@@ -40,6 +44,12 @@ public class PatientServiceImpl extends ServiceImpl<PatientDao, Patient> impleme
     @Override
     public Result getAll() {
         List<Patient> list = patientDao.getAll();
+        if (list != null) {
+            for (Patient d : list) {
+                User user = userDao.selectById(d.getUserID());
+                d.setUser(user);
+            }
+        }
         return new Result(list, Code.GET_OK, "查询成功");
     }
 

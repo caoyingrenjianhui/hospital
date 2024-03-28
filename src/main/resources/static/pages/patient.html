@@ -1,32 +1,38 @@
 <!DOCTYPE html>
 <html lang="zxx">
-<meta charset="UTF-8">
 <head>
-    <title>医生信息</title>
+    <title>患者信息</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8"/>
     <meta name="keywords" content=""/>
+    <script>
+        addEventListener("load", function () {
+            setTimeout(hideURLbar, 0);
+        }, false);
+
+        function hideURLbar() {
+            window.scrollTo(0, 1);
+        }
+    </script>
     <link href="../css/bootstrap.css" type="text/css" rel="stylesheet" media="all">
     <link href="../css/style.css" type="text/css" rel="stylesheet" media="all">
     <link href="../css/fontawesome-all.min.css" rel="stylesheet">
     <link href="http://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">
     <link href="http://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900" rel="stylesheet">
+    <!-- //online-fonts -->
     <script src="../js/vue.js"></script>
     <script src="../element-ui/lib/index.js"></script>
     <link rel="stylesheet" href="../element-ui/lib/theme-chalk/index.css">
 
     <script src="../js/axios-0.18.0.js"></script>
-
-    <script type="text/javascript" src="../js/jquery-1.8.0.min.js"></script>
-    <script type="text/javascript" src="../js/jquery.superslide.2.1.1.js"></script>
-    <script type="text/javascript" src="../js/index.js"></script>
 </head>
 <body>
+<!-- header -->
 <header>
     <nav class="navbar navbar-expand-lg navbar-light bg-gradient-secondary">
         <h1>
             <a class="navbar-brand text-white" href="index.html">
-                百康诊所
+                Alleviating
             </a>
         </h1>
         <button class="navbar-toggler ml-md-auto" type="button" data-toggle="collapse"
@@ -42,7 +48,7 @@
                     </a>
                 </li>
                 <li class="nav-item  mr-3 mt-lg-0 mt-3">
-                    <a class="nav-link" href="services.html">services</a>
+                    <a class="nav-link" href="services.html">服务</a>
                 </li>
                 <li class="nav-item dropdown active mr-3 mt-lg-0 mt-3">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
@@ -70,22 +76,25 @@
         </div>
     </nav>
 </header>
+<!-- main image slider container -->
 <div class="inner-banner">
 </div>
+<!-- end of main image slider container -->
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
             <a href="index.html">主页</a>
         </li>
-        <li class="breadcrumb-item active" aria-current="page">医生信息</li>
+        <li class="breadcrumb-item active" aria-current="page">患者信息</li>
     </ol>
 </nav>
-<section class="wthree-row w3-contact py-lg-5">
+<!-- typography -->
+<section class="wthree-row pt-sm-3  pb-sm-5 pb-3">
     <div id="app" class="container py-4">
         <div>
-            <template style="margin-top: 200px" v-if=administrator!=1>
+            <template style="margin-top: 200px" v-if=administrator!=0>
                 <el-table
-                        :data="doctors"
+                        :data="patients"
                         style="width: 100%"
                         :row-class-name="tableRowClassName"
                         @selection-change="handleSelectionChange"
@@ -98,7 +107,12 @@
                             type="index"
                             width="50">
                     </el-table-column>
-
+                    <el-table-column
+                            prop="patientID"
+                            label="id"
+                            align="center"
+                    >
+                    </el-table-column>
                     <el-table-column
                             prop="doctorID"
                             label="id"
@@ -139,9 +153,9 @@
                     <!--            </el-table-column>-->
 
                     <el-table-column
-                            prop="department"
+                            prop="symptoms"
                             align="center"
-                            label="科室">
+                            label="症状">
                         <!--                <template slot-scope="scope">-->
                         <!--                    <el-row v-if="scope.row.lose==false">拾取</el-row>-->
                         <!--                    <el-row v-if="scope.row.lose==true">丢失</el-row>-->
@@ -149,9 +163,9 @@
                     </el-table-column>
 
                     <el-table-column
-                            prop="specialization"
+                            prop="medicine"
                             align="center"
-                            label="擅长">
+                            label="用药">
                         <!--                <template slot-scope="scope">-->
                         <!--                    <el-row v-if="scope.row.isfinish==false">未寻回</el-row>-->
                         <!--                    <el-row v-if="scope.row.isfinish==true">已寻回</el-row>-->
@@ -182,26 +196,26 @@
                 </el-table>
             </template>
             <div v-else>
-                <div v-for="doctor in doctors">
-                    <div v-if="doctor.userID==userId">
+                <div v-for="patient in patients">
+                    <div v-if="patient.userID==userId">
                         <el-form :inline="true" align="center">
-<!--                            <img :src="getsrc(user)" width="200" height="200" alt="暂无图片"/><br><br>-->
+                            <!--                            <img :src="getsrc(user)" width="200" height="200" alt="暂无图片"/><br><br>-->
                             <el-button @click="Visible = true">修改图片</el-button><br><br>
-<!--                            <el-form-item label="身份证号">-->
-<!--                                <p><el-input v-model="user.sid" disabled></el-input></p>-->
-<!--                            </el-form-item><br>-->
+                            <!--                            <el-form-item label="身份证号">-->
+                            <!--                                <p><el-input v-model="user.sid" disabled></el-input></p>-->
+                            <!--                            </el-form-item><br>-->
                             <el-form-item label="姓名">
-                                <p><el-input v-model="doctor.user.username" disabled></el-input></p>
+                                <p><el-input v-model="patient.user.username" disabled></el-input></p>
                             </el-form-item><br>
                             <el-form-item label="电话">
-                                <p><el-input v-model="doctor.user.phone" disabled></el-input></p>
+                                <p><el-input v-model="patient.user.phone" disabled></el-input></p>
                             </el-form-item><br>
                             <el-form-item label="邮箱">
-                                <p><el-input v-model="doctor.user.email" disabled></el-input></p>
+                                <p><el-input v-model="patient.user.email" disabled></el-input></p>
                             </el-form-item><br>
                             <el-form-item label="密码">
-                                <p><el-input type="password" v-model="doctor.user.password" disabled></el-input></p><br>
-<!--                                <el-button type="primary" @click="xiugai()">修改信息</el-button>-->
+                                <p><el-input type="password" v-model="patient.user.password" disabled></el-input></p><br>
+                                <!--                                <el-button type="primary" @click="xiugai()">修改信息</el-button>-->
                             </el-form-item>
                         </el-form>
                     </div>
@@ -211,6 +225,21 @@
     </div>
 </section>
 
+<script src="../js/jquery-2.2.3.min.js"></script>
+
+<script src="../js/move-top.js"></script>
+<script src="../js/easing.js"></script>
+<script>
+    jQuery(document).ready(function ($) {
+        $(".scroll").click(function (event) {
+            event.preventDefault();
+
+            $('html,body').animate({
+                scrollTop: $(this.hash).offset().top
+            }, 1000);
+        });
+    });
+</script>
 <script>
     $(document).ready(function () {
         $().UItoTop({
@@ -221,15 +250,12 @@
     // 从 localStorage 中获取用户名
     const username = localStorage.getItem('name');
     console.log(localStorage.getItem('name'))
-    console.log(localStorage.getItem('userID'))
-    console.log(localStorage.getItem('userType'))
     // 显示用户名在页面上
-    if (username != null) {
+    if (username!=null) {
         document.getElementById('username').textContent = username;
     } else {
         document.getElementById('username').textContent = 'Guest';
     }
-
 </script>
 
 <script>
@@ -362,38 +388,11 @@
                 Visible: false,
                 visible: false,
                 Visible1: false,
-                tid: '',
-                //修改帖子数据
-                upcard: {
-                    tid: '',
-                    lid: '',
-                    cid: '',
-                    lose: '',
-                    title: '',
-                    time: '',
-                    content: '',
-                    tphoto: '',
-                    sendtime: '',
-                    isfinish: '',
-                    gaifou: ''
-                },
-                card: {
-                    tid: '',
-                    lid: '',
-                    cid: '',
-                    lose: '',
-                    title: '',
-                    time: '',
-                    content: '',
-                    tphoto: '',
-                    sendtime: '',
-                    isfinish: '',
-                    gaifou: ''
-                },
                 // 复选框选中数据集合
                 multipleSelection: [],
                 // 表格数据
-                doctors: [{
+                patients: [{
+                    patientID:'',
                     doctorID: '',
                     userID: '',
                     user: {
@@ -401,12 +400,14 @@
                         phone: '',
                         address: ''
                     },
-                    department: '',
-                    specialization: '',
+                    symptoms: '',
+                    medicine: '',
                     createTime: '',
-                    modifyTime: ''
+                    modifyTime: '',
+                    cost:''
                 }],
-                doctor: {
+                patient: {
+                    patientID:'',
                     doctorID: '',
                     userID: '',
                     user: {
@@ -414,10 +415,11 @@
                         phone: '',
                         address: ''
                     },
-                    department: '',
-                    specialization: '',
+                    symptoms: '',
+                    medicine: '',
                     createTime: '',
-                    modifyTime: ''
+                    modifyTime: '',
+                    cost:''
                 },
                 users: [{
                     sid: '',
@@ -443,10 +445,9 @@
         },
         mounted: function () {
             let _this = this;
-            //获取帖子
             axios({
                 method: 'get',
-                url: 'http://localhost:9080/doctor/getAll',
+                url: 'http://localhost:9080/patient/getAll',
                 headers: { // 设置请求头
                     Authorization: localStorage.getItem("token")
                 }
@@ -454,7 +455,7 @@
             }).then(function (response) {
                 console.log("发送成功")
                 //前边的data和后边的data不同，后边的data才自己自定义的
-                _this.doctors = response.data.data
+                _this.patients = response.data.data
             });
             //获取地点
             axios({
@@ -475,8 +476,5 @@
         }
     })
 </script>
-
-<script src="../js/SmoothScroll.min.js"></script>
-<script src="../js/bootstrap.js"></script>
 </body>
 </html>

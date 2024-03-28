@@ -58,7 +58,7 @@
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" href="doctor.html">医生</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="typo.html">患者</a>
+                        <a class="dropdown-item" href="patient.html">患者</a>
                     </div>
                 </li>
                 <li class="nav-item mr-3 mt-lg-0 mt-3">
@@ -68,11 +68,9 @@
                     <a class="nav-link" href="contact.html">联系我们</a>
                 </li>
                 <li>
-                    <button type="button" class="btn  ml-lg-2 w3ls-btn" data-toggle="modal" aria-pressed="false"
-                            data-target="#exampleModal">
-                        登录
-                    </button>
+                    <a class="nav-link" href="login.html">登录</a>
                 </li>
+                <li><span class="nav-link" id="username"></span></li>
             </ul>
         </div>
     </nav>
@@ -289,25 +287,7 @@
 <!-- js -->
 <script src="../js/jquery-2.2.3.min.js"></script>
 <!-- //js -->
-<!-- script for password match -->
-<script>
-    window.onload = function () {
-        document.getElementById("password1").onchange = validatePassword;
-        document.getElementById("password2").onchange = validatePassword;
-    }
 
-    function validatePassword() {
-        var pass2 = document.getElementById("password2").value;
-        var pass1 = document.getElementById("password1").value;
-        if (pass1 != pass2)
-            document.getElementById("password2").setCustomValidity("Passwords Don't Match");
-        else
-            document.getElementById("password2").setCustomValidity('');
-        //empty string means no validation error
-    }
-</script>
-<!-- script for password match -->
-<!-- start-smooth-scrolling -->
 <script src="../js/move-top.js"></script>
 <script src="../js/easing.js"></script>
 <script>
@@ -325,20 +305,20 @@
 <!-- smooth-scrolling-of-move-up -->
 <script>
     $(document).ready(function () {
-        /*
-        var defaults = {
-            containerID: 'toTop', // fading element id
-            containerHoverID: 'toTopHover', // fading element hover id
-            scrollSpeed: 1200,
-            easingType: 'linear'
-        };
-        */
-
         $().UItoTop({
             easingType: 'easeOutQuart'
         });
 
     });
+    // 从 localStorage 中获取用户名
+    const username = localStorage.getItem('name');
+    console.log(localStorage.getItem('name'))
+    // 显示用户名在页面上
+    if (username!=null) {
+        document.getElementById('username').textContent = username;
+    } else {
+        document.getElementById('username').textContent = 'Guest';
+    }
 </script>
 <script src="../js/SmoothScroll.min.js"></script>
 <!-- //smooth-scrolling-of-move-up -->

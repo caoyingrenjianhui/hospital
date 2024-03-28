@@ -3,7 +3,9 @@ package com.example.service.impl;
 import com.example.controller.Code;
 import com.example.controller.Result;
 import com.example.dao.DoctorDao;
+import com.example.dao.UserDao;
 import com.example.domain.Doctor;
+import com.example.domain.User;
 import com.example.service.IDoctorsService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +16,7 @@ import java.util.List;
 
 /**
  * <p>
- *  服务实现类
+ * 服务实现类
  * </p>
  *
  * @author 戴金磊
@@ -24,6 +26,8 @@ import java.util.List;
 public class DoctorServiceImpl extends ServiceImpl<DoctorDao, Doctor> implements IDoctorsService {
     @Autowired
     private DoctorDao doctorDao;
+    @Autowired
+    private UserDao userDao;
 
     @Override
     public Result add(Doctor doctor) {
@@ -63,6 +67,12 @@ public class DoctorServiceImpl extends ServiceImpl<DoctorDao, Doctor> implements
     @Override
     public Result getAll() {
         List<Doctor> list = doctorDao.getAll();
+        if (list != null) {
+            for (Doctor d : list) {
+                User user = userDao.selectById(d.getUserID());
+                d.setUser(user);
+            }
+        }
         return new Result(list, Code.GET_OK, "查询成功");
     }
 }

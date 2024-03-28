@@ -43,6 +43,9 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
         if (byId != null) {
             return new Result(user, Code.SAVE_ERR, "此学号已经注册过");
         }
+        if (user.getPhone()==null) {
+            return new Result(user, Code.SAVE_ERR, "请输入手机号");
+        }
         if (!user.getPassword().equals(user.getRePassword())) {
             return new Result(user, Code.SAVE_ERR, "两次密码输入不一致");
         }
