@@ -174,6 +174,11 @@
                             align="center"
                             label="操作">
                         <el-row slot-scope="scope">
+                            <a href="#" data-toggle="modal" data-target="#appointment"
+                               @click="appointment(scope.row.sid)"
+                               class="text-secondary">
+                                预约</a>
+                            <br><br>
                             <el-button type="primary" @click="update(scope.row.sid)">编辑</el-button>
                             <br><br>
                             <el-button type="primary" @click="delete(scope.row.tid)">删除</el-button>
@@ -208,6 +213,32 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" id="appointment" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div>
+                    <h3>预约</h3>
+                    <!-- stats -->
+                    <div class="stats">
+                        <div class="stats_inner">
+                            <input class="form-control date mb-3" id="datepicker" name="Text"
+                                   placeholder="日期" type="text" required="">
+                            <button type="submit" class="btn btn-agile btn-block w-100">预约</button>
+                        </div>
+                    </div>
+                    <!-- //stats -->
+
+                </div>
+
+            </div>
+        </div>
+    </div>
     </div>
 </section>
 
