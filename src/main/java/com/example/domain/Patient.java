@@ -32,6 +32,9 @@ public class Patient implements Serializable {
     @TableField(value = "userID")
     private String userID;
 
+    @TableField(exist = false)
+    private User user;
+
     @TableField(value = "doctorID")
     private Integer doctorID;
 

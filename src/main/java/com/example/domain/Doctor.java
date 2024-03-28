@@ -30,6 +30,9 @@ public class Doctor implements Serializable {
     @TableField(value = "userID")
     private String userID;
 
+    @TableField(exist = false)
+    private User user;
+
     private String department;
 
     private String specialization;
