@@ -20,4 +20,7 @@ public interface DoctorDao extends BaseMapper<Doctor> {
 
     @Select("select * from doctor")
     List<Doctor> getAll();
+
+    @Select("select * from doctor where userID = #{userID}")
+    Doctor selectByUserID(String userID);
 }

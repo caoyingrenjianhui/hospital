@@ -26,9 +26,17 @@
     <link href="http://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">
     <link href="http://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900" rel="stylesheet">
     <!-- //online-fonts -->
+    <script src="../js/vue.js"></script>
+    <script src="../element-ui/lib/index.js"></script>
+    <link rel="stylesheet" href="../element-ui/lib/theme-chalk/index.css">
+
+    <script src="../js/axios-0.18.0.js"></script>
+
+    <script type="text/javascript" src="../js/jquery-1.8.0.min.js"></script>
+    <script type="text/javascript" src="../js/jquery.superslide.2.1.1.js"></script>
+    <script type="text/javascript" src="../js/index.js"></script>
 </head>
 <body>
-<!-- header -->
 <header>
     <nav class="navbar navbar-expand-lg navbar-light bg-gradient-secondary">
         <h1>
@@ -63,8 +71,8 @@
                         <a class="dropdown-item" href="patient.html">患者</a>
                     </div>
                 </li>
-                <li class="nav-item mr-3 mt-lg-0 mt-3">
-                    <a class="nav-link" href="gallery.html">222222222222</a>
+                <li class="nav-item mr-3 mt-lg-0 mt-3" v-if="userType==2">
+                    <a class="nav-link" href="medicine.html">药品管理</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="contact.html">联系我们</a>
@@ -77,41 +85,55 @@
         </div>
     </nav>
 </header>
-<!-- main image slider container -->
-<div class="slide-window">
-    <div class="slide-wrapper" style="width:300%;">
-        <div class="slide">
-            <div class="slide-caption text-center">
-                <h3 class="text-uppercase">一系列针对女性的健康服务</h3>
-            </div>
-        </div>
-        <div class="slide slide2">
-            <div class="slide-caption text-center">
-                <h3 class="text-uppercase">对每位患者采取不同的治疗方法</h3>
-            </div>
-        </div>
-        <div class="slide slide3">
-            <div class="slide-caption text-center">
-                <h3 class="text-uppercase">致力于每位患者的医疗诊所</h3>
-            </div>
-        </div>
-    </div>
-    <div class="slide-controller">
-        <div class="slide-control-left">
-            <div class="slide-control-line"></div>
-            <div class="slide-control-line"></div>
-        </div>
-        <div class="slide-control-right">
-            <div class="slide-control-line"></div>
-            <div class="slide-control-line"></div>
-        </div>
-    </div>
-</div>
-
 <script src="../js/jquery-2.2.3.min.js"></script>
 <script src="../js/minimal-slider.js"></script>
 <link rel="stylesheet" href="../css/jquery-ui.css"/>
 <script src="../js/jquery-ui.js"></script>
+<section class="wthree-row w3-contact py-lg-5">
+    <div id="app" style="margin-top: 100px">
+        <template>
+            <div>
+                <h1>医护人员排班</h1>
+                <input type="date" v-model="selectedDate">
+
+                <button @click="fetchSchedule()">获取排班信息</button>
+
+                <ul v-if="schedule.length">
+                    <li v-for="person in schedule" :key="person.id">
+                        {{ person.name }} - {{ person.shift }}
+                    </li>
+                </ul>
+            </div>
+        </template>
+    </div>
+</section>
+
+
+<script>
+    new Vue({
+        el: "#app",
+        data() {
+            return {
+                selectedDate: '',
+                schedule: []
+            };
+        },
+        methods: {
+            fetchSchedule() {
+                axios({
+                    method: 'get',
+                    url: 'http://localhost:9080/schedule/weeklySchedule',
+                    headers: { // 设置请求头
+                        Authorization: localStorage.getItem("token")
+                    }
+                }).then(function (response) {
+                    this.schedule = response.data.data
+                });
+            }
+        }
+    });
+</script>
+
 <script>
     $(function () {
         $("#datepicker").datepicker();
@@ -154,7 +176,7 @@
     const username = localStorage.getItem('name');
     console.log(localStorage.getItem('name'))
     // 显示用户名在页面上
-    if (username!=null) {
+    if (username != null) {
         document.getElementById('username').textContent = username;
     } else {
         document.getElementById('username').textContent = 'Guest';
@@ -167,105 +189,5 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="../js/vue.js"></script>
 
-<script>
-    new Vue({
-        el: "#exampleModal",
-        data() {
-            return {
-                user: {
-                    userID: '',
-                    username: '',
-                    password: '',
-                    phone: '',
-                    email: '',
-                    address: '',
-                    userType: '',
-                    photo: ''
-                },
-            }
-        },
-        methods: {
-            /*登录按钮的方法*/
-            login() {
-                if (this.user.userID.length == 0) {
-                    alert("请输入您的学号")
-                } else if (this.user.password.length == 0) {
-                    alert("请输入您的密码")
-                } else {
-                    localStorage.setItem("password", this.password)
-                    localStorage.setItem("name", this.name);
-                    axios.post("/user/login", this.user).then((res) => {
-                        if (res.data.code == 20041) {
-                            console.log("成功")
-                            this.user = res.data.data
-                            console.log(this.user)
-                            if (this.user.userType == 0) {
-                                //如果是管理员
-                                console.log("患者")
-                                // location.href = "ad_about.html"
-                            } else if (this.user.userType == 1) {
-                                console.log("医生")
-                                // location.href = "doctor.html"
-                            } else if (this.user.userType == 2) {
-                                console.log("管理员")
-                                // location.href = "doctor.html"
-                            }
-                        } else if (res.data.code == 20040) {
-                            alert(res.data.msg);
-                        }
-                    })
-                }
-
-            },
-        }
-    })
-    new Vue({
-        el: "#exampleModalCenter2",
-        data() {
-            return {
-                user: {
-                    userID: '',
-                    username: '',
-                    password: '',
-                    phone: '',
-                    email: '',
-                    address: '',
-                    userType: '',
-                    photo: ''
-                },
-                name: "",
-            }
-        },
-        methods: {
-            /*注册按钮的方法*/
-            addUser() {
-                console.log("点确定" + this.user.username + this.user.userID + this.user.password)
-                //将名字和密码存入localstorage中
-                localStorage.setItem("password", this.password)
-                localStorage.setItem("name", this.name);
-                //调用存储
-                if (this.user != null) {
-                    console.log("user不为空" + this.user.username + this.user.userID + this.user.password)
-                    if (this.user.username.length == 0) {
-                        alert("请您输入您的姓名！")
-                    } else if (this.user.password.length == 0) {
-                        alert("请您输入密码！")
-                    } else {
-                        axios.post("/user/register", this.user).then((res) => {
-                            if (res.data.code == 20011) {
-                                //将输入框清空
-                                this.name = "";
-                                this.password = "";
-                                location.href = "index.html"
-                            } else {
-                                alert(res.data.msg);
-                            }
-                        })
-                    }
-                }
-            }
-        }
-    })
-</script>
 </body>
 </html>

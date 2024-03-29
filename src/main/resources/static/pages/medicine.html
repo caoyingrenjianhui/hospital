@@ -1,31 +1,37 @@
 <!DOCTYPE html>
 <html lang="zxx">
-<meta charset="UTF-8">
 <head>
-    <title>医生信息</title>
+    <title>Gallery</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8"/>
     <meta name="keywords" content=""/>
+    <script>
+        addEventListener("load", function () {
+            setTimeout(hideURLbar, 0);
+        }, false);
+
+        function hideURLbar() {
+            window.scrollTo(0, 1);
+        }
+    </script>
+    <!-- Custom Theme files -->
     <link href="../css/bootstrap.css" type="text/css" rel="stylesheet" media="all">
     <link href="../css/style.css" type="text/css" rel="stylesheet" media="all">
+    <link rel="stylesheet" href="../css/chocolat.css" type="text/css" media="screen"><!-- //Gallery Css -->
+    <!-- font-awesome icons -->
     <link href="../css/fontawesome-all.min.css" rel="stylesheet">
+    <!-- //Custom Theme files -->
+    <!-- online-fonts -->
     <link href="http://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">
     <link href="http://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900" rel="stylesheet">
-    <script src="../js/vue.js"></script>
-    <script src="../element-ui/lib/index.js"></script>
-    <link rel="stylesheet" href="../element-ui/lib/theme-chalk/index.css">
-
-    <script src="../js/axios-0.18.0.js"></script>
-
-    <script type="text/javascript" src="../js/jquery-1.8.0.min.js"></script>
-    <script type="text/javascript" src="../js/jquery.superslide.2.1.1.js"></script>
+    <!-- //online-fonts -->
 </head>
 <body>
 <header>
     <nav class="navbar navbar-expand-lg navbar-light bg-gradient-secondary">
         <h1>
             <a class="navbar-brand text-white" href="index.html">
-                百康诊所
+                Alleviating
             </a>
         </h1>
         <button class="navbar-toggler ml-md-auto" type="button" data-toggle="collapse"
@@ -35,15 +41,15 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-lg-auto text-center">
-                <li class="nav-item mr-3 mt-lg-0 mt-3">
+                <li class="nav-item  mr-3 mt-lg-0 mt-3">
                     <a class="nav-link" href="index.html">主页
                         <span class="sr-only">(current)</span>
                     </a>
                 </li>
                 <li class="nav-item  mr-3 mt-lg-0 mt-3">
-                    <a class="nav-link" href="services.html">services</a>
+                    <a class="nav-link" href="services.html">服务</a>
                 </li>
-                <li class="nav-item dropdown active mr-3 mt-lg-0 mt-3">
+                <li class="nav-item dropdown mr-3 mt-lg-0 mt-3">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                        data-toggle="dropdown" aria-haspopup="true"
                        aria-expanded="false">
@@ -55,7 +61,7 @@
                         <a class="dropdown-item" href="patient.html">患者</a>
                     </div>
                 </li>
-                <li class="nav-item mr-3 mt-lg-0 mt-3" v-if="userType==2">
+                <li class="nav-item active mr-3 mt-lg-0 mt-3">
                     <a class="nav-link" href="medicine.html">药品管理</a>
                 </li>
                 <li class="nav-item">
@@ -76,15 +82,59 @@
         <li class="breadcrumb-item">
             <a href="index.html">主页</a>
         </li>
-        <li class="breadcrumb-item active" aria-current="page">医生信息</li>
+        <li class="breadcrumb-item active" aria-current="page">药品管理</li>
     </ol>
 </nav>
-<section class="wthree-row w3-contact py-lg-5">
+<section class="gallery  py-lg-5">
     <div id="app" class="container py-4">
         <div>
-            <template style="margin-top: 200px" v-if=administrator!=1>
+            <template style="margin-top: 200px">
+                <!--搜索表单-->
+                <el-form :inline="true" :model="medicine" class="demo-form-inline" style="margin-left: 20px">
+
+                    <el-form-item label="根据药品ID搜索">
+                        <el-input v-model="medicine.medicineID" placeholder="根据标题搜索"></el-input>
+                    </el-form-item>
+
+                    <el-form-item label="供货商">
+                        <el-input v-model="medicine.supplier" placeholder="状态">
+                        </el-input>
+                    </el-form-item>
+
+                    <el-form-item label="数量">
+                        <el-input v-model="medicine.count" placeholder="是否寻回">
+                        </el-input>
+                    </el-form-item>
+
+                    <el-form-item label="产地">
+                        <el-input v-model="medicine.address" placeholder="姓名">
+                        </el-input>
+                        <!--                        <select slot-scope="scope" v-model="patient.user.username" placeholder="姓名">-->
+                        <!--                            <option v-for="classify in classifies" @click="patient.cid=scope.row.classify">-->
+                        <!--                                {{classify.classify}}-->
+                        <!--                            </option>-->
+                        <!--                        </select>-->
+                    </el-form-item>
+
+                    <!--                    <el-form-item label="地点">-->
+                    <!--                        <select slot-scope="scope" v-model="card.lid" placeholder="地点">-->
+                    <!--                            <option v-for="location in locations" @click="card.lid=scope.row.location">-->
+                    <!--                                {{location.location}}-->
+                    <!--                            </option>-->
+                    <!--                        </select>-->
+                    <!--                    </el-form-item>-->
+
+                    <el-form-item>
+                        <el-button type="primary" @click="onSubmit">查询</el-button>
+                        <el-button type="primary" @click="onReset">重置</el-button>
+                        <!--按钮-->
+                        <!--        <el-button type="danger" plain>批量删除</el-button>-->
+                        <el-button type="primary" plain @click="xinzeng">新增</el-button>
+                    </el-form-item>
+                </el-form>
+
                 <el-table
-                        :data="doctors"
+                        :data="medicines"
                         style="width: 100%"
                         :row-class-name="tableRowClassName"
                         @selection-change="handleSelectionChange"
@@ -97,34 +147,45 @@
                             type="index"
                             width="50">
                     </el-table-column>
-
                     <el-table-column
-                            prop="doctorID"
-                            label="id"
+                            prop="medicineID"
+                            label="药品ID"
                             align="center"
                     >
                     </el-table-column>
                     <el-table-column
-                            prop="userID"
-                            label="身份证号"
+                            prop="name"
+                            label="药品名称"
                             align="center"
                     >
                     </el-table-column>
                     <el-table-column
-                            prop="user.username"
-                            label="姓名"
+                            prop="count"
+                            label="数量"
                             align="center"
                     >
                     </el-table-column>
                     <el-table-column
-                            prop="user.phone"
-                            label="电话"
+                            prop="useCount"
+                            label="已用数量"
                             align="center"
                     >
                     </el-table-column>
                     <el-table-column
-                            prop="user.address"
-                            label="地址"
+                            prop="address"
+                            label="产地"
+                            align="center"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            prop="symptoms"
+                            label="描述"
+                            align="center"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            prop="supplier"
+                            label="供货商"
                             align="center"
                     >
                     </el-table-column>
@@ -138,24 +199,24 @@
                     <!--            </el-table-column>-->
 
                     <el-table-column
-                            prop="department"
+                            prop="userID"
                             align="center"
-                            label="科室">
+                            label="入库人">
                         <!--                <template slot-scope="scope">-->
                         <!--                    <el-row v-if="scope.row.lose==false">拾取</el-row>-->
                         <!--                    <el-row v-if="scope.row.lose==true">丢失</el-row>-->
                         <!--                </template>-->
                     </el-table-column>
 
-                    <el-table-column
-                            prop="specialization"
-                            align="center"
-                            label="擅长">
-                        <!--                <template slot-scope="scope">-->
-                        <!--                    <el-row v-if="scope.row.isfinish==false">未寻回</el-row>-->
-                        <!--                    <el-row v-if="scope.row.isfinish==true">已寻回</el-row>-->
-                        <!--                </template>-->
-                    </el-table-column>
+                    <!--                    <el-table-column-->
+                    <!--                            prop="medicine"-->
+                    <!--                            align="center"-->
+                    <!--                            label="用药">-->
+                    <!--                        &lt;!&ndash;                <template slot-scope="scope">&ndash;&gt;-->
+                    <!--                        &lt;!&ndash;                    <el-row v-if="scope.row.isfinish==false">未寻回</el-row>&ndash;&gt;-->
+                    <!--                        &lt;!&ndash;                    <el-row v-if="scope.row.isfinish==true">已寻回</el-row>&ndash;&gt;-->
+                    <!--                        &lt;!&ndash;                </template>&ndash;&gt;-->
+                    <!--                    </el-table-column>-->
 
                     <el-table-column
                             prop="createTime"
@@ -170,14 +231,15 @@
                     </el-table-column>
 
                     <el-table-column
+                            prop="price"
+                            align="center"
+                            label="价格">
+                    </el-table-column>
+
+                    <el-table-column
                             align="center"
                             label="操作">
                         <el-row slot-scope="scope">
-                            <el-button type="primary" href="#" data-toggle="modal" data-target="#appointment"
-                               @click="appointment(scope.row.sid)"
-                               class="text-secondary">
-                                预约</el-button>
-                            <br><br>
                             <el-button type="primary" @click="update(scope.row.sid)">编辑</el-button>
                             <br><br>
                             <el-button type="primary" @click="delete(scope.row.tid)">删除</el-button>
@@ -185,62 +247,31 @@
                     </el-table-column>
                 </el-table>
             </template>
-            <div v-else>
-                <div v-for="doctor in doctors">
-                    <div v-if="doctor.userID==userId">
-                        <el-form :inline="true" align="center">
-<!--                            <img :src="getsrc(user)" width="200" height="200" alt="暂无图片"/><br><br>-->
-                            <el-button @click="Visible = true">修改图片</el-button><br><br>
-<!--                            <el-form-item label="身份证号">-->
-<!--                                <p><el-input v-model="user.sid" disabled></el-input></p>-->
-<!--                            </el-form-item><br>-->
-                            <el-form-item label="姓名">
-                                <p><el-input v-model="doctor.user.username" disabled></el-input></p>
-                            </el-form-item><br>
-                            <el-form-item label="电话">
-                                <p><el-input v-model="doctor.user.phone" disabled></el-input></p>
-                            </el-form-item><br>
-                            <el-form-item label="邮箱">
-                                <p><el-input v-model="doctor.user.email" disabled></el-input></p>
-                            </el-form-item><br>
-                            <el-form-item label="密码">
-                                <p><el-input type="password" v-model="doctor.user.password" disabled></el-input></p><br>
-<!--                                <el-button type="primary" @click="xiugai()">修改信息</el-button>-->
-                            </el-form-item>
-                        </el-form>
-                    </div>
-                </div>
-            </div>
         </div>
-
-        <div class="modal fade" id="appointment" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header text-center">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div>
-                    <h3>预约</h3>
-                    <!-- stats -->
-                    <div class="stats">
-                        <div class="stats_inner">
-                            <input class="form-control date mb-3" id="datepicker" name="Text"
-                                   placeholder="日期" type="text" required="">
-                            <button type="submit" class="btn btn-agile btn-block w-100">预约</button>
-                        </div>
-                    </div>
-                    <!-- //stats -->
-
-                </div>
-
-            </div>
-        </div>
-    </div>
     </div>
 </section>
 
+
+<script src="../js/jquery-2.2.3.min.js"></script>
+<script src="../js/jquery.chocolat.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $('.gallery-grid1 a').Chocolat();
+    });
+</script>
+<script src="../js/move-top.js"></script>
+<script src="../js/easing.js"></script>
+<script>
+    jQuery(document).ready(function ($) {
+        $(".scroll").click(function (event) {
+            event.preventDefault();
+
+            $('html,body').animate({
+                scrollTop: $(this.hash).offset().top
+            }, 1000);
+        });
+    });
+</script>
 <script>
     $(document).ready(function () {
         $().UItoTop({
@@ -251,17 +282,15 @@
     // 从 localStorage 中获取用户名
     const username = localStorage.getItem('name');
     console.log(localStorage.getItem('name'))
-    console.log(localStorage.getItem('userID'))
-    console.log(localStorage.getItem('userType'))
     // 显示用户名在页面上
     if (username != null) {
         document.getElementById('username').textContent = username;
     } else {
         document.getElementById('username').textContent = 'Guest';
     }
-
 </script>
-
+<script src="../js/SmoothScroll.min.js"></script>
+<script src="../js/bootstrap.js"></script>
 <script>
     new Vue({
         el: "#app",
@@ -392,51 +421,24 @@
                 Visible: false,
                 visible: false,
                 Visible1: false,
-                tid: '',
-                //修改帖子数据
-                upcard: {
-                    tid: '',
-                    lid: '',
-                    cid: '',
-                    lose: '',
-                    title: '',
-                    time: '',
-                    content: '',
-                    tphoto: '',
-                    sendtime: '',
-                    isfinish: '',
-                    gaifou: ''
-                },
-                card: {
-                    tid: '',
-                    lid: '',
-                    cid: '',
-                    lose: '',
-                    title: '',
-                    time: '',
-                    content: '',
-                    tphoto: '',
-                    sendtime: '',
-                    isfinish: '',
-                    gaifou: ''
-                },
                 // 复选框选中数据集合
                 multipleSelection: [],
                 // 表格数据
-                doctors: [{
-                    doctorID: '',
+                medicines: [{
+                    medicineID: '',
+                    name: '',
+                    count: '',
+                    useCount: '',
+                    address: '',
+                    symptoms: '',
+                    supplier: '',
                     userID: '',
-                    user: {
-                        username: '',
-                        phone: '',
-                        address: ''
-                    },
-                    department: '',
-                    specialization: '',
                     createTime: '',
-                    modifyTime: ''
+                    modifyTime: '',
+                    price: ''
                 }],
-                doctor: {
+                patient: {
+                    patientID: '',
                     doctorID: '',
                     userID: '',
                     user: {
@@ -444,10 +446,11 @@
                         phone: '',
                         address: ''
                     },
-                    department: '',
-                    specialization: '',
+                    symptoms: '',
+                    medicine: '',
                     createTime: '',
-                    modifyTime: ''
+                    modifyTime: '',
+                    cost: ''
                 },
                 users: [{
                     sid: '',
@@ -473,10 +476,9 @@
         },
         mounted: function () {
             let _this = this;
-            //获取帖子
             axios({
                 method: 'get',
-                url: 'http://localhost:9080/doctor/getAll',
+                url: 'http://localhost:9080/medicines/getAll',
                 headers: { // 设置请求头
                     Authorization: localStorage.getItem("token")
                 }
@@ -484,7 +486,7 @@
             }).then(function (response) {
                 console.log("发送成功")
                 //前边的data和后边的data不同，后边的data才自己自定义的
-                _this.doctors = response.data.data
+                _this.medicines = response.data.data
             });
             //获取地点
             axios({
@@ -505,8 +507,5 @@
         }
     })
 </script>
-
-<script src="../js/SmoothScroll.min.js"></script>
-<script src="../js/bootstrap.js"></script>
 </body>
 </html>

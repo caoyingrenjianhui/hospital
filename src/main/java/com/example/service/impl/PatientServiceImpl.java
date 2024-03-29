@@ -1,18 +1,23 @@
 package com.example.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.controller.Code;
 import com.example.controller.Result;
+import com.example.dao.DoctorDao;
 import com.example.dao.UserDao;
+import com.example.domain.Doctor;
 import com.example.domain.Patient;
 import com.example.dao.PatientDao;
 import com.example.domain.User;
 import com.example.service.IPatientService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.utils.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -29,6 +34,8 @@ public class PatientServiceImpl extends ServiceImpl<PatientDao, Patient> impleme
     private PatientDao patientDao;
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private DoctorDao doctorDao;
 
     @Override
     public Result add(Patient patient) {
@@ -45,9 +52,13 @@ public class PatientServiceImpl extends ServiceImpl<PatientDao, Patient> impleme
     public Result getAll() {
         List<Patient> list = patientDao.getAll();
         if (list != null) {
-            for (Patient d : list) {
-                User user = userDao.selectById(d.getUserID());
-                d.setUser(user);
+            for (Patient patient : list) {
+                User user = userDao.selectById(patient.getUserID());
+                patient.setUser(user);
+                Doctor doctor = doctorDao.selectById(patient.getDoctorID());
+                User selectById = userDao.selectById(doctor.getUserID());
+                doctor.setUser(selectById);
+                patient.setDoctor(doctor);
             }
         }
         return new Result(list, Code.GET_OK, "查询成功");
@@ -75,5 +86,26 @@ public class PatientServiceImpl extends ServiceImpl<PatientDao, Patient> impleme
         patient.setModifyTime(LocalDate.now().toString());
         patientDao.updateById(patient);
         return new Result(patient, Code.UPDATE_OK, "修改成功");
+    }
+
+    @Override
+    public Result getPatient() {
+//        获取医生id
+        Map<String, Object> map = ThreadLocalUtil.get();
+        String userID = (String) map.get("userID");
+        Doctor doctor = doctorDao.selectByUserID(userID);
+        QueryWrapper<Patient> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("doctorID", doctor.getDoctorID());
+        List<Patient> list = patientDao.selectList(queryWrapper);
+        if (list != null) {
+            for (Patient patient : list) {
+                User user = userDao.selectById(patient.getUserID());
+                patient.setUser(user);
+                User selectById = userDao.selectById(doctor.getUserID());
+                doctor.setUser(selectById);
+                patient.setDoctor(doctor);
+            }
+        }
+        return new Result(list, Code.GET_OK, "查询成功");
     }
 }

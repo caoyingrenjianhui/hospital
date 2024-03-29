@@ -4,6 +4,7 @@ import com.example.controller.Code;
 import com.example.controller.Result;
 import com.example.dao.DoctorDao;
 import com.example.dao.UserDao;
+import com.example.domain.Department;
 import com.example.domain.Doctor;
 import com.example.domain.User;
 import com.example.service.IDoctorsService;
@@ -71,6 +72,7 @@ public class DoctorServiceImpl extends ServiceImpl<DoctorDao, Doctor> implements
             for (Doctor d : list) {
                 User user = userDao.selectById(d.getUserID());
                 d.setUser(user);
+                d.setDepartment(Department.getNameByCode(Integer.parseInt(d.getDepartment())));
             }
         }
         return new Result(list, Code.GET_OK, "查询成功");

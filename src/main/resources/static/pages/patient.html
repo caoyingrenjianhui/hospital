@@ -62,8 +62,8 @@
                         <a class="dropdown-item" href="patient.html">患者</a>
                     </div>
                 </li>
-                <li class="nav-item mr-3 mt-lg-0 mt-3">
-                    <a class="nav-link" href="gallery.html">222222222222</a>
+                <li class="nav-item mr-3 mt-lg-0 mt-3" v-if="userType==2">
+                    <a class="nav-link" href="medicine.html">药品管理</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="contact.html">联系我们</a>
@@ -93,6 +93,50 @@
     <div id="app" class="container py-4">
         <div>
             <template style="margin-top: 200px" v-if=administrator!=0>
+                <!--搜索表单-->
+                <el-form :inline="true" :model="patient" class="demo-form-inline" style="margin-left: 20px">
+
+                    <el-form-item label="根据患者ID搜索">
+                        <el-input v-model="patient.patientID" placeholder="根据标题搜索"></el-input>
+                    </el-form-item>
+
+                    <el-form-item label="主治医师">
+                        <el-input v-model="patient.doctorID" placeholder="状态">
+                        </el-input>
+                    </el-form-item>
+
+                    <el-form-item label="身份证号">
+                        <el-input v-model="patient.userID" placeholder="是否寻回">
+                        </el-input>
+                    </el-form-item>
+
+                    <el-form-item label="姓名">
+                        <el-input v-model="patient.user.username" placeholder="姓名">
+                        </el-input>
+                        <!--                        <select slot-scope="scope" v-model="patient.user.username" placeholder="姓名">-->
+                        <!--                            <option v-for="classify in classifies" @click="patient.cid=scope.row.classify">-->
+                        <!--                                {{classify.classify}}-->
+                        <!--                            </option>-->
+                        <!--                        </select>-->
+                    </el-form-item>
+
+                    <!--                    <el-form-item label="地点">-->
+                    <!--                        <select slot-scope="scope" v-model="card.lid" placeholder="地点">-->
+                    <!--                            <option v-for="location in locations" @click="card.lid=scope.row.location">-->
+                    <!--                                {{location.location}}-->
+                    <!--                            </option>-->
+                    <!--                        </select>-->
+                    <!--                    </el-form-item>-->
+
+                    <el-form-item>
+                        <el-button type="primary" @click="onSubmit">查询</el-button>
+                        <el-button type="primary" @click="onReset">重置</el-button>
+                        <!--按钮-->
+                        <!--        <el-button type="danger" plain>批量删除</el-button>-->
+                        <el-button type="primary" plain @click="xinzeng">新增</el-button>
+                    </el-form-item>
+                </el-form>
+
                 <el-table
                         :data="patients"
                         style="width: 100%"
@@ -109,13 +153,13 @@
                     </el-table-column>
                     <el-table-column
                             prop="patientID"
-                            label="id"
+                            label="患者ID"
                             align="center"
                     >
                     </el-table-column>
                     <el-table-column
-                            prop="doctorID"
-                            label="id"
+                            prop="doctor.user.username"
+                            label="主治医师姓名"
                             align="center"
                     >
                     </el-table-column>
@@ -200,21 +244,34 @@
                     <div v-if="patient.userID==userId">
                         <el-form :inline="true" align="center">
                             <!--                            <img :src="getsrc(user)" width="200" height="200" alt="暂无图片"/><br><br>-->
-                            <el-button @click="Visible = true">修改图片</el-button><br><br>
+                            <el-button @click="Visible = true">修改图片</el-button>
+                            <br><br>
                             <!--                            <el-form-item label="身份证号">-->
                             <!--                                <p><el-input v-model="user.sid" disabled></el-input></p>-->
                             <!--                            </el-form-item><br>-->
                             <el-form-item label="姓名">
-                                <p><el-input v-model="patient.user.username" disabled></el-input></p>
-                            </el-form-item><br>
+                                <p>
+                                    <el-input v-model="patient.user.username" disabled></el-input>
+                                </p>
+                            </el-form-item>
+                            <br>
                             <el-form-item label="电话">
-                                <p><el-input v-model="patient.user.phone" disabled></el-input></p>
-                            </el-form-item><br>
+                                <p>
+                                    <el-input v-model="patient.user.phone" disabled></el-input>
+                                </p>
+                            </el-form-item>
+                            <br>
                             <el-form-item label="邮箱">
-                                <p><el-input v-model="patient.user.email" disabled></el-input></p>
-                            </el-form-item><br>
+                                <p>
+                                    <el-input v-model="patient.user.email" disabled></el-input>
+                                </p>
+                            </el-form-item>
+                            <br>
                             <el-form-item label="密码">
-                                <p><el-input type="password" v-model="patient.user.password" disabled></el-input></p><br>
+                                <p>
+                                    <el-input type="password" v-model="patient.user.password" disabled></el-input>
+                                </p>
+                                <br>
                                 <!--                                <el-button type="primary" @click="xiugai()">修改信息</el-button>-->
                             </el-form-item>
                         </el-form>
@@ -249,9 +306,9 @@
     });
     // 从 localStorage 中获取用户名
     const username = localStorage.getItem('name');
-    console.log(localStorage.getItem('name'))
+    console.log(username)
     // 显示用户名在页面上
-    if (username!=null) {
+    if (username != null) {
         document.getElementById('username').textContent = username;
     } else {
         document.getElementById('username').textContent = 'Guest';
@@ -392,7 +449,7 @@
                 multipleSelection: [],
                 // 表格数据
                 patients: [{
-                    patientID:'',
+                    patientID: '',
                     doctorID: '',
                     userID: '',
                     user: {
@@ -400,14 +457,15 @@
                         phone: '',
                         address: ''
                     },
+                    doctor: {},
                     symptoms: '',
                     medicine: '',
                     createTime: '',
                     modifyTime: '',
-                    cost:''
+                    cost: ''
                 }],
                 patient: {
-                    patientID:'',
+                    patientID: '',
                     doctorID: '',
                     userID: '',
                     user: {
@@ -419,7 +477,7 @@
                     medicine: '',
                     createTime: '',
                     modifyTime: '',
-                    cost:''
+                    cost: ''
                 },
                 users: [{
                     sid: '',
@@ -445,18 +503,33 @@
         },
         mounted: function () {
             let _this = this;
-            axios({
-                method: 'get',
-                url: 'http://localhost:9080/patient/getAll',
-                headers: { // 设置请求头
-                    Authorization: localStorage.getItem("token")
-                }
-                // responseType: 'stream'
-            }).then(function (response) {
-                console.log("发送成功")
-                //前边的data和后边的data不同，后边的data才自己自定义的
-                _this.patients = response.data.data
-            });
+            if (localStorage.getItem("userType") == 1) {
+                axios({
+                    method: 'get',
+                    url: 'http://localhost:9080/patient/getPatient',
+                    headers: { // 设置请求头
+                        Authorization: localStorage.getItem("token")
+                    }
+                    // responseType: 'stream'
+                }).then(function (response) {
+                    console.log("发送成功")
+                    //前边的data和后边的data不同，后边的data才自己自定义的
+                    _this.patients = response.data.data
+                });
+            } else {
+                axios({
+                    method: 'get',
+                    url: 'http://localhost:9080/patient/getAll',
+                    headers: { // 设置请求头
+                        Authorization: localStorage.getItem("token")
+                    }
+                    // responseType: 'stream'
+                }).then(function (response) {
+                    console.log("发送成功")
+                    //前边的data和后边的data不同，后边的data才自己自定义的
+                    _this.patients = response.data.data
+                });
+            }
             //获取地点
             axios({
                 method: 'get',

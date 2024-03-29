@@ -40,5 +40,11 @@ public class PatientController {
     public Result delete(@PathVariable Integer id){
         return patientService.delete(id);
     }
+
+    @GetMapping("/getPatient")
+    public Result getPatient() {
+        return patientService.getPatient();
+    }
+
 }
 

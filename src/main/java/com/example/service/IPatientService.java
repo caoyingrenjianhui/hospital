@@ -21,4 +21,6 @@ public interface IPatientService extends IService<Patient> {
     Result delete(Integer id);
 
     Result update(Patient patient);
+
+    Result getPatient();
 }
