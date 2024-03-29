@@ -1,10 +1,13 @@
 package com.example.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.controller.Code;
 import com.example.controller.Result;
+import com.example.dao.UserDao;
 import com.example.domain.Doctor;
 import com.example.domain.Medicines;
 import com.example.dao.MedicinesDao;
+import com.example.domain.User;
 import com.example.service.IMedicinesService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.utils.ThreadLocalUtil;
@@ -28,6 +31,8 @@ public class MedicinesServiceImpl extends ServiceImpl<MedicinesDao, Medicines> i
 
     @Autowired
     private MedicinesDao medicinesDao;
+    @Autowired
+    private UserDao userDao;
 
     @Override
     public Result add(Medicines medicines) {
@@ -58,6 +63,13 @@ public class MedicinesServiceImpl extends ServiceImpl<MedicinesDao, Medicines> i
     @Override
     public Result getAll() {
         List<Medicines> list = medicinesDao.getAll();
+        if (list != null) {
+            for (Medicines medicine : list) {
+                User user = userDao.selectById(medicine.getUserID());
+                medicine.setUser(user);
+            }
+
+        }
         return new Result(list, Code.GET_OK, "查询成功");
     }
 
@@ -72,5 +84,27 @@ public class MedicinesServiceImpl extends ServiceImpl<MedicinesDao, Medicines> i
         } else {
             return new Result(null, Code.DELETE_ERR, "删除失败");
         }
+    }
+
+    @Override
+    public Result select(Medicines medicines) {
+        QueryWrapper<Medicines> wrapper = new QueryWrapper<>();
+        if (medicines.getMedicineID() != null) {
+            wrapper.eq("medicineID", medicines.getMedicineID());
+        }
+        if (medicines.getSupplier() != null && !"".equals(medicines.getSupplier())) {
+            wrapper.like("supplier", medicines.getSupplier());
+        }
+        if (medicines.getAddress() != null && !"".equals(medicines.getAddress())) {
+            wrapper.like("address", medicines.getAddress());
+        }
+        if (medicines.getName() != null && !"".equals(medicines.getName())) {
+            wrapper.like("name", medicines.getName());
+        }
+        List<Medicines> list = medicinesDao.selectList(wrapper);
+        if (list == null) {
+            return new Result(null,Code.GET_ERR,"查询不到数据");
+        }
+        return new Result(list,Code.GET_OK,"查询成功");
     }
 }

@@ -1,6 +1,7 @@
 package com.example.service;
 
 import com.example.controller.Result;
+import com.example.domain.Medicines;
 import com.example.domain.Patient;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -23,4 +24,6 @@ public interface IPatientService extends IService<Patient> {
     Result update(Patient patient);
 
     Result getPatient();
+
+    Result select(Patient patient);
 }

@@ -1,6 +1,7 @@
 package com.example.controller;
 
 
+import com.example.domain.Medicines;
 import com.example.domain.Patient;
 import com.example.service.IPatientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,5 +47,9 @@ public class PatientController {
         return patientService.getPatient();
     }
 
+    @PostMapping("/select")
+    public Result select(@RequestBody Patient patient){
+        return patientService.select(patient);
+    }
 }
 

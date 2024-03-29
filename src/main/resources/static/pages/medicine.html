@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zxx">
 <head>
-    <title>Gallery</title>
+    <title>药品管理</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8"/>
     <meta name="keywords" content=""/>
@@ -100,14 +100,12 @@
                     <el-form-item label="根据药品ID搜索">
                         <el-input v-model="medicine.medicineID" placeholder="根据标题搜索"></el-input>
                     </el-form-item>
+                    <el-form-item label="根据药品名称搜索">
+                        <el-input v-model="medicine.name" placeholder="根据名称搜索"></el-input>
+                    </el-form-item>
 
                     <el-form-item label="供货商">
                         <el-input v-model="medicine.supplier" placeholder="状态">
-                        </el-input>
-                    </el-form-item>
-
-                    <el-form-item label="数量">
-                        <el-input v-model="medicine.count" placeholder="是否寻回">
                         </el-input>
                     </el-form-item>
 
@@ -206,11 +204,17 @@
                     <el-table-column
                             prop="userID"
                             align="center"
-                            label="入库人">
+                            label="入库人ID">
                         <!--                <template slot-scope="scope">-->
                         <!--                    <el-row v-if="scope.row.lose==false">拾取</el-row>-->
                         <!--                    <el-row v-if="scope.row.lose==true">丢失</el-row>-->
                         <!--                </template>-->
+                    </el-table-column>
+
+                    <el-table-column
+                            prop="user.username"
+                            align="center"
+                            label="入库人姓名">
                     </el-table-column>
 
                     <!--                    <el-table-column-->
@@ -338,23 +342,19 @@
             },
             // 查询方法
             onSubmit() {
-                console.log(this.card);
-                axios.post("/cards/sel", this.card).then((res) => {
-                    console.log("查询成功")
+                axios.post("/medicines/select", this.medicine).then((res) => {
                     //如果成功，跳转到登录
                     if (res.data.code == 20041) {
-                        if (this.cards == null) {
-                            alert("未搜索到")
-                        } else {
-                            this.cards = res.data.data;
-                        }
+                        this.medicines = res.data.data;
+                    }else {
+                        alert(res.data.msg)
                     }
                 })
             },
             //重置查询
             onReset() {
-                console.log("重置")
                 location.reload()
+                this.onSubmit()
             },
             // 新增帖子
             // addCard() {
@@ -438,42 +438,24 @@
                     symptoms: '',
                     supplier: '',
                     userID: '',
+                    user:{},
                     createTime: '',
                     modifyTime: '',
                     price: ''
                 }],
-                patient: {
-                    patientID: '',
-                    doctorID: '',
-                    userID: '',
-                    user: {
-                        username: '',
-                        phone: '',
-                        address: ''
-                    },
+                medicine: {
+                    medicineID: '',
+                    name: '',
+                    count: '',
+                    useCount: '',
+                    address: '',
                     symptoms: '',
-                    medicine: '',
+                    supplier: '',
+                    userID: '',
+                    user:{},
                     createTime: '',
                     modifyTime: '',
-                    cost: ''
-                },
-                users: [{
-                    sid: '',
-                    name: '',
-                    phone: '',
-                    qq: '',
-                    password: '',
-                    sphoto: '',
-                    administrators: ''
-                }],
-                user: {
-                    sid: '',
-                    name: '',
-                    phone: '',
-                    qq: '',
-                    password: '',
-                    sphoto: '',
-                    administrators: ''
+                    price: ''
                 },
                 classifies: [],
                 locations: [],

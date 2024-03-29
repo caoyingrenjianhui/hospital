@@ -129,8 +129,8 @@
                     <!--                    </el-form-item>-->
 
                     <el-form-item>
-                        <el-button type="primary" @click="onSubmit">查询</el-button>
-                        <el-button type="primary" @click="onReset">重置</el-button>
+                        <el-button type="primary" @click="onSubmit()">查询</el-button>
+                        <el-button type="primary" @click="onReset()">重置</el-button>
                         <!--按钮-->
                         <!--        <el-button type="danger" plain>批量删除</el-button>-->
                         <el-button type="primary" plain @click="xinzeng">新增</el-button>
@@ -357,16 +357,12 @@
             },
             // 查询方法
             onSubmit() {
-                console.log(this.card);
-                axios.post("/cards/sel", this.card).then((res) => {
-                    console.log("查询成功")
+                axios.post("/patient/select", this.patient).then((res) => {
                     //如果成功，跳转到登录
                     if (res.data.code == 20041) {
-                        if (this.cards == null) {
-                            alert("未搜索到")
-                        } else {
-                            this.cards = res.data.data;
-                        }
+                        this.patients = res.data.data;
+                    }else {
+                        alert(res.data.msg)
                     }
                 })
             },

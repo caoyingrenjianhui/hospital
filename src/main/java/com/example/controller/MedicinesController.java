@@ -41,5 +41,10 @@ public class MedicinesController {
         return medicinesService.delete(id);
     }
 
+    @PostMapping("/select")
+    public Result select(@RequestBody Medicines medicines){
+        return medicinesService.select(medicines);
+    }
+
 }
 

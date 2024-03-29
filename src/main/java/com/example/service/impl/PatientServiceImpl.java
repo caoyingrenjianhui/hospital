@@ -6,6 +6,7 @@ import com.example.controller.Result;
 import com.example.dao.DoctorDao;
 import com.example.dao.UserDao;
 import com.example.domain.Doctor;
+import com.example.domain.Medicines;
 import com.example.domain.Patient;
 import com.example.dao.PatientDao;
 import com.example.domain.User;
@@ -105,6 +106,36 @@ public class PatientServiceImpl extends ServiceImpl<PatientDao, Patient> impleme
                 doctor.setUser(selectById);
                 patient.setDoctor(doctor);
             }
+        }
+        return new Result(list, Code.GET_OK, "查询成功");
+    }
+
+    @Override
+    public Result select(Patient patient) {
+        QueryWrapper<Patient> wrapper = new QueryWrapper<>();
+        if (patient.getPatientID() != null) {
+            wrapper.eq("patientID", patient.getPatientID());
+        }
+        if (patient.getDoctorID() != null && !"".equals(patient.getDoctorID())) {
+            wrapper.eq("doctorID", patient.getDoctorID());
+        }
+        if (patient.getUserID() != null && !"".equals(patient.getUserID())) {
+            wrapper.eq("userID", patient.getUserID());
+        }
+        List<Patient> list = patientDao.selectList(wrapper);
+        if (list == null) {
+            return new Result(null, Code.GET_ERR, "查询不到数据");
+        }
+        for (Patient p : list) {
+            QueryWrapper<User> userWrapper = new QueryWrapper<>();
+            if (patient.getUser().getUsername() != null && !"".equals(patient.getUser().getUsername())) {
+                userWrapper.like("username", patient.getUser().getUsername());
+            }
+            if (patient.getUserID() != null) {
+                userWrapper.eq("userID", patient.getUserID());
+            }
+            User user = userDao.selectOne(userWrapper);
+            p.setUser(user);
         }
         return new Result(list, Code.GET_OK, "查询成功");
     }

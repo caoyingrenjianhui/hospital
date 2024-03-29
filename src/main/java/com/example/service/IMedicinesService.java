@@ -21,4 +21,6 @@ public interface IMedicinesService extends IService<Medicines> {
     Result getAll();
 
     Result delete(Integer id);
+
+    Result select(Medicines medicines);
 }
