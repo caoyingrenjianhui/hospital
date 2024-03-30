@@ -14,27 +14,17 @@
             window.scrollTo(0, 1);
         }
     </script>
-    <!-- Custom Theme files -->
     <link href="../css/bootstrap.css" type="text/css" rel="stylesheet" media="all">
     <link href="../css/style.css" type="text/css" rel="stylesheet" media="all">
-    <!-- font-awesome icons -->
     <link href="../css/fontawesome-all.min.css" rel="stylesheet">
-    <!-- //Custom Theme files -->
     <link href="../css/minimal-slider.css" rel='stylesheet' type='text/css'/>
     <link rel="stylesheet" href="../css/flexslider.css" type="text/css" media="screen" property=""/>
-    <!-- online-fonts -->
     <link href="http://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">
     <link href="http://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900" rel="stylesheet">
-    <!-- //online-fonts -->
     <script src="../js/vue.js"></script>
     <script src="../element-ui/lib/index.js"></script>
     <link rel="stylesheet" href="../element-ui/lib/theme-chalk/index.css">
-
     <script src="../js/axios-0.18.0.js"></script>
-
-    <script type="text/javascript" src="../js/jquery-1.8.0.min.js"></script>
-    <script type="text/javascript" src="../js/jquery.superslide.2.1.1.js"></script>
-    <script type="text/javascript" src="../js/index.js"></script>
 </head>
 <body>
 <header>
@@ -51,13 +41,10 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-lg-auto text-center">
-                <li class="nav-item active  mr-3 mt-lg-0 mt-3">
+                <li class="nav-item  mr-3 mt-lg-0 mt-3">
                     <a class="nav-link" href="index.html">主页
                         <span class="sr-only">(current)</span>
                     </a>
-                </li>
-                <li class="nav-item  mr-3 mt-lg-0 mt-3">
-                    <a class="nav-link" href="services.html">服务</a>
                 </li>
                 <li class="nav-item dropdown mr-3 mt-lg-0 mt-3">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
@@ -72,7 +59,7 @@
                     </div>
                 </li>
                 <li class="nav-item dropdown active mr-3 mt-lg-0 mt-3" v-if="userType==2">
-                    <a class="nav-link dropdown-toggle" role="button"
+                    <a class="nav-link dropdown-toggle" role="button" href="#"
                        data-toggle="dropdown" aria-haspopup="true"
                        aria-expanded="false">
                         管理
@@ -82,9 +69,6 @@
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="schedule.html">排班</a>
                     </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="contact.html">联系我们</a>
                 </li>
                 <li>
                     <a class="nav-link" href="login.html">登录</a>
@@ -205,24 +189,13 @@
     });
 </script>
 
-<script>
+<script src="../js/jquery-2.2.3.min.js"></script>
+<script src="../js/jquery.chocolat.js"></script>
+<script type="text/javascript">
     $(function () {
-        $("#datepicker").datepicker();
+        $('.gallery-grid1 a').Chocolat();
     });
 </script>
-
-<script defer src="../js/jquery.flexslider.js"></script>
-<script>
-    $(window).load(function () {
-        $('.flexslider').flexslider({
-            animation: "slide",
-            start: function (slider) {
-                $('body').removeClass('loading');
-            }
-        });
-    });
-</script>
-
 <script src="../js/move-top.js"></script>
 <script src="../js/easing.js"></script>
 <script>
@@ -254,11 +227,8 @@
     }
 </script>
 <script src="../js/SmoothScroll.min.js"></script>
-
 <script src="../js/bootstrap.js"></script>
-<script src="../js/axios-0.18.0.js"></script>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="../js/vue.js"></script>
-
+<script src="../js/SmoothScroll.min.js"></script>
+<script src="../js/bootstrap.js"></script>
 </body>
 </html>

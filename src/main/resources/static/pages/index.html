@@ -14,18 +14,18 @@
             window.scrollTo(0, 1);
         }
     </script>
-    <!-- Custom Theme files -->
     <link href="../css/bootstrap.css" type="text/css" rel="stylesheet" media="all">
     <link href="../css/style.css" type="text/css" rel="stylesheet" media="all">
-    <!-- font-awesome icons -->
     <link href="../css/fontawesome-all.min.css" rel="stylesheet">
-    <!-- //Custom Theme files -->
     <link href="../css/minimal-slider.css" rel='stylesheet' type='text/css'/>
     <link rel="stylesheet" href="../css/flexslider.css" type="text/css" media="screen" property=""/>
-    <!-- online-fonts -->
     <link href="http://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">
     <link href="http://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900" rel="stylesheet">
-    <!-- //online-fonts -->
+    <script src="../js/vue.js"></script>
+    <script src="../element-ui/lib/index.js"></script>
+    <link rel="stylesheet" href="../element-ui/lib/theme-chalk/index.css">
+
+    <script src="../js/axios-0.18.0.js"></script>
 </head>
 <body>
 <!-- header -->
@@ -48,9 +48,6 @@
                         <span class="sr-only">(current)</span>
                     </a>
                 </li>
-                <li class="nav-item  mr-3 mt-lg-0 mt-3">
-                    <a class="nav-link" href="services.html">服务</a>
-                </li>
                 <li class="nav-item dropdown mr-3 mt-lg-0 mt-3">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                        data-toggle="dropdown" aria-haspopup="true"
@@ -63,11 +60,17 @@
                         <a class="dropdown-item" href="patient.html">患者</a>
                     </div>
                 </li>
-                <li class="nav-item mr-3 mt-lg-0 mt-3" v-if="userType==2">
-                    <a class="nav-link" href="medicine.html">药品管理</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="contact.html">联系我们</a>
+                <li class="nav-item dropdown mr-3 mt-lg-0 mt-3" v-if="userType==2">
+                    <a class="nav-link dropdown-toggle" role="button" href="#"
+                       data-toggle="dropdown" aria-haspopup="true"
+                       aria-expanded="false">
+                        管理
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="medicine.html">药品管理</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="schedule.html">排班</a>
+                    </div>
                 </li>
                 <li>
                     <a class="nav-link" href="login.html">登录</a>
@@ -107,54 +110,6 @@
         </div>
     </div>
 </div>
-<!-- main image slider container -->
-<!-- end of main image slider container -->
-<!--about-->
-<!--<div class="about">-->
-<!--    <div class="abt-layer">-->
-<!--        <div class="container">-->
-<!--            <div class="about-main">-->
-<!--                <div class="about-right">-->
-<!--                    <h3 class="subheading-w3-agile">预约</h3>-->
-<!--                    &lt;!&ndash; stats &ndash;&gt;-->
-<!--                    <div class="stats">-->
-<!--                        <div class="stats_inner">-->
-<!--                            <form action="#" method="post">-->
-<!--                                <select class="form-control mb-3">-->
-<!--                                    &lt;!&ndash;查找所有科室，遍历&ndash;&gt;-->
-<!--                                    &lt;!&ndash;<option value="2">Neurology</option>-->
-<!--                                    <option value="3">Dentistry</option>-->
-<!--                                    <option value="4">Cardiology</option>-->
-<!--                                    <option value="5">Pediatrics</option>-->
-<!--                                    <option value="6">Pulmonology</option>-->
-<!--                                    <option value="7">Ophthalmology</option>-->
-<!--                                    <option value="8">症状</option>&ndash;&gt;-->
-<!--                                </select>-->
-<!--                                <input class="form-control mb-3" type="text" placeholder="Name" name="name" required="">-->
-<!--                                <select class="form-control mb-3">-->
-<!--                                    <option value="2">性别</option>-->
-<!--                                    <option value="3">男</option>-->
-<!--                                    <option value="4">女</option>-->
-<!--                                </select>-->
-<!--                                <input class="form-control mb-3" type="text" placeholder="手机号" name="phone"-->
-<!--                                       required="">-->
-<!--                                <input class="form-control mb-3" type="email" placeholder="邮箱" name="email"-->
-<!--                                       required="">-->
-<!--                                <input class="form-control date mb-3" id="datepicker" name="Text"-->
-<!--                                       placeholder="日期" type="text" required="">-->
-<!--                                <button type="submit" class="btn btn-agile btn-block w-100">预约</button>-->
-<!--                            </form>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    &lt;!&ndash; //stats &ndash;&gt;-->
-
-<!--                </div>-->
-<!--            </div>-->
-
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
-<!--//about-->
 <section class="departments">
     <div class="departments-1 py-lg-5">
         <div class="container py-5">
@@ -228,7 +183,7 @@
                     <div class="img_text_w3ls">
                         <h4>紧急求助</h4>
                         <span> </span>
-                        <p>Sed porttitor lectus nibh ras ultricies ligula sed magna dictum porta. </p>
+                        <p></p>
                     </div>
                 </div>
             </div>
@@ -237,8 +192,7 @@
                     <div class="img_text_w3ls">
                         <h4>心脏外科手术</h4>
                         <span> </span>
-                        <p>Sed porttitor lectus nibh ras ultricies ligula sed magna dictum porta. </p>
-                    </div>
+                        <p></p></div>
                 </div>
             </div>
             <div class="col-lg-4 col-md-6 my-lg-0 mt-4">
@@ -246,8 +200,7 @@
                     <div class="img_text_w3ls">
                         <h4>急救护理</h4>
                         <span> </span>
-                        <p>Sed porttitor lectus nibh ras ultricies ligula sed magna dictum porta. </p>
-                    </div>
+                        <p></p></div>
                 </div>
             </div>
             <div class="col-lg-4 col-md-6 mt-4">
@@ -255,8 +208,7 @@
                     <div class="img_text_w3ls">
                         <h4>牙科护理</h4>
                         <span> </span>
-                        <p>Sed porttitor lectus nibh ras ultricies ligula sed magna dictum porta. </p>
-                    </div>
+                        <p></p></div>
                 </div>
             </div>
             <div class="col-lg-4 col-md-6  mt-4">
@@ -264,8 +216,7 @@
                     <div class="img_text_w3ls">
                         <h4>血糖测试</h4>
                         <span> </span>
-                        <p>Sed porttitor lectus nibh ras ultricies ligula sed magna dictum porta. </p>
-                    </div>
+                        <p></p></div>
                 </div>
             </div>
             <div class="col-lg-4 col-md-6 mt-4">
@@ -273,15 +224,12 @@
                     <div class="img_text_w3ls">
                         <h4>医生帮助</h4>
                         <span> </span>
-                        <p>Sed porttitor lectus nibh ras ultricies ligula sed magna dictum porta. </p>
-                    </div>
+                        <p></p></div>
                 </div>
             </div>
         </div>
-        <!-- //case studies row -->
     </div>
 </section>
-<!-- //case studies -->
 
 <script src="../js/jquery-2.2.3.min.js"></script>
 <script src="../js/minimal-slider.js"></script>
@@ -329,7 +277,7 @@
     const username = localStorage.getItem('name');
     console.log(localStorage.getItem('name'))
     // 显示用户名在页面上
-    if (username!=null) {
+    if (username != null) {
         document.getElementById('username').textContent = username;
     } else {
         document.getElementById('username').textContent = 'Guest';
@@ -343,104 +291,6 @@
 <script src="../js/vue.js"></script>
 
 <script>
-    new Vue({
-        el: "#exampleModal",
-        data() {
-            return {
-                user: {
-                    userID: '',
-                    username: '',
-                    password: '',
-                    phone: '',
-                    email: '',
-                    address: '',
-                    userType: '',
-                    photo: ''
-                },
-            }
-        },
-        methods: {
-            /*登录按钮的方法*/
-            login() {
-                if (this.user.userID.length == 0) {
-                    alert("请输入您的学号")
-                } else if (this.user.password.length == 0) {
-                    alert("请输入您的密码")
-                } else {
-                    localStorage.setItem("password", this.password)
-                    localStorage.setItem("name", this.name);
-                    axios.post("/user/login", this.user).then((res) => {
-                        if (res.data.code == 20041) {
-                            console.log("成功")
-                            this.user = res.data.data
-                            console.log(this.user)
-                            if (this.user.userType == 0) {
-                                //如果是管理员
-                                console.log("患者")
-                                // location.href = "ad_about.html"
-                            } else if (this.user.userType == 1) {
-                                console.log("医生")
-                                // location.href = "doctor.html"
-                            } else if (this.user.userType == 2) {
-                                console.log("管理员")
-                                // location.href = "doctor.html"
-                            }
-                        } else if (res.data.code == 20040) {
-                            alert(res.data.msg);
-                        }
-                    })
-                }
-
-            },
-        }
-    })
-    new Vue({
-        el: "#exampleModalCenter2",
-        data() {
-            return {
-                user: {
-                    userID: '',
-                    username: '',
-                    password: '',
-                    phone: '',
-                    email: '',
-                    address: '',
-                    userType: '',
-                    photo: ''
-                },
-                name: "",
-            }
-        },
-        methods: {
-            /*注册按钮的方法*/
-            addUser() {
-                console.log("点确定" + this.user.username + this.user.userID + this.user.password)
-                //将名字和密码存入localstorage中
-                localStorage.setItem("password", this.password)
-                localStorage.setItem("name", this.name);
-                //调用存储
-                if (this.user != null) {
-                    console.log("user不为空" + this.user.username + this.user.userID + this.user.password)
-                    if (this.user.username.length == 0) {
-                        alert("请您输入您的姓名！")
-                    } else if (this.user.password.length == 0) {
-                        alert("请您输入密码！")
-                    } else {
-                        axios.post("/user/register", this.user).then((res) => {
-                            if (res.data.code == 20011) {
-                                //将输入框清空
-                                this.name = "";
-                                this.password = "";
-                                location.href = "index.html"
-                            } else {
-                                alert(res.data.msg);
-                            }
-                        })
-                    }
-                }
-            }
-        }
-    })
 </script>
 </body>
 </html>

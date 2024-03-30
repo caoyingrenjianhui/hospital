@@ -20,7 +20,6 @@
     <link href="../css/fontawesome-all.min.css" rel="stylesheet">
     <link href="http://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">
     <link href="http://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900" rel="stylesheet">
-    <!-- //online-fonts -->
     <script src="../js/vue.js"></script>
     <script src="../element-ui/lib/index.js"></script>
     <link rel="stylesheet" href="../element-ui/lib/theme-chalk/index.css">
@@ -46,9 +45,6 @@
                         <span class="sr-only">(current)</span>
                     </a>
                 </li>
-                <li class="nav-item  mr-3 mt-lg-0 mt-3">
-                    <a class="nav-link" href="services.html">服务</a>
-                </li>
                 <li class="nav-item dropdown mr-3 mt-lg-0 mt-3">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                        data-toggle="dropdown" aria-haspopup="true"
@@ -62,7 +58,7 @@
                     </div>
                 </li>
                 <li class="nav-item dropdown active mr-3 mt-lg-0 mt-3" v-if="userType==2">
-                    <a class="nav-link dropdown-toggle" role="button"
+                    <a class="nav-link dropdown-toggle" role="button" href="#"
                        data-toggle="dropdown" aria-haspopup="true"
                        aria-expanded="false">
                         管理
@@ -73,13 +69,10 @@
                         <a class="dropdown-item" href="schedule.html">排班</a>
                     </div>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="contact.html">联系我们</a>
-                </li>
                 <li>
                     <a class="nav-link" href="login.html">登录</a>
                 </li>
-                <li><span class="nav-link" id="username"></span></li>
+                <li><a href="information.html" class="nav-link" id="username"></a></li>
             </ul>
         </div>
     </nav>
@@ -323,6 +316,9 @@
 </script>
 <script src="../js/SmoothScroll.min.js"></script>
 <script src="../js/bootstrap.js"></script>
+<script src="../js/SmoothScroll.min.js"></script>
+<script src="../js/bootstrap.js"></script>
+
 <script>
     new Vue({
         el: "#app",
