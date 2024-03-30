@@ -134,9 +134,6 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
         User selectById = userDao.selectById(userID);
         if (selectById.getPassword().equals(Md5Util.getMD5String(user.getOldPassword()))) {
             userDao.updatePassword(Md5Util.getMD5String(user.getPassword()), userID);
-//            删除redis中的token
-            ValueOperations<String, String> opsForValue = stringRedisTemplate.opsForValue();
-            opsForValue.getOperations().delete(token);
             return new Result(user, Code.UPDATE_OK, "密码修改成功");
         } else {
             return new Result(null, Code.UPDATE_ERR, "原密码不正确");

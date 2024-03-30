@@ -3,8 +3,11 @@ package com.example.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.controller.Code;
 import com.example.controller.Result;
+import com.example.dao.DoctorDao;
+import com.example.domain.Doctor;
 import com.example.domain.Schedule;
 import com.example.dao.ScheduleDao;
+import com.example.domain.UserType;
 import com.example.service.IScheduleService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +30,9 @@ public class ScheduleServiceImpl extends ServiceImpl<ScheduleDao, Schedule> impl
 
     @Autowired
     private ScheduleDao scheduleDao;
+
+    @Autowired
+    private DoctorDao doctorDao;
 
     @Override
     public Result selectWeeklySchedule() {
@@ -57,8 +63,22 @@ public class ScheduleServiceImpl extends ServiceImpl<ScheduleDao, Schedule> impl
         // 调用 MyBatis-Plus 的方法来查询一周内的排班信息
         QueryWrapper<Schedule> wrapper = new QueryWrapper<>();
         wrapper.between("shift_date", startDateStr, endDateStr);
-        wrapper.eq("doctorID",id);
+        wrapper.eq("doctorID", id);
         List<Schedule> schedules = scheduleDao.selectList(wrapper);
         return new Result(schedules, Code.GET_OK, "查询成功");
+    }
+
+    @Override
+    public Result createSchedule(Schedule schedule) {
+        Doctor doctor = doctorDao.selectById(schedule.getDoctorID());
+        if (doctor == null) {
+            return new Result(null, Code.SAVE_ERR, "新增失败，系统中无此医生");
+        }
+        int insert = scheduleDao.insert(schedule);
+        if (insert != 0) {
+            return new Result(doctor, Code.SAVE_OK, "新增成功");
+        } else {
+            return new Result(doctor, Code.SAVE_ERR, "新增失败，请联系管理员");
+        }
     }
 }

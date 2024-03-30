@@ -4,11 +4,7 @@ package com.example.controller;
 import com.example.domain.Schedule;
 import com.example.service.IScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -39,6 +35,11 @@ public class ScheduleController {
     public Result weeklyScheduleByDoctorID(@PathVariable Integer id) {
         // 调用 service 方法来查询一周内的排班信息
         return scheduleService.weeklyScheduleByDoctorID(id);
+    }
+
+    @PostMapping("/add")
+    public Result createSchedule(@RequestBody Schedule schedule) {
+        return scheduleService.createSchedule(schedule);
     }
 }
 

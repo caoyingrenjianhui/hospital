@@ -46,10 +46,6 @@ public class User implements Serializable {
     @TableLogic
     private Integer isdel;
 
-    private Integer identity;
-
-    private String photo;
-
     @TableField(exist = false)
     private String oldPassword;
 

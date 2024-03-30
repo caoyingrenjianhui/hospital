@@ -93,65 +93,62 @@
     <div id="app" style="margin-top: 100px">
         <template>
             <div>
-                <h1>医护人员排班</h1>
-                <input type="date" v-model="selectedDate">
+                <el-form :model="user" :inline="true" align="center">
+                    <el-form-item label="姓名">
+                        <el-input v-model="user.username" :disabled="!editing"></el-input>
+                    </el-form-item>
+                    <br>
+                    <el-form-item label="电话">
+                        <el-input v-model="user.phone" :disabled="!editing"></el-input>
+                    </el-form-item>
+                    <br>
+                    <el-form-item label="邮箱">
+                        <el-input v-model="user.email" :disabled="!editing"></el-input>
+                    </el-form-item>
+                    <br>
+                    <el-form-item label="地址">
+                        <el-input v-model="user.address" :disabled="!editing"></el-input>
+                    </el-form-item>
+                    <br>
+                    <el-form-item>
+                        <el-button v-if="!editing" type="primary" @click="toggleEditing">修改信息</el-button>
+                        <el-button v-else type="primary" @click="updateUser">保存</el-button>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="danger" @click="showChangePasswordDialog">修改密码</el-button>
+                    </el-form-item>
+                </el-form>
 
-                <button @click="fetchSchedule()">获取排班信息</button>
-
-                <ul v-if="schedule.length">
-                    <li v-for="person in schedule" :key="person.id">
-                        {{ person.name }} - {{ person.shift }}
-                    </li>
-                </ul>
+                <el-dialog title="修改密码" :visible.sync="changePasswordDialogVisible">
+                    <el-form ref="passwordForm" label-width="100px">
+                        <el-form-item label="原密码" prop="oldPassword">
+                            <el-input type="password" v-model="user.oldPassword"></el-input>
+                        </el-form-item>
+                        <el-form-item label="新密码" prop="newPassword">
+                            <el-input type="password" v-model="user.password"></el-input>
+                        </el-form-item>
+                        <el-form-item label="重复密码" prop="confirmPassword">
+                            <el-input type="password" v-model="user.rePassword"></el-input>
+                        </el-form-item>
+                    </el-form>
+                    <div slot="footer" class="dialog-footer">
+                        <el-button @click="changePasswordDialogVisible = false">取消</el-button>
+                        <el-button type="primary" @click="changePassword">确认修改</el-button>
+                    </div>
+                </el-dialog>
             </div>
         </template>
     </div>
 </section>
 
 
-<script>
-    new Vue({
-        el: "#app",
-        data() {
-            return {
-                selectedDate: '',
-                schedule: []
-            };
-        },
-        methods: {
-            fetchSchedule() {
-                axios({
-                    method: 'get',
-                    url: 'http://localhost:9080/schedule/weeklySchedule',
-                    headers: { // 设置请求头
-                        Authorization: localStorage.getItem("token")
-                    }
-                }).then(function (response) {
-                    this.schedule = response.data.data
-                });
-            }
-        }
-    });
-</script>
-
-<script>
+<script src="../js/jquery-2.2.3.min.js"></script>
+<script src="../js/jquery.chocolat.js"></script>
+<script type="text/javascript">
     $(function () {
-        $("#datepicker").datepicker();
+        $('.gallery-grid1 a').Chocolat();
     });
 </script>
-
-<script defer src="../js/jquery.flexslider.js"></script>
-<script>
-    $(window).load(function () {
-        $('.flexslider').flexslider({
-            animation: "slide",
-            start: function (slider) {
-                $('body').removeClass('loading');
-            }
-        });
-    });
-</script>
-
 <script src="../js/move-top.js"></script>
 <script src="../js/easing.js"></script>
 <script>
@@ -183,11 +180,89 @@
     }
 </script>
 <script src="../js/SmoothScroll.min.js"></script>
-
 <script src="../js/bootstrap.js"></script>
-<script src="../js/axios-0.18.0.js"></script>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="../js/vue.js"></script>
 
+<script>
+    new Vue({
+        el: "#app",
+        methods: {
+            toggleEditing() {
+                this.editing = !this.editing;
+            },
+            updateUser() {
+                axios({
+                    method: 'post',
+                    url: 'http://localhost:9080/user/update',
+                    data: this.user,
+                    headers: { // 设置请求头
+                        Authorization: localStorage.getItem("token")
+                    }
+                }).then(function (response) {
+                    if (response.data.code == 20031) {
+                        this.user = response.data.data
+                    } else {
+                        alert(response.data.msg)
+                    }
+                });
+                this.editing = false;
+            },
+            showChangePasswordDialog() {
+                this.changePasswordDialogVisible = true;
+                this.user.password = null
+            },
+            changePassword() {
+                axios({
+                    method: 'post',
+                    url: 'http://localhost:9080/user/updatePassword',
+                    data: this.user,
+                    headers: { // 设置请求头
+                        Authorization: localStorage.getItem("token")
+                    }
+                }).then(function (response) {
+                    if (response.data.code == 20031) {
+                        this.user = response.data.data
+                    } else {
+                        alert(response.data.msg)
+                    }
+                });
+            },
+        },
+        data() {
+            return {
+                administrator: localStorage.getItem('userType'),
+                userId: localStorage.getItem('userID'),
+                editing: false,
+                changePasswordDialogVisible: false,
+                user: {
+                    userID: '',
+                    username: '',
+                    phone: '',
+                    address: '',
+                    email: '',
+                    password: '',
+                    oldPassword: '',
+                    rePassword: '',
+                    createTime: '',
+                    modifyTime: ''
+                },
+            }
+        },
+        mounted: function () {
+            let _this = this;
+            axios({
+                method: 'get',
+                url: 'http://localhost:9080/user/userInfo',
+                headers: { // 设置请求头
+                    Authorization: localStorage.getItem("token")
+                }
+            }).then(function (response) {
+                _this.user = response.data.data
+            });
+        }
+    })
+</script>
+
+<script src="../js/SmoothScroll.min.js"></script>
+<script src="../js/bootstrap.js"></script>
 </body>
 </html>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zxx">
+<head>
+    <title>医护人员排班</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8"/>
+    <meta name="keywords" content=""/>
+    <script>
+        addEventListener("load", function () {
+            setTimeout(hideURLbar, 0);
+        }, false);
+
+        function hideURLbar() {
+            window.scrollTo(0, 1);
+        }
+    </script>
+    <!-- Custom Theme files -->
+    <link href="../css/bootstrap.css" type="text/css" rel="stylesheet" media="all">
+    <link href="../css/style.css" type="text/css" rel="stylesheet" media="all">
+    <!-- font-awesome icons -->
+    <link href="../css/fontawesome-all.min.css" rel="stylesheet">
+    <!-- //Custom Theme files -->
+    <link href="../css/minimal-slider.css" rel='stylesheet' type='text/css'/>
+    <link rel="stylesheet" href="../css/flexslider.css" type="text/css" media="screen" property=""/>
+    <!-- online-fonts -->
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900" rel="stylesheet">
+    <!-- //online-fonts -->
+    <script src="../js/vue.js"></script>
+    <script src="../element-ui/lib/index.js"></script>
+    <link rel="stylesheet" href="../element-ui/lib/theme-chalk/index.css">
+
+    <script src="../js/axios-0.18.0.js"></script>
+
+    <script type="text/javascript" src="../js/jquery-1.8.0.min.js"></script>
+    <script type="text/javascript" src="../js/jquery.superslide.2.1.1.js"></script>
+    <script type="text/javascript" src="../js/index.js"></script>
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-gradient-secondary">
+        <h1>
+            <a class="navbar-brand text-white" href="index.html">
+                百康诊所
+            </a>
+        </h1>
+        <button class="navbar-toggler ml-md-auto" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-lg-auto text-center">
+                <li class="nav-item active  mr-3 mt-lg-0 mt-3">
+                    <a class="nav-link" href="index.html">主页
+                        <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+                <li class="nav-item  mr-3 mt-lg-0 mt-3">
+                    <a class="nav-link" href="services.html">服务</a>
+                </li>
+                <li class="nav-item dropdown mr-3 mt-lg-0 mt-3">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown" aria-haspopup="true"
+                       aria-expanded="false">
+                        人员信息
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="doctor.html">医生</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="patient.html">患者</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown active mr-3 mt-lg-0 mt-3" v-if="userType==2">
+                    <a class="nav-link dropdown-toggle" role="button"
+                       data-toggle="dropdown" aria-haspopup="true"
+                       aria-expanded="false">
+                        管理
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="medicine.html">药品管理</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="schedule.html">排班</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="contact.html">联系我们</a>
+                </li>
+                <li>
+                    <a class="nav-link" href="login.html">登录</a>
+                </li>
+                <li><a href="" class="nav-link" id="username"></a></li>
+            </ul>
+        </div>
+    </nav>
+</header>
+<div class="inner-banner">
+</div>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="index.html">主页</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">排班</li>
+    </ol>
+</nav>
+<script src="../js/jquery-2.2.3.min.js"></script>
+<script src="../js/minimal-slider.js"></script>
+<link rel="stylesheet" href="../css/jquery-ui.css"/>
+<script src="../js/jquery-ui.js"></script>
+<section class="wthree-row w3-contact py-lg-5">
+    <div id="app" class="container py-4">
+        <template>
+            <div>
+                <h3>医护人员排班</h3>
+                <div>
+                    <button @click="fetchSchedule()">获取排班信息</button>
+                    <ul v-if="schedule.length">
+                        <li v-for="person in schedule" :key="person.id">
+                            {{ person.name }} - {{ person.shift }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </template>
+        <template>
+            <div>
+                <el-select v-model="schedule.doctorID" placeholder="请选择医生">
+                    <el-option
+                            v-for="doctor in doctors"
+                            :key="doctor.doctorID"
+                            :label="doctor.name"
+                            :value="doctor.doctorID"
+                    ></el-option>
+                </el-select>
+                <el-date-picker v-model="schedule.selectedDate" type="date" placeholder="选择排班日期"></el-date-picker>
+                <el-select v-model="schedule.selectedShiftType" placeholder="选择班次类型">
+                    <el-option label="上午班" value="Morning"></el-option>
+                    <el-option label="下午班" value="Afternoon"></el-option>
+                </el-select>
+                <el-button type="primary" @click="submitSchedule">提交排班</el-button>
+            </div>
+        </template>
+    </div>
+</section>
+
+
+<script>
+    new Vue({
+        el: "#app",
+        data() {
+            return {
+                selectedDate: '',
+                schedule: {},
+                doctors: [] // 从后端获取的医生列表
+            };
+        },
+        methods: {
+            //重置查询
+            onReset() {
+                this.schedule = {}
+                this.fetchSchedule()
+            },
+            fetchSchedule() {
+                axios({
+                    method: 'get',
+                    url: 'http://localhost:9080/schedule/weeklySchedule',
+                    headers: { // 设置请求头
+                        Authorization: localStorage.getItem("token")
+                    }
+                }).then(function (response) {
+                    this.schedule = response.data.data
+                });
+            },
+            submitSchedule() {
+                axios({
+                    method: 'post',
+                    url: 'http://localhost:9080/schedule/add',
+                    data: this.schedule,
+                    headers: { // 设置请求头
+                        Authorization: localStorage.getItem("token")
+                    }
+                }).then(function (response) {
+                    if (response.data.code == 20011) {
+                        this.onReset()
+                    } else {
+                        alert(response.data.msg)
+                    }
+                });
+            }
+        },
+        mounted: function () {
+            let _this = this;
+            axios({
+                method: 'get',
+                url: 'http://localhost:9080/doctor/getAll',
+                headers: { // 设置请求头
+                    Authorization: localStorage.getItem("token")
+                }
+                // responseType: 'stream'
+            }).then(function (response) {
+                _this.doctors = response.data.data
+            });
+        }
+    });
+</script>
+
+<script>
+    $(function () {
+        $("#datepicker").datepicker();
+    });
+</script>
+
+<script defer src="../js/jquery.flexslider.js"></script>
+<script>
+    $(window).load(function () {
+        $('.flexslider').flexslider({
+            animation: "slide",
+            start: function (slider) {
+                $('body').removeClass('loading');
+            }
+        });
+    });
+</script>
+
+<script src="../js/move-top.js"></script>
+<script src="../js/easing.js"></script>
+<script>
+    jQuery(document).ready(function ($) {
+        $(".scroll").click(function (event) {
+            event.preventDefault();
+
+            $('html,body').animate({
+                scrollTop: $(this.hash).offset().top
+            }, 1000);
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $().UItoTop({
+            easingType: 'easeOutQuart'
+        });
+
+    });
+    // 从 localStorage 中获取用户名
+    const username = localStorage.getItem('name');
+    console.log(localStorage.getItem('name'))
+    // 显示用户名在页面上
+    if (username != null) {
+        document.getElementById('username').textContent = username;
+    } else {
+        document.getElementById('username').textContent = 'Guest';
+    }
+</script>
+<script src="../js/SmoothScroll.min.js"></script>
+
+<script src="../js/bootstrap.js"></script>
+<script src="../js/axios-0.18.0.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="../js/vue.js"></script>
+
+</body>
+</html>
