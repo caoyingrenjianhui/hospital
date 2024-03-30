@@ -39,6 +39,9 @@ public class MedicinesServiceImpl extends ServiceImpl<MedicinesDao, Medicines> i
         medicines.setCreateTime(LocalDate.now().toString());
         Map<String, Object> map = ThreadLocalUtil.get();
         medicines.setUserID((String) map.get("userID"));
+        if (medicinesDao.selectById(medicines.getMedicineID()) == null) {
+            return new Result(medicines, Code.SAVE_ERR, "新增失败，已有此ID的药品");
+        }
         int insert = medicinesDao.insert(medicines);
         if (insert != 0) {
             return new Result(medicines, Code.SAVE_OK, "新增成功");

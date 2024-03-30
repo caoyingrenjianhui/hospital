@@ -14,21 +14,16 @@
             window.scrollTo(0, 1);
         }
     </script>
-    <!-- Custom Theme files -->
     <link href="../css/bootstrap.css" type="text/css" rel="stylesheet" media="all">
     <link href="../css/style.css" type="text/css" rel="stylesheet" media="all">
-    <link rel="stylesheet" href="../css/chocolat.css" type="text/css" media="screen"><!-- //Gallery Css -->
-    <!-- font-awesome icons -->
+    <link rel="stylesheet" href="../css/chocolat.css" type="text/css" media="screen">
     <link href="../css/fontawesome-all.min.css" rel="stylesheet">
-    <!-- //Custom Theme files -->
-    <!-- online-fonts -->
     <link href="http://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">
     <link href="http://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900" rel="stylesheet">
     <!-- //online-fonts -->
     <script src="../js/vue.js"></script>
     <script src="../element-ui/lib/index.js"></script>
     <link rel="stylesheet" href="../element-ui/lib/theme-chalk/index.css">
-
     <script src="../js/axios-0.18.0.js"></script>
 </head>
 <body>
@@ -36,7 +31,7 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-gradient-secondary">
         <h1>
             <a class="navbar-brand text-white" href="index.html">
-                Alleviating
+                百康诊所
             </a>
         </h1>
         <button class="navbar-toggler ml-md-auto" type="button" data-toggle="collapse"
@@ -98,44 +93,32 @@
                 <el-form :inline="true" :model="medicine" class="demo-form-inline" style="margin-left: 20px">
 
                     <el-form-item label="根据药品ID搜索">
-                        <el-input v-model="medicine.medicineID" placeholder="根据标题搜索"></el-input>
+                        <el-input v-model="medicine.medicineID" placeholder="ID"></el-input>
                     </el-form-item>
                     <el-form-item label="根据药品名称搜索">
-                        <el-input v-model="medicine.name" placeholder="根据名称搜索"></el-input>
+                        <el-input v-model="medicine.name" placeholder="名称"></el-input>
                     </el-form-item>
 
                     <el-form-item label="供货商">
-                        <el-input v-model="medicine.supplier" placeholder="状态">
+                        <el-input v-model="medicine.supplier" placeholder="供货商">
                         </el-input>
                     </el-form-item>
 
                     <el-form-item label="产地">
-                        <el-input v-model="medicine.address" placeholder="姓名">
+                        <el-input v-model="medicine.address" placeholder="产地">
                         </el-input>
-                        <!--                        <select slot-scope="scope" v-model="patient.user.username" placeholder="姓名">-->
-                        <!--                            <option v-for="classify in classifies" @click="patient.cid=scope.row.classify">-->
-                        <!--                                {{classify.classify}}-->
-                        <!--                            </option>-->
-                        <!--                        </select>-->
                     </el-form-item>
-
-                    <!--                    <el-form-item label="地点">-->
-                    <!--                        <select slot-scope="scope" v-model="card.lid" placeholder="地点">-->
-                    <!--                            <option v-for="location in locations" @click="card.lid=scope.row.location">-->
-                    <!--                                {{location.location}}-->
-                    <!--                            </option>-->
-                    <!--                        </select>-->
-                    <!--                    </el-form-item>-->
 
                     <el-form-item>
                         <el-button type="primary" @click="onSubmit">查询</el-button>
                         <el-button type="primary" @click="onReset">重置</el-button>
-                        <!--按钮-->
-                        <!--        <el-button type="danger" plain>批量删除</el-button>-->
-                        <el-button type="primary" plain @click="xinzeng">新增</el-button>
+                        <el-button type="primary" href="#" data-toggle="modal" data-target="#add"
+                                   @click="beforeAdd">
+                            新增
+                        </el-button>
                     </el-form-item>
                 </el-form>
-
+                <!--内容-->
                 <el-table
                         :data="medicines"
                         style="width: 100%"
@@ -192,23 +175,10 @@
                             align="center"
                     >
                     </el-table-column>
-                    <!--            <el-table-column-->
-                    <!--                    align="center"-->
-                    <!--                    label="图片">-->
-                    <!--                <template slot-scope="scope">-->
-                    <!--                    <img :src="scope.row.tphoto" width="100" height="100" alt="暂无图片" class="head_pic"/>-->
-                    <!--                    &lt;!&ndash;                    <el-button @click="Visible = true,tid=scope.row.tid">修改图片</el-button>&ndash;&gt;-->
-                    <!--                </template>-->
-                    <!--            </el-table-column>-->
-
                     <el-table-column
                             prop="userID"
                             align="center"
                             label="入库人ID">
-                        <!--                <template slot-scope="scope">-->
-                        <!--                    <el-row v-if="scope.row.lose==false">拾取</el-row>-->
-                        <!--                    <el-row v-if="scope.row.lose==true">丢失</el-row>-->
-                        <!--                </template>-->
                     </el-table-column>
 
                     <el-table-column
@@ -216,16 +186,6 @@
                             align="center"
                             label="入库人姓名">
                     </el-table-column>
-
-                    <!--                    <el-table-column-->
-                    <!--                            prop="medicine"-->
-                    <!--                            align="center"-->
-                    <!--                            label="用药">-->
-                    <!--                        &lt;!&ndash;                <template slot-scope="scope">&ndash;&gt;-->
-                    <!--                        &lt;!&ndash;                    <el-row v-if="scope.row.isfinish==false">未寻回</el-row>&ndash;&gt;-->
-                    <!--                        &lt;!&ndash;                    <el-row v-if="scope.row.isfinish==true">已寻回</el-row>&ndash;&gt;-->
-                    <!--                        &lt;!&ndash;                </template>&ndash;&gt;-->
-                    <!--                    </el-table-column>-->
 
                     <el-table-column
                             prop="createTime"
@@ -249,12 +209,70 @@
                             align="center"
                             label="操作">
                         <el-row slot-scope="scope">
-                            <el-button type="primary" @click="update(scope.row.sid)">编辑</el-button>
+                            <el-button type="primary" data-toggle="modal" data-target="#add"
+                                       @click="beforeUpdate(scope.row)">编辑
+                            </el-button>
                             <br><br>
-                            <el-button type="primary" @click="delete(scope.row.tid)">删除</el-button>
+                            <el-button type="primary" @click="delete(scope.row)">删除</el-button>
                         </el-row>
                     </el-table-column>
                 </el-table>
+                <!--新增,编辑-->
+                <div class="modal fade" id="add" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">新增药品</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label class="col-form-label">药品ID</label>
+                                    <input type="number" class="form-control" v-model="medicine.medicineID"
+                                           placeholder=" "
+                                           name="Name"
+                                           required="">
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-form-label">药品名称</label>
+                                    <input type="text" class="form-control" v-model="medicine.name" placeholder=" "
+                                           name="Password"
+                                           required="">
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-form-label">入库数量</label>
+                                    <input type="number" class="form-control" v-model="medicine.count" placeholder=" "
+                                           name="Password"
+                                           required="">
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-form-label">产地</label>
+                                    <input type="text" class="form-control" v-model="medicine.address" placeholder=" "
+                                           name="Password"
+                                           required="">
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-form-label">供应商</label>
+                                    <input type="text" class="form-control" v-model="medicine.supplier" placeholder=" "
+                                           name="Password"
+                                           required="">
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-form-label">价格</label>
+                                    <input type="number" class="form-control" v-model="medicine.price" placeholder=" "
+                                           name="Password"
+                                           required="">
+                                </div>
+                                <div class="right-w3l">
+                                    <input @click="addMedicine" type="submit" class="form-control" value="确定">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </template>
         </div>
     </div>
@@ -315,30 +333,6 @@
             // 复选框选中后执行的方法
             handleSelectionChange(val) {
                 this.multipleSelection = val;
-
-                console.log(this.multipleSelection)
-            },
-            //新增
-            xinzeng() {
-                if (this.name1 != '') {
-                    this.dialogVisible = true
-                } else {
-                    alert("您还未登录")
-                    location.href = "login.html"
-                }
-            },
-            //查看发帖人信息
-            chakan(sid) {
-                console.log(sid)
-                let _this = this
-                axios({
-                    method: 'get',
-                    url: 'http://localhost:9080/users/' + sid,
-                }).then(function (response) {
-                    _this.user = response.data.data
-                });
-                this.Visible1 = true
-                console.log(this.name1)
             },
             // 查询方法
             onSubmit() {
@@ -346,86 +340,91 @@
                     //如果成功，跳转到登录
                     if (res.data.code == 20041) {
                         this.medicines = res.data.data;
-                    }else {
+                    } else {
                         alert(res.data.msg)
                     }
                 })
             },
             //重置查询
             onReset() {
-                location.reload()
+                this.beforeAdd()
                 this.onSubmit()
             },
-            // 新增帖子
-            // addCard() {
-            //     let _this = this;
-            //     console.log(this.card);
-            //     if (this.name1.length != 0) {
-            //         if (this.card.title.length != 0) {
-            //             axios.post("/cards", this.card).then((res) => {
-            //                 console.log("正在新增" + res.data.msg)
-            //                 if (res.data.code == 20011) {
-            //                     alert("新增成功")
-            //                     _this.dialogVisible = false
-            //                     location.href = "http://localhost:9080/pages/about.html"
-            //                 } else if (res.data.code == 20010) {
-            //                     alert(res.data.msg)
-            //                 } else {
-            //                     alert("其他错误")
-            //                 }
-            //             })
-            //         } else {
-            //             alert("请您填写标题")
-            //         }
-            //     } else {
-            //         alert("您还未登录")
-            //         location.href = "http://localhost:9080/pages/login.html"
-            //     }
-            // },
-            //修改
-            xiugai(tid) {
+            beforeAdd() {
+                this.medicine.medicineID = null
+                this.medicine.name = null
+                this.medicine.supplier = null
+                this.medicine.address = null
+                this.medicine.count = null
+                this.medicine.useCount = null
+                this.medicine.symptoms = null
+                this.medicine.userID = null
+                this.medicine.user = null
+                this.medicine.createTime = null
+                this.medicine.modifyTime = null
+                this.medicine.price = null
+                this.updateFlag = 0
+            },
+            addMedicine() {
+                let _this = this
+                if (_this.updateFlag == 1) {
+                    axios({
+                        method: 'post',
+                        url: 'http://localhost:9080/medicine/update' + this.medicine,
+                        headers: { // 设置请求头
+                            Authorization: localStorage.getItem("token")
+                        }
+                    }).then(function (response) {
+                        if (response.data.code == 20031) {
+                            this.onReset()
+                        } else {
+                            alert(response.data.msg)
+                        }
+                    });
+                } else {
+                    axios({
+                        method: 'post',
+                        url: 'http://localhost:9080/medicine/add' + this.medicine,
+                        headers: { // 设置请求头
+                            Authorization: localStorage.getItem("token")
+                        }
+                    }).then(function (response) {
+                        if (response.data.code == 20011) {
+                            _this.onReset()
+                        } else {
+                            alert(response.data.msg)
+                        }
+                    });
+                }
+            },
+            beforeUpdate(rowDate) {
+                this.medicine = rowDate
+                this.updateFlag = 1
+            },
+            delete(medicineID) {
                 let _this = this
                 axios({
-                    method: 'get',
-                    url: 'http://localhost:9080/cards/sel/' + tid,
-                }).then(function (response) {
-                    console.log("发送成功")
-                    _this.upcard = response.data.data
-                    _this.upcard.gaifou = '1';
-                });
-                this.visible = true
-            },
-            //修改帖子
-            updateCard() {
-                let _this = this
-                console.log(this.upcard)
-                axios.put("/cards", this.upcard).then((res) => {
-                    console.log("修改")
-                    if (res.data.code == 20031) {
-                        alert(res.data.msg)
-                        _this.visible = false
-                        //刷新页面
-                        location.reload()
-                    } else if (res.data.code == 20030) {
-                        alert(res.data.msg)
-                    } else {
-                        alert("其他错误")
+                    method: 'delete',
+                    url: 'http://localhost:9080/medicine/delete/' + medicineID,
+                    headers: { // 设置请求头
+                        Authorization: localStorage.getItem("token")
                     }
-                })
-            },
+                }).then(function (response) {
+                    if (response.data.code == 20021) {
+                        _this.onSubmit()
+                    } else {
+                        alert(response.data.msg)
+                    }
+                });
+            }
         },
         data() {
             return {
                 administrator: localStorage.getItem('userType'),
                 userId: localStorage.getItem('userID'),
+                updateFlag: 0,
                 // 当前页码
                 currentPage: 1,
-                // 添加数据对话框是否展示的标记
-                dialogVisible: false,
-                // 添加数据对话框是否展示的标记
-                Visible: false,
-                visible: false,
-                Visible1: false,
                 // 复选框选中数据集合
                 multipleSelection: [],
                 // 表格数据
@@ -438,7 +437,7 @@
                     symptoms: '',
                     supplier: '',
                     userID: '',
-                    user:{},
+                    user: {},
                     createTime: '',
                     modifyTime: '',
                     price: ''
@@ -452,13 +451,11 @@
                     symptoms: '',
                     supplier: '',
                     userID: '',
-                    user:{},
+                    user: {},
                     createTime: '',
                     modifyTime: '',
                     price: ''
-                },
-                classifies: [],
-                locations: [],
+                }
             }
         },
         mounted: function () {
@@ -471,27 +468,8 @@
                 }
                 // responseType: 'stream'
             }).then(function (response) {
-                console.log("发送成功")
-                //前边的data和后边的data不同，后边的data才自己自定义的
-                console.log(response.data.data)
                 _this.medicines = response.data.data
             });
-            //获取地点
-            axios({
-                method: 'get',
-                url: 'http://localhost:9080/locations',
-            }).then(function (response) {
-                _this.locations = response.data.data
-            });
-            //获取物品类别
-            console.log(this.classifies)
-            axios({
-                method: 'get',
-                url: 'http://localhost:9080/classify',
-            }).then(function (response) {
-                _this.classifies = response.data.data
-            });
-            console.log("classifies" + this.classifies)
         }
     })
 </script>
