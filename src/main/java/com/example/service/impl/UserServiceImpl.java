@@ -4,6 +4,7 @@ import com.example.controller.Code;
 import com.example.controller.Result;
 import com.example.dao.UserDao;
 import com.example.domain.User;
+import com.example.domain.UserType;
 import com.example.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.utils.JwtUtil;
@@ -43,7 +44,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
         if (byId != null) {
             return new Result(user, Code.SAVE_ERR, "此学号已经注册过");
         }
-        if (user.getPhone()==null) {
+        if (user.getPhone() == null) {
             return new Result(user, Code.SAVE_ERR, "请输入手机号");
         }
         if (!user.getPassword().equals(user.getRePassword())) {
@@ -57,6 +58,8 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
         }
         user.setPassword(md5String);
         user.setCreateTime(LocalDate.now().toString());
+        user.setUserType(UserType.common.getCode());
+        user.setIsdel(0);
         int insert = userDao.insert(user);
         if (insert != 0) {
             return new Result(user, Code.SAVE_OK, "注册成功");

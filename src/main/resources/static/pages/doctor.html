@@ -14,11 +14,7 @@
     <script src="../js/vue.js"></script>
     <script src="../element-ui/lib/index.js"></script>
     <link rel="stylesheet" href="../element-ui/lib/theme-chalk/index.css">
-
     <script src="../js/axios-0.18.0.js"></script>
-
-    <script type="text/javascript" src="../js/jquery-1.8.0.min.js"></script>
-    <script type="text/javascript" src="../js/jquery.superslide.2.1.1.js"></script>
 </head>
 <body>
 <header>
@@ -83,6 +79,54 @@
     <div id="app" class="container py-4">
         <div>
             <template style="margin-top: 200px" v-if=administrator!=1>
+                <!--搜索表单-->
+                <el-form :inline="true" :model="doctor" class="demo-form-inline" style="margin-left: 20px">
+
+                    <el-form-item label="根据医生ID搜索">
+                        <el-input v-model="doctor.doctorID" placeholder="医生ID"></el-input>
+                    </el-form-item>
+
+                    <el-form-item label="身份证号">
+                        <el-input v-model="doctor.userID" placeholder="身份证号">
+                        </el-input>
+                    </el-form-item>
+
+                    <el-form-item label="姓名">
+                        <el-input v-model="doctor.user.username" placeholder="姓名">
+                        </el-input>
+                    </el-form-item>
+
+                    <el-form-item label="科室">
+                        <el-select v-model="doctor.department" placeholder="科室">
+                            <!--                            <el-option-->
+                            <!--                                    v-for="department in departments"-->
+                            <!--                                    :key="department.code"-->
+                            <!--                                    :label="department.name"-->
+                            <!--                                    :value="department.code">-->
+                            <!--                            </el-option>-->
+                            <el-option value="神经科">神经科</el-option>
+                            <el-option value="牙科">牙科</el-option>
+                            <el-option value="心脏病学">心脏病学</el-option>
+                            <el-option value="小儿科">小儿科</el-option>
+                            <el-option value="肺病学">肺病学</el-option>
+                            <el-option value="眼科学">眼科学</el-option>
+                            <el-option value="诊断">诊断</el-option>
+                            <el-option value="创伤学">创伤学</el-option>
+                        </el-select>
+                    </el-form-item>
+
+                    <el-form-item>
+                        <el-button type="primary" @click="onSubmit">查询</el-button>
+                        <el-button type="primary" @click="onReset">重置</el-button>
+                        <!--按钮-->
+                        <!--        <el-button type="danger" plain>批量删除</el-button>-->
+                        <el-button type="primary" data-toggle="modal" data-target="#add"
+                                   @click="beforeAdd">
+                            新增
+                        </el-button>
+                    </el-form-item>
+                </el-form>
+
                 <el-table
                         :data="doctors"
                         style="width: 100%"
@@ -128,33 +172,17 @@
                             align="center"
                     >
                     </el-table-column>
-                    <!--            <el-table-column-->
-                    <!--                    align="center"-->
-                    <!--                    label="图片">-->
-                    <!--                <template slot-scope="scope">-->
-                    <!--                    <img :src="scope.row.tphoto" width="100" height="100" alt="暂无图片" class="head_pic"/>-->
-                    <!--                    &lt;!&ndash;                    <el-button @click="Visible = true,tid=scope.row.tid">修改图片</el-button>&ndash;&gt;-->
-                    <!--                </template>-->
-                    <!--            </el-table-column>-->
 
                     <el-table-column
                             prop="department"
                             align="center"
                             label="科室">
-                        <!--                <template slot-scope="scope">-->
-                        <!--                    <el-row v-if="scope.row.lose==false">拾取</el-row>-->
-                        <!--                    <el-row v-if="scope.row.lose==true">丢失</el-row>-->
-                        <!--                </template>-->
                     </el-table-column>
 
                     <el-table-column
                             prop="specialization"
                             align="center"
                             label="擅长">
-                        <!--                <template slot-scope="scope">-->
-                        <!--                    <el-row v-if="scope.row.isfinish==false">未寻回</el-row>-->
-                        <!--                    <el-row v-if="scope.row.isfinish==true">已寻回</el-row>-->
-                        <!--                </template>-->
                     </el-table-column>
 
                     <el-table-column
@@ -173,14 +201,16 @@
                             align="center"
                             label="操作">
                         <el-row slot-scope="scope">
-                            <el-button type="primary" href="#" data-toggle="modal" data-target="#appointment"
-                               @click="appointment(scope.row.sid)"
-                               class="text-secondary">
-                                预约</el-button>
+                            <el-button type="primary" data-toggle="modal" data-target="#appointment"
+                                       @click="beforeAppointment(scope.row.sid)">
+                                预约
+                            </el-button>
                             <br><br>
-                            <el-button type="primary" @click="update(scope.row.sid)">编辑</el-button>
+                            <el-button type="primary" data-toggle="modal" data-target="#add"
+                                       @click="beforeUpdate(scope.row)">编辑
+                            </el-button>
                             <br><br>
-                            <el-button type="primary" @click="delete(scope.row.tid)">删除</el-button>
+                            <el-button type="primary" @click="delete(scope.row.doctorID)">删除</el-button>
                         </el-row>
                     </el-table-column>
                 </el-table>
@@ -189,23 +219,36 @@
                 <div v-for="doctor in doctors">
                     <div v-if="doctor.userID==userId">
                         <el-form :inline="true" align="center">
-<!--                            <img :src="getsrc(user)" width="200" height="200" alt="暂无图片"/><br><br>-->
-                            <el-button @click="Visible = true">修改图片</el-button><br><br>
-<!--                            <el-form-item label="身份证号">-->
-<!--                                <p><el-input v-model="user.sid" disabled></el-input></p>-->
-<!--                            </el-form-item><br>-->
+                            <!--                            <img :src="getsrc(user)" width="200" height="200" alt="暂无图片"/><br><br>-->
+                            <el-button @click="Visible = true">修改图片</el-button>
+                            <br><br>
+                            <!--                            <el-form-item label="身份证号">-->
+                            <!--                                <p><el-input v-model="user.sid" disabled></el-input></p>-->
+                            <!--                            </el-form-item><br>-->
                             <el-form-item label="姓名">
-                                <p><el-input v-model="doctor.user.username" disabled></el-input></p>
-                            </el-form-item><br>
+                                <p>
+                                    <el-input v-model="doctor.user.username" disabled></el-input>
+                                </p>
+                            </el-form-item>
+                            <br>
                             <el-form-item label="电话">
-                                <p><el-input v-model="doctor.user.phone" disabled></el-input></p>
-                            </el-form-item><br>
+                                <p>
+                                    <el-input v-model="doctor.user.phone" disabled></el-input>
+                                </p>
+                            </el-form-item>
+                            <br>
                             <el-form-item label="邮箱">
-                                <p><el-input v-model="doctor.user.email" disabled></el-input></p>
-                            </el-form-item><br>
+                                <p>
+                                    <el-input v-model="doctor.user.email" disabled></el-input>
+                                </p>
+                            </el-form-item>
+                            <br>
                             <el-form-item label="密码">
-                                <p><el-input type="password" v-model="doctor.user.password" disabled></el-input></p><br>
-<!--                                <el-button type="primary" @click="xiugai()">修改信息</el-button>-->
+                                <p>
+                                    <el-input type="password" v-model="doctor.user.password" disabled></el-input>
+                                </p>
+                                <br>
+                                <!--                                <el-button type="primary" @click="xiugai()">修改信息</el-button>-->
                             </el-form-item>
                         </el-form>
                     </div>
@@ -213,34 +256,93 @@
             </div>
         </div>
 
-        <div class="modal fade" id="appointment" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header text-center">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div>
-                    <h3>预约</h3>
-                    <!-- stats -->
-                    <div class="stats">
-                        <div class="stats_inner">
-                            <input class="form-control date mb-3" id="datepicker" name="Text"
-                                   placeholder="日期" type="text" required="">
-                            <button type="submit" class="btn btn-agile btn-block w-100">预约</button>
+        <div class="modal fade" id="add" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" v-if="updateFlag==0">新增医生</h5>
+                        <h5 class="modal-title" v-else>编辑医生</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group" v-if="updateFlag==0">
+                            <label class="col-form-label">医生身份证号</label>
+                            <input type="text" class="form-control" v-model="doctor.doctorID" placeholder=" "
+                                   required="">
+                        </div>
+                        <div class="form-group">
+                            <el-select v-model="doctor.department" placeholder="科室">
+                                <el-option value="神经科">神经科</el-option>
+                                <el-option value="牙科">牙科</el-option>
+                                <el-option value="心脏病学">心脏病学</el-option>
+                                <el-option value="小儿科">小儿科</el-option>
+                                <el-option value="肺病学">肺病学</el-option>
+                                <el-option value="眼科学">眼科学</el-option>
+                                <el-option value="诊断">诊断</el-option>
+                                <el-option value="创伤学">创伤学</el-option>
+                            </el-select>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-form-label">擅长</label>
+                            <input type="text" class="form-control" v-model="doctor.specialization" placeholder=" "
+                                   name="Password"
+                                   required="">
+                        </div>
+                        <div class="right-w3l">
+                            <input @click="addDoctor" type="submit" class="form-control" value="确定">
                         </div>
                     </div>
-                    <!-- //stats -->
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="appointment" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header text-center">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div>
+                        <h3>预约</h3>
+                        <div class="stats">
+                            <select class="form-control date mb-3" v-model="appointment.appointmentDate" required="">
+                                <option v-for="date in availableDates" :key="date" :value="date">{{ date }}</option>
+                            </select>
+                            <button type="submit" @click="appointment" class="btn btn-agile btn-block w-100">预约</button>
+                        </div>
+                    </div>
 
                 </div>
-
             </div>
         </div>
     </div>
-    </div>
 </section>
 
+
+<script src="../js/jquery-2.2.3.min.js"></script>
+<script src="../js/jquery.chocolat.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $('.gallery-grid1 a').Chocolat();
+    });
+</script>
+<script src="../js/move-top.js"></script>
+<script src="../js/easing.js"></script>
+<script>
+    jQuery(document).ready(function ($) {
+        $(".scroll").click(function (event) {
+            event.preventDefault();
+
+            $('html,body').animate({
+                scrollTop: $(this.hash).offset().top
+            }, 1000);
+        });
+    });
+</script>
 <script>
     $(document).ready(function () {
         $().UItoTop({
@@ -251,16 +353,15 @@
     // 从 localStorage 中获取用户名
     const username = localStorage.getItem('name');
     console.log(localStorage.getItem('name'))
-    console.log(localStorage.getItem('userID'))
-    console.log(localStorage.getItem('userType'))
     // 显示用户名在页面上
     if (username != null) {
         document.getElementById('username').textContent = username;
     } else {
         document.getElementById('username').textContent = 'Guest';
     }
-
 </script>
+<script src="../js/SmoothScroll.min.js"></script>
+<script src="../js/bootstrap.js"></script>
 
 <script>
     new Vue({
@@ -277,149 +378,135 @@
             // 复选框选中后执行的方法
             handleSelectionChange(val) {
                 this.multipleSelection = val;
-
-                console.log(this.multipleSelection)
             },
-            //新增
-            xinzeng() {
-                if (this.name1 != '') {
-                    this.dialogVisible = true
-                } else {
-                    alert("您还未登录")
-                    location.href = "login.html"
-                }
-            },
-            //查看发帖人信息
-            chakan(sid) {
-                console.log(sid)
-                let _this = this
+            //查询可预约的时间
+            beforeAppointment(doctorID) {
                 axios({
                     method: 'get',
-                    url: 'http://localhost:9080/users/' + sid,
+                    url: 'http://localhost:9080/schedule/weeklyScheduleByDoctorID/' + doctorID,
+                    headers: { // 设置请求头
+                        Authorization: localStorage.getItem("token")
+                    }
                 }).then(function (response) {
-                    _this.user = response.data.data
+                    if (response.data.code == 20041) {
+                        this.availableDates = response.data.data
+                    } else {
+                        alert(response.data.msg)
+                    }
                 });
-                this.Visible1 = true
-                console.log(this.name1)
+            },
+            appointment() {
+                axios({
+                    method: 'post',
+                    url: 'http://localhost:9080/appointments/add',
+                    data:  this.appointment,
+                    headers: { // 设置请求头
+                        Authorization: localStorage.getItem("token")
+                    }
+                }).then(function (response) {
+                    if (response.data.code == 20011) {
+                        this.onReset()
+                    } else {
+                        alert(response.data.msg)
+                    }
+                });
             },
             // 查询方法
             onSubmit() {
-                console.log(this.card);
-                axios.post("/cards/sel", this.card).then((res) => {
-                    console.log("查询成功")
+                axios.post("/medicines/select", this.medicine).then((res) => {
                     //如果成功，跳转到登录
                     if (res.data.code == 20041) {
-                        if (this.cards == null) {
-                            alert("未搜索到")
-                        } else {
-                            this.cards = res.data.data;
-                        }
+                        this.medicines = res.data.data;
+                    } else {
+                        alert(res.data.msg)
                     }
                 })
             },
             //重置查询
             onReset() {
-                console.log("重置")
-                location.reload()
+                this.beforeAdd()
+                this.onSubmit()
             },
-            // 新增帖子
-            // addCard() {
-            //     let _this = this;
-            //     console.log(this.card);
-            //     if (this.name1.length != 0) {
-            //         if (this.card.title.length != 0) {
-            //             axios.post("/cards", this.card).then((res) => {
-            //                 console.log("正在新增" + res.data.msg)
-            //                 if (res.data.code == 20011) {
-            //                     alert("新增成功")
-            //                     _this.dialogVisible = false
-            //                     location.href = "http://localhost:9080/pages/about.html"
-            //                 } else if (res.data.code == 20010) {
-            //                     alert(res.data.msg)
-            //                 } else {
-            //                     alert("其他错误")
-            //                 }
-            //             })
-            //         } else {
-            //             alert("请您填写标题")
-            //         }
-            //     } else {
-            //         alert("您还未登录")
-            //         location.href = "http://localhost:9080/pages/login.html"
-            //     }
-            // },
-            //修改
-            xiugai(tid) {
+            beforeAdd() {
+                this.updateFlag = 0
+                this.availableDates = []
+                this.appointment = {}
+                this.doctor.doctorID = null
+                this.doctor.userID = null
+                this.doctor.user = {}
+                this.doctor.department = null
+                this.doctor.specialization = null
+                this.doctor.createTime = null
+                this.doctor.modifyTime = null
+            },
+            beforeUpdate(rowDate) {
+                this.doctor = rowDate
+                this.updateFlag = 1
+            },
+            addDoctor() {
+                let _this = this
+                if (_this.updateFlag == 1) {
+                    axios({
+                        method: 'post',
+                        url: 'http://localhost:9080/doctor/update' ,
+                        data: this.doctor,
+                        headers: { // 设置请求头
+                            Authorization: localStorage.getItem("token")
+                        }
+                    }).then(function (response) {
+                        if (response.data.code == 20031) {
+                            this.onReset()
+                        } else {
+                            alert(response.data.msg)
+                        }
+                    });
+                } else {
+                    axios({
+                        method: 'post',
+                        url: 'http://localhost:9080/doctor/add',
+                        data: this.doctor,
+                        headers: { // 设置请求头
+                            Authorization: localStorage.getItem("token")
+                        }
+                    }).then(function (response) {
+                        if (response.data.code == 20011) {
+                            _this.onReset()
+                        } else {
+                            alert(response.data.msg)
+                        }
+                    });
+                }
+            },
+            beforeUpdate(rowDate) {
+                this.doctor = rowDate
+                this.updateFlag = 1
+            },
+            delete(doctorID) {
                 let _this = this
                 axios({
-                    method: 'get',
-                    url: 'http://localhost:9080/cards/sel/' + tid,
-                }).then(function (response) {
-                    console.log("发送成功")
-                    _this.upcard = response.data.data
-                    _this.upcard.gaifou = '1';
-                });
-                this.visible = true
-            },
-            //修改帖子
-            updateCard() {
-                let _this = this
-                console.log(this.upcard)
-                axios.put("/cards", this.upcard).then((res) => {
-                    console.log("修改")
-                    if (res.data.code == 20031) {
-                        alert(res.data.msg)
-                        _this.visible = false
-                        //刷新页面
-                        location.reload()
-                    } else if (res.data.code == 20030) {
-                        alert(res.data.msg)
-                    } else {
-                        alert("其他错误")
+                    method: 'delete',
+                    url: 'http://localhost:9080/medicine/delete/' + doctorID,
+                    headers: { // 设置请求头
+                        Authorization: localStorage.getItem("token")
                     }
-                })
-            },
+                }).then(function (response) {
+                    if (response.data.code == 20021) {
+                        _this.onSubmit()
+                    } else {
+                        alert(response.data.msg)
+                    }
+                });
+            }
         },
         data() {
             return {
                 administrator: localStorage.getItem('userType'),
                 userId: localStorage.getItem('userID'),
+                updateFlag: 0,
                 // 当前页码
                 currentPage: 1,
-                // 添加数据对话框是否展示的标记
-                dialogVisible: false,
-                // 添加数据对话框是否展示的标记
-                Visible: false,
-                visible: false,
-                Visible1: false,
-                tid: '',
-                //修改帖子数据
-                upcard: {
-                    tid: '',
-                    lid: '',
-                    cid: '',
-                    lose: '',
-                    title: '',
-                    time: '',
-                    content: '',
-                    tphoto: '',
-                    sendtime: '',
-                    isfinish: '',
-                    gaifou: ''
-                },
-                card: {
-                    tid: '',
-                    lid: '',
-                    cid: '',
-                    lose: '',
-                    title: '',
-                    time: '',
-                    content: '',
-                    tphoto: '',
-                    sendtime: '',
-                    isfinish: '',
-                    gaifou: ''
-                },
+                availableDates: [], // 存储可用的预约日期
+                appointment: {},
                 // 复选框选中数据集合
                 multipleSelection: [],
                 // 表格数据
@@ -449,31 +536,10 @@
                     createTime: '',
                     modifyTime: ''
                 },
-                users: [{
-                    sid: '',
-                    name: '',
-                    phone: '',
-                    qq: '',
-                    password: '',
-                    sphoto: '',
-                    administrators: ''
-                }],
-                user: {
-                    sid: '',
-                    name: '',
-                    phone: '',
-                    qq: '',
-                    password: '',
-                    sphoto: '',
-                    administrators: ''
-                },
-                classifies: [],
-                locations: [],
             }
         },
         mounted: function () {
             let _this = this;
-            //获取帖子
             axios({
                 method: 'get',
                 url: 'http://localhost:9080/doctor/getAll',
@@ -486,22 +552,6 @@
                 //前边的data和后边的data不同，后边的data才自己自定义的
                 _this.doctors = response.data.data
             });
-            //获取地点
-            axios({
-                method: 'get',
-                url: 'http://localhost:9080/locations',
-            }).then(function (response) {
-                _this.locations = response.data.data
-            });
-            //获取物品类别
-            console.log(this.classifies)
-            axios({
-                method: 'get',
-                url: 'http://localhost:9080/classify',
-            }).then(function (response) {
-                _this.classifies = response.data.data
-            });
-            console.log("classifies" + this.classifies)
         }
     })
 </script>

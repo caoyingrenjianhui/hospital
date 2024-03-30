@@ -5,6 +5,7 @@ import com.example.domain.Schedule;
 import com.example.service.IScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
@@ -32,6 +33,12 @@ public class ScheduleController {
     public Result selectWeeklySchedule() {
         // 调用 service 方法来查询一周内的排班信息
         return scheduleService.selectWeeklySchedule();
+    }
+
+    @GetMapping("/weeklyScheduleByDoctorID/{id}")
+    public Result weeklyScheduleByDoctorID(@PathVariable Integer id) {
+        // 调用 service 方法来查询一周内的排班信息
+        return scheduleService.weeklyScheduleByDoctorID(id);
     }
 }
 

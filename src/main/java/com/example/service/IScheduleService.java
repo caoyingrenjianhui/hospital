@@ -17,4 +17,6 @@ import java.util.List;
 public interface IScheduleService extends IService<Schedule> {
 
     Result selectWeeklySchedule();
+
+    Result weeklyScheduleByDoctorID(Integer id);
 }

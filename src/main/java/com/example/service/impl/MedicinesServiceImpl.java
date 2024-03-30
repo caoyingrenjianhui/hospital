@@ -106,8 +106,21 @@ public class MedicinesServiceImpl extends ServiceImpl<MedicinesDao, Medicines> i
         }
         List<Medicines> list = medicinesDao.selectList(wrapper);
         if (list == null) {
-            return new Result(null,Code.GET_ERR,"查询不到数据");
+            return new Result(null, Code.GET_ERR, "查询不到数据");
         }
-        return new Result(list,Code.GET_OK,"查询成功");
+        return new Result(list, Code.GET_OK, "查询成功");
+    }
+
+    @Override
+    public Result updateCount(Medicines medicines) {
+        Medicines selectById = medicinesDao.selectById(medicines.getMedicineID());
+        selectById.setCount(selectById.getCount() - medicines.getUseCount());
+        selectById.setUseCount(selectById.getUseCount() + medicines.getUseCount());
+        int i = medicinesDao.updateById(selectById);
+        if (i != 0) {
+            return new Result(selectById, Code.UPDATE_OK, "修改药品数量成功");
+        } else {
+            return new Result(selectById, Code.UPDATE_ERR, "修改药品数量失败");
+        }
     }
 }

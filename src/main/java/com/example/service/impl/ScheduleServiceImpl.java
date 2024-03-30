@@ -43,4 +43,22 @@ public class ScheduleServiceImpl extends ServiceImpl<ScheduleDao, Schedule> impl
                 .between("shift_date", startDateStr, endDateStr));
         return new Result(schedules, Code.GET_OK, "查询成功");
     }
+
+    @Override
+    public Result weeklyScheduleByDoctorID(Integer id) {
+        // 获取当前日期
+        LocalDate currentDate = LocalDate.now();
+        // 计算一周后的日期
+        LocalDate endDate = currentDate.plusDays(7);
+
+        // 转换日期格式为字符串，假设您的日期格式是 "yyyy-MM-dd"
+        String startDateStr = currentDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        String endDateStr = endDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        // 调用 MyBatis-Plus 的方法来查询一周内的排班信息
+        QueryWrapper<Schedule> wrapper = new QueryWrapper<>();
+        wrapper.between("shift_date", startDateStr, endDateStr);
+        wrapper.eq("doctorID",id);
+        List<Schedule> schedules = scheduleDao.selectList(wrapper);
+        return new Result(schedules, Code.GET_OK, "查询成功");
+    }
 }

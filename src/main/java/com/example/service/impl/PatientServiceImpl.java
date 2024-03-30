@@ -40,7 +40,24 @@ public class PatientServiceImpl extends ServiceImpl<PatientDao, Patient> impleme
 
     @Override
     public Result add(Patient patient) {
+        User user = userDao.selectById(patient.getUserID());
+        if (user == null) {
+            return new Result(patient, Code.SAVE_ERR, "新增失败，系统中无此人员，请先自行注册或检查身份证号是否正确");
+        }
+//        QueryWrapper<Patient> patientQueryWrapper = new QueryWrapper<>();
+//        patientQueryWrapper.eq("userID", patient.getUserID());
+//        Patient p = patientDao.selectOne(patientQueryWrapper);
+//        if (p != null) {
+//            return new Result(patient, Code.SAVE_ERR, "新增失败，系统中已经有此患者，请先自行注册或检查身份证号是否正确");
+//        }
+        QueryWrapper<Doctor> wrapper = new QueryWrapper<>();
+        Map<String, Object> map = ThreadLocalUtil.get();
+        String userID = (String) map.get("userID");
+        wrapper.eq("userID", userID);
+        Doctor doctor = doctorDao.selectOne(wrapper);
+        patient.setDoctorID(doctor.getDoctorID());
         patient.setCreateTime(LocalDate.now().toString());
+        patient.setIsdel(0);
         int insert = patientDao.insert(patient);
         if (insert != 0) {
             return new Result(patient, Code.SAVE_OK, "新增成功");

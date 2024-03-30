@@ -46,5 +46,10 @@ public class MedicinesController {
         return medicinesService.select(medicines);
     }
 
+    @PostMapping("/updateCount")
+    public Result updateCount(@RequestBody Medicines medicines){
+        return medicinesService.updateCount(medicines);
+    }
+
 }
 

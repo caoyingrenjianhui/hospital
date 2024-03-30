@@ -2,6 +2,7 @@ package com.example.controller;
 
 
 import com.example.domain.Doctor;
+import com.example.domain.Patient;
 import com.example.service.IDoctorsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -40,5 +41,11 @@ public class DoctorController {
     public Result delete(@PathVariable Integer id){
         return doctorsService.delete(id);
     }
+
+    @PostMapping("/select")
+    public Result select(@RequestBody Doctor doctor){
+        return doctorsService.select(doctor);
+    }
+
 }
 
