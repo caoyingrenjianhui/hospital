@@ -18,9 +18,9 @@ import java.util.List;
 @Mapper
 public interface DoctorDao extends BaseMapper<Doctor> {
 
-    @Select("select * from doctor")
+    @Select("select * from doctor where isdel=0")
     List<Doctor> getAll();
 
-    @Select("select * from doctor where userID = #{userID}")
+    @Select("select * from doctor where userID = #{userID} where isdel=0")
     Doctor selectByUserID(String userID);
 }

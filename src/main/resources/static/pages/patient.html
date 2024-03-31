@@ -90,7 +90,7 @@
 <section class="wthree-row pt-sm-3  pb-sm-5 pb-3">
     <div id="app" class="container py-4">
         <div>
-            <template style="margin-top: 200px" v-if=administrator!=0>
+            <template style="margin-top: 200px" v-if=userType!=0>
                 <!--搜索表单-->
                 <el-form :inline="true" :model="patient" class="demo-form-inline" style="margin-left: 20px">
 
@@ -209,7 +209,7 @@
                                        @click="beforeUpdate(scope.row)">编辑
                             </el-button>
                             <br><br>
-                            <el-button type="primary" @click="delete(scope.row.doctorID)">删除</el-button>
+                            <el-button type="primary" @click="deletePatient(scope.row.doctorID)">删除</el-button>
                         </el-row>
                     </el-table-column>
                 </el-table>
@@ -272,13 +272,12 @@
                     <div class="modal-body">
                         <div class="form-group" v-if="updateFlag==0">
                             <label class="col-form-label">患者身份证号</label>
-                            <input type="text" class="form-control" v-model="patient.patientID" placeholder=" "
+                            <input v-model="patient.userID" class="form-control" placeholder=" "
                                    required="">
                         </div>
                         <div class="form-group">
                             <label class="col-form-label">症状</label>
-                            <input type="text" class="form-control" v-model="patient.symptoms" placeholder=" "
-                                   name="Password"
+                            <input class="form-control" v-model="patient.symptoms" placeholder=" "
                                    required="">
                         </div>
                         <div class="right-w3l">
@@ -300,7 +299,8 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label class="col-form-label">患者姓名</label>
-                            <input type="text" :disabled="true" class="form-control" v-model="patient.user.username" placeholder=" "
+                            <input type="text" :disabled="true" class="form-control" v-model="patient.user.username"
+                                   placeholder=" "
                                    required="">
                         </div>
                         <div>
@@ -374,6 +374,9 @@
     new Vue({
         el: "#app",
         methods: {
+            hideModel() {
+                $('#add').modal('hide');
+            },
             tableRowClassName({row, rowIndex}) {
                 if (rowIndex === 1) {
                     return 'warning-row';
@@ -390,13 +393,21 @@
             },
             // 查询方法
             onSubmit() {
-                axios.post("/patient/select", this.patient).then((res) => {
-                    if (res.data.code == 20041) {
-                        this.patients = res.data.data;
-                    } else {
-                        alert(res.data.msg)
+                let _this = this
+                axios({
+                    method: 'post',
+                    url: 'http://localhost:9080/patient/select',
+                    data: this.patient,
+                    headers: { // 设置请求头
+                        Authorization: localStorage.getItem("token")
                     }
-                })
+                }).then(function (response) {
+                    if (response.data.code == 20041) {
+                        _this.patients = response.data.data
+                    } else {
+                        alert(response.data.msg)
+                    }
+                });
             },
             //重置查询
             onReset() {
@@ -404,11 +415,12 @@
                 this.onSubmit()
             },
             beforeAdd() {
+                console.log('beforeAdd')
                 this.updateFlag = 0
                 this.patient.patientID = null
                 this.patient.doctorID = null
                 this.patient.userID = null
-                this.patient.user = {}
+                this.patient.user.username = null
                 this.patient.symptoms = null
                 this.patient.medicine = null
                 this.patient.createTime = null
@@ -418,12 +430,13 @@
             beforeUpdate(rowDate) {
                 this.patient = rowDate
                 this.updateFlag = 1
+                console.log(this.patient)
             },
             addPatient() {
                 let _this = this
-                if (_this.updateFlag == 1) {
+                if (this.updateFlag == 1) {
                     axios({
-                        method: 'post',
+                        method: 'put',
                         url: 'http://localhost:9080/patient/update',
                         data: this.patient,
                         headers: { // 设置请求头
@@ -431,7 +444,7 @@
                         }
                     }).then(function (response) {
                         if (response.data.code == 20031) {
-                            this.onReset()
+                            _this.onReset()
                         } else {
                             alert(response.data.msg)
                         }
@@ -452,12 +465,13 @@
                         }
                     });
                 }
+                this.hideModel()
             },
             beforeUpdate(rowDate) {
                 this.patient = rowDate
                 this.updateFlag = 1
             },
-            delete(patientID) {
+            deletePatient(patientID) {
                 let _this = this
                 axios({
                     method: 'delete',
@@ -478,17 +492,17 @@
             },
             commit() {
                 let _this = this
-                if (this.patient.medicines != null) {
-                    this.patient.medicines = this.patient.medicines + "," + this.medicine.name + ":" + this.medicine.useCount
+                if (this.patient.medicine != null) {
+                    this.patient.medicine = this.patient.medicine + "," + this.medicine.name + ":" + this.medicine.useCount
                     this.patient.cost = this.patient.cost + (this.medicine.price * this.medicine.useCount)
                 } else {
-                    this.patient.medicines = this.medicine.name + ":" + this.medicine.useCount
+                    this.patient.medicine = this.medicine.name + ":" + this.medicine.useCount
                     this.patient.cost = this.medicine.price * this.medicine.useCount
                 }
                 //    药品数量减少
                 axios({
                     method: 'post',
-                    url: 'http://localhost:9080/medicine/updateCount',
+                    url: 'http://localhost:9080/medicines/updateCount',
                     data: this.medicine,
                     headers: { // 设置请求头
                         Authorization: localStorage.getItem("token")
@@ -521,7 +535,7 @@
         },
         data() {
             return {
-                administrator: localStorage.getItem('userType'),
+                userType: localStorage.getItem('userType'),
                 userId: localStorage.getItem('userID'),
                 updateFlag: 0,
                 quantity: 0,

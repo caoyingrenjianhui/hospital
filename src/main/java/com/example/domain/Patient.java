@@ -26,7 +26,7 @@ public class Patient implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "patientID", type = IdType.ASSIGN_ID)
+    @TableId(value = "patientID", type = IdType.AUTO)
     private Integer patientID;
 
     @TableField(value = "userID")

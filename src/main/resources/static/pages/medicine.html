@@ -210,7 +210,7 @@
                                        @click="beforeUpdate(scope.row)">编辑
                             </el-button>
                             <br><br>
-                            <el-button type="primary" @click="delete(scope.row.medicineID)">删除</el-button>
+                            <el-button type="primary" @click="deleteMedicine(scope.row)">删除</el-button>
                         </el-row>
                     </el-table-column>
                 </el-table>
@@ -323,6 +323,9 @@
     new Vue({
         el: "#app",
         methods: {
+            hideModel() {
+                $('#add').modal('hide');
+            },
             tableRowClassName({row, rowIndex}) {
                 if (rowIndex === 1) {
                     return 'warning-row';
@@ -337,14 +340,21 @@
             },
             // 查询方法
             onSubmit() {
-                axios.post("/medicines/select", this.medicine).then((res) => {
-                    //如果成功，跳转到登录
-                    if (res.data.code == 20041) {
-                        this.medicines = res.data.data;
-                    } else {
-                        alert(res.data.msg)
+                let _this = this
+                axios({
+                    method: 'post',
+                    url: 'http://localhost:9080/medicines/select',
+                    data: this.medicine,
+                    headers: { // 设置请求头
+                        Authorization: localStorage.getItem("token")
                     }
-                })
+                }).then(function (response) {
+                    if (response.data.code == 20041) {
+                        _this.medicines = response.data.data;
+                    } else {
+                        alert(response.data.msg)
+                    }
+                });
             },
             //重置查询
             onReset() {
@@ -370,15 +380,15 @@
                 let _this = this
                 if (_this.updateFlag == 1) {
                     axios({
-                        method: 'post',
-                        url: 'http://localhost:9080/medicine/update',
+                        method: 'put',
+                        url: 'http://localhost:9080/medicines/update',
                         data: this.medicine,
                         headers: { // 设置请求头
                             Authorization: localStorage.getItem("token")
                         }
                     }).then(function (response) {
                         if (response.data.code == 20031) {
-                            this.onReset()
+                            _this.onReset()
                         } else {
                             alert(response.data.msg)
                         }
@@ -386,7 +396,7 @@
                 } else {
                     axios({
                         method: 'post',
-                        url: 'http://localhost:9080/medicine/add' ,
+                        url: 'http://localhost:9080/medicines/add',
                         data: this.medicine,
                         headers: { // 设置请求头
                             Authorization: localStorage.getItem("token")
@@ -399,22 +409,24 @@
                         }
                     });
                 }
+                this.hideModel()
             },
             beforeUpdate(rowDate) {
                 this.medicine = rowDate
                 this.updateFlag = 1
             },
-            delete(medicineID) {
+            deleteMedicine(rowDate) {
                 let _this = this
+                this.medicine = rowDate
                 axios({
                     method: 'delete',
-                    url: 'http://localhost:9080/medicine/delete/' + medicineID,
+                    url: 'http://localhost:9080/medicines/delete/' + this.medicine.medicineID,
                     headers: { // 设置请求头
                         Authorization: localStorage.getItem("token")
                     }
                 }).then(function (response) {
                     if (response.data.code == 20021) {
-                        _this.onSubmit()
+                        _this.onReset()
                     } else {
                         alert(response.data.msg)
                     }
@@ -423,7 +435,7 @@
         },
         data() {
             return {
-                administrator: localStorage.getItem('userType'),
+                userType: localStorage.getItem('userType'),
                 userId: localStorage.getItem('userID'),
                 updateFlag: 0,
                 // 当前页码

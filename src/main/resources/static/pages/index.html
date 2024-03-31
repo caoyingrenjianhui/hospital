@@ -276,6 +276,7 @@
     // 从 localStorage 中获取用户名
     const username = localStorage.getItem('name');
     console.log(localStorage.getItem('name'))
+    const userType = localStorage.getItem("userType")
     // 显示用户名在页面上
     if (username != null) {
         document.getElementById('username').textContent = username;

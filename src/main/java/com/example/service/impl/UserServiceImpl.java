@@ -59,7 +59,6 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
         user.setPassword(md5String);
         user.setCreateTime(LocalDate.now().toString());
         user.setUserType(UserType.common.getCode());
-        user.setIsdel(0);
         int insert = userDao.insert(user);
         if (insert != 0) {
             return new Result(user, Code.SAVE_OK, "注册成功");

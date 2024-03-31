@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -57,7 +58,6 @@ public class PatientServiceImpl extends ServiceImpl<PatientDao, Patient> impleme
         Doctor doctor = doctorDao.selectOne(wrapper);
         patient.setDoctorID(doctor.getDoctorID());
         patient.setCreateTime(LocalDate.now().toString());
-        patient.setIsdel(0);
         int insert = patientDao.insert(patient);
         if (insert != 0) {
             return new Result(patient, Code.SAVE_OK, "新增成功");
@@ -86,8 +86,8 @@ public class PatientServiceImpl extends ServiceImpl<PatientDao, Patient> impleme
     public Result delete(Integer id) {
         Patient patient = patientDao.selectById(id);
         patient.setModifyTime(LocalDate.now().toString());
-        patient.setIsdel(0);
-        int i = patientDao.updateById(patient);
+        int update = patientDao.updateById(patient);
+        int i = patientDao.deleteById(id);
         if (i != 0) {
             return new Result(null, Code.DELETE_OK, "删除成功");
         } else {
@@ -129,7 +129,20 @@ public class PatientServiceImpl extends ServiceImpl<PatientDao, Patient> impleme
 
     @Override
     public Result select(Patient patient) {
+        QueryWrapper<User> userWrapper = new QueryWrapper<>();
+        if (patient.getUser().getUsername() != null && !"".equals(patient.getUser().getUsername())) {
+            userWrapper.like("username", patient.getUser().getUsername());
+        }
+        List<User> users = userDao.selectList(userWrapper);
+
         QueryWrapper<Patient> wrapper = new QueryWrapper<>();
+        if (users != null) {
+            List<String> userIds = new ArrayList<>();
+            for (User user : users) {
+                userIds.add(user.getUserID());
+            }
+            wrapper.in("userID", userIds);
+        }
         if (patient.getPatientID() != null) {
             wrapper.eq("patientID", patient.getPatientID());
         }
@@ -144,14 +157,7 @@ public class PatientServiceImpl extends ServiceImpl<PatientDao, Patient> impleme
             return new Result(null, Code.GET_ERR, "查询不到数据");
         }
         for (Patient p : list) {
-            QueryWrapper<User> userWrapper = new QueryWrapper<>();
-            if (patient.getUser().getUsername() != null && !"".equals(patient.getUser().getUsername())) {
-                userWrapper.like("username", patient.getUser().getUsername());
-            }
-            if (patient.getUserID() != null) {
-                userWrapper.eq("userID", patient.getUserID());
-            }
-            User user = userDao.selectOne(userWrapper);
+            User user = userDao.selectById(p.getUserID());
             p.setUser(user);
         }
         return new Result(list, Code.GET_OK, "查询成功");

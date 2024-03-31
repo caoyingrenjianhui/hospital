@@ -20,10 +20,10 @@ import java.util.List;
 @Mapper
 public interface UserDao extends BaseMapper<User> {
 
-    @Select("select * from user")
+    @Select("select * from user where isdel=0")
     List<User> getAllUser();
 
-    @Select("select * from user where userID = #{id}")
+    @Select("select * from user where userID = #{id} and isdel=0")
     User selectById(Serializable id);
 
     @Update("update user set username = #{username},password = #{password},email=#{email},phone=#{phone},address=#{address},modify_time = #{modifyTime} where userID = #{userID}")

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,7 +43,7 @@ public class DoctorServiceImpl extends ServiceImpl<DoctorDao, Doctor> implements
             return new Result(doctor, Code.SAVE_ERR, "新增失败，系统中已经有此医生");
         }
         doctor.setCreateTime(LocalDate.now().toString());
-        doctor.setIsdel(0);
+        doctor.setDepartment(Department.getCodeByName(doctor.getDepartment()) + "");
         int insert = doctorDao.insert(doctor);
         if (insert != 0) {
             user.setUserType(UserType.doctor.getCode());
@@ -60,6 +61,7 @@ public class DoctorServiceImpl extends ServiceImpl<DoctorDao, Doctor> implements
             return new Result(null, Code.UPDATE_ERR, "无此医生");
         }
         doctor.setModifyTime(LocalDate.now().toString());
+        doctor.setDepartment(Department.getCodeByName(doctor.getDepartment()) + "");
         doctorDao.updateById(doctor);
         return new Result(doctor, Code.UPDATE_OK, "修改成功");
     }
@@ -68,8 +70,8 @@ public class DoctorServiceImpl extends ServiceImpl<DoctorDao, Doctor> implements
     public Result delete(Integer id) {
         Doctor doctor = doctorDao.selectById(id);
         doctor.setModifyTime(LocalDate.now().toString());
-        doctor.setIsdel(0);
-        int i = doctorDao.updateById(doctor);
+        int update = doctorDao.updateById(doctor);
+        int i = doctorDao.deleteById(id);
         if (i != 0) {
             return new Result(null, Code.DELETE_OK, "删除成功");
         } else {
@@ -79,7 +81,20 @@ public class DoctorServiceImpl extends ServiceImpl<DoctorDao, Doctor> implements
 
     @Override
     public Result select(Doctor doctor) {
+        QueryWrapper<User> userWrapper = new QueryWrapper<>();
+        if (doctor.getUser().getUsername() != null && !"".equals(doctor.getUser().getUsername())) {
+            userWrapper.like("username", doctor.getUser().getUsername());
+        }
+        List<User> users = userDao.selectList(userWrapper);
+
         QueryWrapper<Doctor> wrapper = new QueryWrapper<>();
+        if (users != null) {
+            List<String> userIds = new ArrayList<>();
+            for (User user : users) {
+                userIds.add(user.getUserID());
+            }
+            wrapper.in("userID", userIds);
+        }
         if (doctor.getDoctorID() != null && !"".equals(doctor.getDoctorID())) {
             wrapper.eq("doctorID", doctor.getDoctorID());
         }
@@ -87,22 +102,16 @@ public class DoctorServiceImpl extends ServiceImpl<DoctorDao, Doctor> implements
             wrapper.eq("userID", doctor.getUserID());
         }
         if (doctor.getDepartment() != null && !"".equals(doctor.getDepartment())) {
-            wrapper.eq("department", Department.getCodeByName(doctor.getDepartment()));
+            wrapper.eq("department", Department.getCodeByName(doctor.getDepartment()) + "");
         }
         List<Doctor> list = doctorDao.selectList(wrapper);
         if (list == null) {
             return new Result(null, Code.GET_ERR, "查询不到数据");
         }
         for (Doctor d : list) {
-            QueryWrapper<User> userWrapper = new QueryWrapper<>();
-            if (doctor.getUser().getUsername() != null && !"".equals(doctor.getUser().getUsername())) {
-                userWrapper.like("username", doctor.getUser().getUsername());
-            }
-            if (doctor.getUserID() != null) {
-                userWrapper.eq("userID", doctor.getUserID());
-            }
-            User user = userDao.selectOne(userWrapper);
+            User user = userDao.selectById(d.getUserID());
             d.setUser(user);
+            d.setDepartment(Department.getNameByCode(Integer.valueOf(d.getDepartment())));
         }
         return new Result(list, Code.GET_OK, "查询成功");
     }

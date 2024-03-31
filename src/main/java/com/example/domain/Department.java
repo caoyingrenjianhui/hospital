@@ -29,7 +29,7 @@ public enum Department {
 
     public static int getCodeByName(String name) {
         for (Department gss : Department.values()) {
-            if (gss.getName() == name) {
+            if (gss.getName().equals(name)) {
                 return gss.getCode();
             }
         }

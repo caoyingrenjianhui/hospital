@@ -13,9 +13,12 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * <p>
@@ -73,6 +76,20 @@ public class ScheduleServiceImpl extends ServiceImpl<ScheduleDao, Schedule> impl
         Doctor doctor = doctorDao.selectById(schedule.getDoctorID());
         if (doctor == null) {
             return new Result(null, Code.SAVE_ERR, "新增失败，系统中无此医生");
+        }
+        schedule.setCreateTime(LocalDate.now().toString());
+
+        try {
+            // 解析前端传递的日期字符串
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            Date date = inputFormat.parse(schedule.getShiftDate());
+
+            // 格式化日期为数据库支持的格式
+            SimpleDateFormat databaseFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String databaseDateString = databaseFormat.format(date);
+            schedule.setShiftDate(databaseDateString);
+        } catch (Exception e) {
+            System.out.println("日期转换失败：" + e.getMessage());
         }
         int insert = scheduleDao.insert(schedule);
         if (insert != 0) {

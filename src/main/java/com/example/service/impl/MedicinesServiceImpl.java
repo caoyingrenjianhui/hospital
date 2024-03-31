@@ -39,7 +39,7 @@ public class MedicinesServiceImpl extends ServiceImpl<MedicinesDao, Medicines> i
         medicines.setCreateTime(LocalDate.now().toString());
         Map<String, Object> map = ThreadLocalUtil.get();
         medicines.setUserID((String) map.get("userID"));
-        if (medicinesDao.selectById(medicines.getMedicineID()) == null) {
+        if (medicinesDao.selectById(medicines.getMedicineID()) != null) {
             return new Result(medicines, Code.SAVE_ERR, "新增失败，已有此ID的药品");
         }
         int insert = medicinesDao.insert(medicines);
@@ -80,8 +80,8 @@ public class MedicinesServiceImpl extends ServiceImpl<MedicinesDao, Medicines> i
     public Result delete(Integer id) {
         Medicines medicines = medicinesDao.selectById(id);
         medicines.setModifyTime(LocalDate.now().toString());
-        medicines.setIsdel(0);
-        int i = medicinesDao.updateById(medicines);
+        int update = medicinesDao.updateById(medicines);
+        int i = medicinesDao.deleteById(id);
         if (i != 0) {
             return new Result(null, Code.DELETE_OK, "删除成功");
         } else {

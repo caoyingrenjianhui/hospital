@@ -24,7 +24,7 @@ public class Doctor implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "doctorID", type = IdType.ASSIGN_ID)
+    @TableId(value = "doctorID", type = IdType.AUTO)
     private Integer doctorID;
 
     @TableField(value = "userID")

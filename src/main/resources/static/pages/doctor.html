@@ -81,7 +81,7 @@
 <section class="wthree-row w3-contact py-lg-5">
     <div id="app" class="container py-4">
         <div>
-            <template style="margin-top: 200px" v-if=administrator!=1>
+            <template style="margin-top: 200px" v-if=userType!=1>
                 <!--搜索表单-->
                 <el-form :inline="true" :model="doctor" class="demo-form-inline" style="margin-left: 20px">
 
@@ -124,7 +124,7 @@
                         <!--按钮-->
                         <!--        <el-button type="danger" plain>批量删除</el-button>-->
                         <el-button type="primary" data-toggle="modal" data-target="#add"
-                                   @click="beforeAdd">
+                                   @click="beforeAdd" v-if="userType==1">
                             新增
                         </el-button>
                     </el-form-item>
@@ -205,7 +205,7 @@
                             label="操作">
                         <el-row slot-scope="scope">
                             <el-button type="primary" data-toggle="modal" data-target="#appointment"
-                                       @click="beforeAppointment(scope.row.sid)">
+                                       @click="beforeAppointment(scope.row.doctorID)">
                                 预约
                             </el-button>
                             <br><br>
@@ -213,7 +213,7 @@
                                        @click="beforeUpdate(scope.row)">编辑
                             </el-button>
                             <br><br>
-                            <el-button type="primary" @click="delete(scope.row.doctorID)">删除</el-button>
+                            <el-button type="primary" @click="deleteDoctor(scope.row.doctorID)">删除</el-button>
                         </el-row>
                     </el-table-column>
                 </el-table>
@@ -222,12 +222,6 @@
                 <div v-for="doctor in doctors">
                     <div v-if="doctor.userID==userId">
                         <el-form :inline="true" align="center">
-                            <!--                            <img :src="getsrc(user)" width="200" height="200" alt="暂无图片"/><br><br>-->
-                            <el-button @click="Visible = true">修改图片</el-button>
-                            <br><br>
-                            <!--                            <el-form-item label="身份证号">-->
-                            <!--                                <p><el-input v-model="user.sid" disabled></el-input></p>-->
-                            <!--                            </el-form-item><br>-->
                             <el-form-item label="姓名">
                                 <p>
                                     <el-input v-model="doctor.user.username" disabled></el-input>
@@ -272,7 +266,7 @@
                     <div class="modal-body">
                         <div class="form-group" v-if="updateFlag==0">
                             <label class="col-form-label">医生身份证号</label>
-                            <input type="text" class="form-control" v-model="doctor.doctorID" placeholder=" "
+                            <input type="text" class="form-control" v-model="doctor.userID" placeholder=" "
                                    required="">
                         </div>
                         <div class="form-group">
@@ -313,9 +307,12 @@
                         <h3>预约</h3>
                         <div class="stats">
                             <select class="form-control date mb-3" v-model="appointment.appointmentDate" required="">
-                                <option v-for="date in availableDates" :key="date" :value="date">{{ date }}</option>
+                                <option v-for="date in availableDates" :key="date" :value="date.shiftDate">{{
+                                    date.shiftDate }}
+                                </option>
                             </select>
-                            <button type="submit" @click="appointment" class="btn btn-agile btn-block w-100">预约</button>
+                            <button type="submit" @click="appointmentDoctor" class="btn btn-agile btn-block w-100">预约
+                            </button>
                         </div>
                     </div>
 
@@ -370,6 +367,10 @@
     new Vue({
         el: "#app",
         methods: {
+            hideModel() {
+                $('#add').modal('hide');
+                $('#appointment').modal('hide');
+            },
             tableRowClassName({row, rowIndex}) {
                 if (rowIndex === 1) {
                     return 'warning-row';
@@ -384,6 +385,7 @@
             },
             //查询可预约的时间
             beforeAppointment(doctorID) {
+                let _this = this
                 axios({
                     method: 'get',
                     url: 'http://localhost:9080/schedule/weeklyScheduleByDoctorID/' + doctorID,
@@ -392,38 +394,49 @@
                     }
                 }).then(function (response) {
                     if (response.data.code == 20041) {
-                        this.availableDates = response.data.data
+                        _this.availableDates = response.data.data
+                        _this.appointment.doctorID = doctorID
+                        _this.appointment.userID = localStorage.getItem("userID")
                     } else {
                         alert(response.data.msg)
                     }
                 });
             },
-            appointment() {
+            appointmentDoctor() {
                 axios({
                     method: 'post',
                     url: 'http://localhost:9080/appointments/add',
-                    data:  this.appointment,
+                    data: this.appointment,
                     headers: { // 设置请求头
                         Authorization: localStorage.getItem("token")
                     }
                 }).then(function (response) {
                     if (response.data.code == 20011) {
+                        alert(response.data.msg)
                         this.onReset()
                     } else {
                         alert(response.data.msg)
                     }
                 });
+                this.hideModel()
             },
             // 查询方法
             onSubmit() {
-                axios.post("/medicines/select", this.medicine).then((res) => {
-                    //如果成功，跳转到登录
-                    if (res.data.code == 20041) {
-                        this.medicines = res.data.data;
-                    } else {
-                        alert(res.data.msg)
+                let _this = this
+                axios({
+                    method: 'post',
+                    url: 'http://localhost:9080/doctor/select',
+                    data: this.doctor,
+                    headers: { // 设置请求头
+                        Authorization: localStorage.getItem("token")
                     }
-                })
+                }).then(function (response) {
+                    if (response.data.code == 20041) {
+                        _this.doctors = response.data.data
+                    } else {
+                        alert(response.data.msg)
+                    }
+                });
             },
             //重置查询
             onReset() {
@@ -451,7 +464,7 @@
                 if (_this.updateFlag == 1) {
                     axios({
                         method: 'post',
-                        url: 'http://localhost:9080/doctor/update' ,
+                        url: 'http://localhost:9080/doctor/update',
                         data: this.doctor,
                         headers: { // 设置请求头
                             Authorization: localStorage.getItem("token")
@@ -479,16 +492,18 @@
                         }
                     });
                 }
+                this.hideModel()
+                this.onReset()
             },
             beforeUpdate(rowDate) {
                 this.doctor = rowDate
                 this.updateFlag = 1
             },
-            delete(doctorID) {
+            deleteDoctor(doctorID) {
                 let _this = this
                 axios({
                     method: 'delete',
-                    url: 'http://localhost:9080/medicine/delete/' + doctorID,
+                    url: 'http://localhost:9080/doctor/delete/' + doctorID,
                     headers: { // 设置请求头
                         Authorization: localStorage.getItem("token")
                     }
@@ -503,13 +518,18 @@
         },
         data() {
             return {
-                administrator: localStorage.getItem('userType'),
+                userType: localStorage.getItem('userType'),
                 userId: localStorage.getItem('userID'),
                 updateFlag: 0,
                 // 当前页码
                 currentPage: 1,
                 availableDates: [], // 存储可用的预约日期
-                appointment: {},
+                appointment: {
+                    doctorID: '',
+                    userID: '',
+                    appointmentDate: '',
+                    appointmentNotes: ''
+                },
                 // 复选框选中数据集合
                 multipleSelection: [],
                 // 表格数据
@@ -551,8 +571,6 @@
                 }
                 // responseType: 'stream'
             }).then(function (response) {
-                console.log("发送成功")
-                //前边的data和后边的data不同，后边的data才自己自定义的
                 _this.doctors = response.data.data
             });
         }

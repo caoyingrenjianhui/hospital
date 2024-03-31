@@ -18,6 +18,6 @@ import java.util.List;
 @Mapper
 public interface MedicinesDao extends BaseMapper<Medicines> {
 
-    @Select("select * from Medicines")
+    @Select("select * from Medicines where isdel=0")
     List<Medicines> getAll();
 }
