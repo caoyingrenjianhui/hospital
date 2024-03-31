@@ -316,9 +316,9 @@
                         </div>
                         <div>
                             <label class="col-form-label">已开药品：</label>
-                            <input type="text" v-model.number="patient.medicine" readonly>
+                            <input type="text" v-model.number="patient.medicine" readonly><br>
                             <label class="col-form-label">总价格：</label>
-                            <span v-model="patient.cost"></span> 元
+                            <input type="text" v-model.number="patient.cost" readonly> 元
                         </div>
                         <div class="right-w3l">
                             <input @click="updateMedicine" type="submit" class="form-control" value="确定">
@@ -376,6 +376,7 @@
         methods: {
             hideModel() {
                 $('#add').modal('hide');
+                $('#updateMedicine').modal('hide');
             },
             tableRowClassName({row, rowIndex}) {
                 if (rowIndex === 1) {
