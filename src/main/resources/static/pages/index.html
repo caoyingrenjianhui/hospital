@@ -28,209 +28,212 @@
     <script src="../js/axios-0.18.0.js"></script>
 </head>
 <body>
-<!-- header -->
-<header>
-    <nav class="navbar navbar-expand-lg navbar-light bg-gradient-secondary">
-        <h1>
-            <a class="navbar-brand text-white" href="index.html">
-                百康诊所
-            </a>
-        </h1>
-        <button class="navbar-toggler ml-md-auto" type="button" data-toggle="collapse"
-                data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ml-lg-auto text-center">
-                <li class="nav-item active  mr-3 mt-lg-0 mt-3">
-                    <a class="nav-link" href="index.html">主页
-                        <span class="sr-only">(current)</span>
-                    </a>
-                </li>
-                <li class="nav-item dropdown mr-3 mt-lg-0 mt-3">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                       data-toggle="dropdown" aria-haspopup="true"
-                       aria-expanded="false">
-                        人员信息
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="doctor.html">医生</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="patient.html">患者</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown mr-3 mt-lg-0 mt-3" v-if="userType==2">
-                    <a class="nav-link dropdown-toggle" role="button" href="#"
-                       data-toggle="dropdown" aria-haspopup="true"
-                       aria-expanded="false">
-                        管理
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="medicine.html">药品管理</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="schedule.html">排班</a>
-                    </div>
-                </li>
-                <li>
-                    <a class="nav-link" href="login.html">登录</a>
-                </li>
-                <li><a href="information.html" class="nav-link" id="username"></a></li>
-            </ul>
-        </div>
-    </nav>
-</header>
-<!-- main image slider container -->
-<div class="slide-window">
-    <div class="slide-wrapper" style="width:300%;">
-        <div class="slide">
-            <div class="slide-caption text-center">
-                <h3 class="text-uppercase">一系列针对女性的健康服务</h3>
+<div id="app">
+    <!-- header -->
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-gradient-secondary">
+            <h1>
+                <a class="navbar-brand text-white" href="index.html">
+                    百康诊所
+                </a>
+            </h1>
+            <button class="navbar-toggler ml-md-auto" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-lg-auto text-center">
+                    <li class="nav-item active  mr-3 mt-lg-0 mt-3">
+                        <a class="nav-link" href="index.html">主页
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown mr-3 mt-lg-0 mt-3">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true"
+                           aria-expanded="false">
+                            人员信息
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="doctor.html">医生</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="patient.html">患者</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown mr-3 mt-lg-0 mt-3" v-if="userType==2">
+                        <a class="nav-link dropdown-toggle" role="button" href="#"
+                           data-toggle="dropdown" aria-haspopup="true"
+                           aria-expanded="false">
+                            管理
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="medicine.html">药品管理</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="schedule.html">排班</a>
+                        </div>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="login.html">登录</a>
+                    </li>
+                    <li class="nav-item active  mr-3 mt-lg-0 mt-3">
+                        <a href="information.html" class="nav-link" id="username"></a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <!-- main image slider container -->
+    <div class="slide-window">
+        <div class="slide-wrapper" style="width:300%;">
+            <div class="slide">
+                <div class="slide-caption text-center">
+                    <h3 class="text-uppercase">一系列针对女性的健康服务</h3>
+                </div>
+            </div>
+            <div class="slide slide2">
+                <div class="slide-caption text-center">
+                    <h3 class="text-uppercase">对每位患者采取不同的治疗方法</h3>
+                </div>
+            </div>
+            <div class="slide slide3">
+                <div class="slide-caption text-center">
+                    <h3 class="text-uppercase">致力于每位患者的医疗诊所</h3>
+                </div>
             </div>
         </div>
-        <div class="slide slide2">
-            <div class="slide-caption text-center">
-                <h3 class="text-uppercase">对每位患者采取不同的治疗方法</h3>
+        <div class="slide-controller">
+            <div class="slide-control-left">
+                <div class="slide-control-line"></div>
+                <div class="slide-control-line"></div>
             </div>
-        </div>
-        <div class="slide slide3">
-            <div class="slide-caption text-center">
-                <h3 class="text-uppercase">致力于每位患者的医疗诊所</h3>
+            <div class="slide-control-right">
+                <div class="slide-control-line"></div>
+                <div class="slide-control-line"></div>
             </div>
         </div>
     </div>
-    <div class="slide-controller">
-        <div class="slide-control-left">
-            <div class="slide-control-line"></div>
-            <div class="slide-control-line"></div>
+    <section class="departments">
+        <div class="departments-1 py-lg-5">
+            <div class="container py-5">
+                <div class="text-center wthree-title pb-sm-5 pb-3">
+                    <h3 class="w3l-sub text-white">科室</h3>
+                </div>
+                <div class="row py-lg-5">
+                    <div class="col-sm-4 w3-ab">
+                        <div class="w3-ab-grid text-center">
+                            <div class="w3-aicon p-4">
+                                <i class="fa fa-stethoscope" aria-hidden="true"></i>
+                                <h4 class="my-3 text-capitalize text-white">神经科</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 w3-ab">
+                        <div class="w3-ab-grid text-center">
+                            <div class="w3-aicon p-4">
+                                <i class="fa fa-wheelchair" aria-hidden="true"></i>
+                                <h4 class="my-3 text-capitalize text-white">创伤学</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 w3-ab">
+                        <div class="w3-ab-grid text-center">
+                            <div class="w3-aicon p-4">
+                                <i class="fa fa-plus-square" aria-hidden="true"></i>
+                                <h4 class="my-3 text-capitalize text-white">牙科</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 mt-4 w3-ab">
+                        <div class="w3-ab-grid text-center">
+                            <div class="w3-aicon  p-4">
+                                <i class="fa fa-heartbeat" aria-hidden="true"></i>
+                                <h4 class="my-3 text-capitalize text-white">心脏病学</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 mt-4 w3-ab">
+                        <div class="w3-ab-grid text-center">
+                            <div class="w3-aicon p-4">
+                                <i class="fa fa-medkit" aria-hidden="true"></i>
+                                <h4 class="my-3 text-capitalize text-white">肺病学</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 mt-4 w3-ab">
+                        <div class="w3-ab-grid text-center">
+                            <div class="w3-aicon p-4">
+                                <i class="fa fa-ambulance" aria-hidden="true"></i>
+                                <h4 class="my-3 text-capitalize text-white">小儿科</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="slide-control-right">
-            <div class="slide-control-line"></div>
-            <div class="slide-control-line"></div>
-        </div>
-    </div>
-</div>
-<section class="departments">
-    <div class="departments-1 py-lg-5">
+    </section>
+
+    <!-- case studies -->
+    <section class="case_w3ls  py-lg-5">
         <div class="container py-5">
             <div class="text-center wthree-title pb-sm-5 pb-3">
-                <h3 class="w3l-sub text-white">科室</h3>
+                <h3 class="w3l-sub">医疗服务</h3>
             </div>
-            <div class="row py-lg-5">
-                <div class="col-sm-4 w3-ab">
-                    <div class="w3-ab-grid text-center">
-                        <div class="w3-aicon p-4">
-                            <i class="fa fa-stethoscope" aria-hidden="true"></i>
-                            <h4 class="my-3 text-capitalize text-white">神经科</h4>
+            <!-- case studies row -->
+            <div class="row">
+                <div class="col-lg-4 col-md-6">
+                    <div class="img1 img-grid  d-flex align-items-end justify-content-center p-3">
+                        <div class="img_text_w3ls">
+                            <h4>紧急求助</h4>
+                            <span> </span>
+                            <p></p>
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-4 w3-ab">
-                    <div class="w3-ab-grid text-center">
-                        <div class="w3-aicon p-4">
-                            <i class="fa fa-wheelchair" aria-hidden="true"></i>
-                            <h4 class="my-3 text-capitalize text-white">创伤学</h4>
-                        </div>
+                <div class="col-lg-4 col-md-6 my-md-0 mt-4">
+                    <div class="img1 img2 img-grid  d-flex align-items-end justify-content-center p-3">
+                        <div class="img_text_w3ls">
+                            <h4>心脏外科手术</h4>
+                            <span> </span>
+                            <p></p></div>
                     </div>
                 </div>
-                <div class="col-sm-4 w3-ab">
-                    <div class="w3-ab-grid text-center">
-                        <div class="w3-aicon p-4">
-                            <i class="fa fa-plus-square" aria-hidden="true"></i>
-                            <h4 class="my-3 text-capitalize text-white">牙科</h4>
-                        </div>
+                <div class="col-lg-4 col-md-6 my-lg-0 mt-4">
+                    <div class="img1 img3 img-grid  d-flex align-items-end justify-content-center p-3">
+                        <div class="img_text_w3ls">
+                            <h4>急救护理</h4>
+                            <span> </span>
+                            <p></p></div>
                     </div>
                 </div>
-                <div class="col-sm-4 mt-4 w3-ab">
-                    <div class="w3-ab-grid text-center">
-                        <div class="w3-aicon  p-4">
-                            <i class="fa fa-heartbeat" aria-hidden="true"></i>
-                            <h4 class="my-3 text-capitalize text-white">心脏病学</h4>
-                        </div>
+                <div class="col-lg-4 col-md-6 mt-4">
+                    <div class="img1 img5 img-grid  d-flex align-items-end justify-content-center p-3">
+                        <div class="img_text_w3ls">
+                            <h4>牙科护理</h4>
+                            <span> </span>
+                            <p></p></div>
                     </div>
                 </div>
-                <div class="col-sm-4 mt-4 w3-ab">
-                    <div class="w3-ab-grid text-center">
-                        <div class="w3-aicon p-4">
-                            <i class="fa fa-medkit" aria-hidden="true"></i>
-                            <h4 class="my-3 text-capitalize text-white">肺病学</h4>
-                        </div>
+                <div class="col-lg-4 col-md-6  mt-4">
+                    <div class="img1 img4 img-grid  d-flex align-items-end justify-content-center p-3">
+                        <div class="img_text_w3ls">
+                            <h4>血糖测试</h4>
+                            <span> </span>
+                            <p></p></div>
                     </div>
                 </div>
-                <div class="col-sm-4 mt-4 w3-ab">
-                    <div class="w3-ab-grid text-center">
-                        <div class="w3-aicon p-4">
-                            <i class="fa fa-ambulance" aria-hidden="true"></i>
-                            <h4 class="my-3 text-capitalize text-white">小儿科</h4>
-                        </div>
+                <div class="col-lg-4 col-md-6 mt-4">
+                    <div class="img1 img6 img-grid  d-flex align-items-end justify-content-center p-3">
+                        <div class="img_text_w3ls">
+                            <h4>医生帮助</h4>
+                            <span> </span>
+                            <p></p></div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
-
-<!-- case studies -->
-<section class="case_w3ls  py-lg-5">
-    <div class="container py-5">
-        <div class="text-center wthree-title pb-sm-5 pb-3">
-            <h3 class="w3l-sub">医疗服务</h3>
-        </div>
-        <!-- case studies row -->
-        <div class="row">
-            <div class="col-lg-4 col-md-6">
-                <div class="img1 img-grid  d-flex align-items-end justify-content-center p-3">
-                    <div class="img_text_w3ls">
-                        <h4>紧急求助</h4>
-                        <span> </span>
-                        <p></p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 my-md-0 mt-4">
-                <div class="img1 img2 img-grid  d-flex align-items-end justify-content-center p-3">
-                    <div class="img_text_w3ls">
-                        <h4>心脏外科手术</h4>
-                        <span> </span>
-                        <p></p></div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 my-lg-0 mt-4">
-                <div class="img1 img3 img-grid  d-flex align-items-end justify-content-center p-3">
-                    <div class="img_text_w3ls">
-                        <h4>急救护理</h4>
-                        <span> </span>
-                        <p></p></div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 mt-4">
-                <div class="img1 img5 img-grid  d-flex align-items-end justify-content-center p-3">
-                    <div class="img_text_w3ls">
-                        <h4>牙科护理</h4>
-                        <span> </span>
-                        <p></p></div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6  mt-4">
-                <div class="img1 img4 img-grid  d-flex align-items-end justify-content-center p-3">
-                    <div class="img_text_w3ls">
-                        <h4>血糖测试</h4>
-                        <span> </span>
-                        <p></p></div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 mt-4">
-                <div class="img1 img6 img-grid  d-flex align-items-end justify-content-center p-3">
-                    <div class="img_text_w3ls">
-                        <h4>医生帮助</h4>
-                        <span> </span>
-                        <p></p></div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
+    </section>
+</div>
 <script src="../js/jquery-2.2.3.min.js"></script>
 <script src="../js/minimal-slider.js"></script>
 <link rel="stylesheet" href="../css/jquery-ui.css"/>
@@ -276,13 +279,22 @@
     // 从 localStorage 中获取用户名
     const username = localStorage.getItem('name');
     console.log(localStorage.getItem('name'))
-    const userType = localStorage.getItem("userType")
     // 显示用户名在页面上
     if (username != null) {
         document.getElementById('username').textContent = username;
     } else {
         document.getElementById('username').textContent = 'Guest';
     }
+
+    let userType; // 声明一个变量用于存储 userType 的值
+
+    // 获取 localStorage 中的 userType，并将其转换为数字类型
+    if (localStorage.getItem("userType") != null) {
+        userType = parseInt(localStorage.getItem("userType"));
+    } else {
+        userType = 0; // 如果 localStorage 中没有 userType，则设置默认值为 0 或其他适当的默认值
+    }
+    console.log(userType)
 </script>
 <script src="../js/SmoothScroll.min.js"></script>
 
@@ -290,7 +302,31 @@
 <script src="../js/axios-0.18.0.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="../js/vue.js"></script>
-
+<script>
+    new Vue({
+        el: "#app",
+        methods: {},
+        data() {
+            return {
+                userType: localStorage.getItem('userType'),
+                userId: localStorage.getItem('userID'),
+            }
+        },
+        mounted: function () {
+            let _this = this;
+            axios({
+                method: 'get',
+                url: 'http://localhost:9080/doctor/getAll',
+                headers: { // 设置请求头
+                    Authorization: localStorage.getItem("token")
+                }
+                // responseType: 'stream'
+            }).then(function (response) {
+                _this.doctors = response.data.data
+            });
+        }
+    })
+</script>
 <script>
 </script>
 </body>

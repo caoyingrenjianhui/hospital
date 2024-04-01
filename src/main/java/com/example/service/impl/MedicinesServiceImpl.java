@@ -51,15 +51,18 @@ public class MedicinesServiceImpl extends ServiceImpl<MedicinesDao, Medicines> i
     }
 
     @Override
-    public Result update(Medicines medicines) {
-        Medicines selectById = medicinesDao.selectById(medicines.getMedicineID());
-        if (selectById == null) {
-            return new Result(null, Code.UPDATE_ERR, "无此药品");
+    public Result update(List<Medicines> medicines) {
+        for (Medicines medicine : medicines) {
+            Medicines selectById = medicinesDao.selectById(medicine.getMedicineID());
+            if (selectById != null) {
+                medicine.setModifyTime(LocalDate.now().toString());
+                Map<String, Object> map = ThreadLocalUtil.get();
+                selectById.setUserID((String) map.get("userID"));
+                selectById.setCount(selectById.getCount() - medicine.getUseCount());
+                selectById.setUseCount(selectById.getUseCount() + medicine.getUseCount());
+                medicinesDao.updateById(selectById);
+            }
         }
-        medicines.setModifyTime(LocalDate.now().toString());
-        Map<String, Object> map = ThreadLocalUtil.get();
-        medicines.setUserID((String) map.get("userID"));
-        medicinesDao.updateById(medicines);
         return new Result(medicines, Code.UPDATE_OK, "修改成功");
     }
 
@@ -122,5 +125,18 @@ public class MedicinesServiceImpl extends ServiceImpl<MedicinesDao, Medicines> i
         } else {
             return new Result(selectById, Code.UPDATE_ERR, "修改药品数量失败");
         }
+    }
+
+    @Override
+    public Result update(Medicines medicines) {
+        Medicines selectById = medicinesDao.selectById(medicines.getMedicineID());
+        if (selectById == null) {
+            return new Result(null, Code.UPDATE_ERR, "无此药品");
+        }
+        medicines.setModifyTime(LocalDate.now().toString());
+        Map<String, Object> map = ThreadLocalUtil.get();
+        medicines.setUserID((String) map.get("userID"));
+        medicinesDao.updateById(medicines);
+        return new Result(medicines, Code.UPDATE_OK, "修改成功");
     }
 }

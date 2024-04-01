@@ -4,6 +4,8 @@ import com.example.controller.Result;
 import com.example.domain.Medicines;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务类
@@ -16,7 +18,7 @@ public interface IMedicinesService extends IService<Medicines> {
 
     Result add(Medicines medicines);
 
-    Result update(Medicines medicines);
+    Result update(List<Medicines> medicines);
 
     Result getAll();
 
@@ -25,4 +27,6 @@ public interface IMedicinesService extends IService<Medicines> {
     Result select(Medicines medicines);
 
     Result updateCount(Medicines medicines);
+
+    Result update(Medicines medicines);
 }

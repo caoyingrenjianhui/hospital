@@ -26,256 +26,263 @@
     <script src="../js/axios-0.18.0.js"></script>
 </head>
 <body>
-<header>
-    <nav class="navbar navbar-expand-lg navbar-light bg-gradient-secondary">
-        <h1>
-            <a class="navbar-brand text-white" href="index.html">
-                百康诊所
-            </a>
-        </h1>
-        <button class="navbar-toggler ml-md-auto" type="button" data-toggle="collapse"
-                data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ml-lg-auto text-center">
-                <li class="nav-item  mr-3 mt-lg-0 mt-3">
-                    <a class="nav-link" href="index.html">主页
-                        <span class="sr-only">(current)</span>
-                    </a>
-                </li>
-                <li class="nav-item dropdown mr-3 mt-lg-0 mt-3">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                       data-toggle="dropdown" aria-haspopup="true"
-                       aria-expanded="false">
-                        人员信息
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="doctor.html">医生</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="patient.html">患者</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown active mr-3 mt-lg-0 mt-3" v-if="userType==2">
-                    <a class="nav-link dropdown-toggle" role="button" href="#"
-                       data-toggle="dropdown" aria-haspopup="true"
-                       aria-expanded="false">
-                        管理
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="medicine.html">药品管理</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="schedule.html">排班</a>
-                    </div>
-                </li>
-                <li>
-                    <a class="nav-link" href="login.html">登录</a>
-                </li>
-                <li><a href="information.html" class="nav-link" id="username"></a></li>
-            </ul>
-        </div>
+<div id="app">
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-gradient-secondary">
+            <h1>
+                <a class="navbar-brand text-white" href="index.html">
+                    百康诊所
+                </a>
+            </h1>
+            <button class="navbar-toggler ml-md-auto" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-lg-auto text-center">
+                    <li class="nav-item  mr-3 mt-lg-0 mt-3">
+                        <a class="nav-link" href="index.html">主页
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown mr-3 mt-lg-0 mt-3">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true"
+                           aria-expanded="false">
+                            人员信息
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="doctor.html">医生</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="patient.html">患者</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown active mr-3 mt-lg-0 mt-3" v-if="userType==2">
+                        <a class="nav-link dropdown-toggle" role="button" href="#"
+                           data-toggle="dropdown" aria-haspopup="true"
+                           aria-expanded="false">
+                            管理
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="medicine.html">药品管理</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="schedule.html">排班</a>
+                        </div>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="login.html">登录</a>
+                    </li>
+                    <li class="nav-item active  mr-3 mt-lg-0 mt-3">
+                        <a href="information.html" class="nav-link" id="username"></a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <div class="inner-banner">
+    </div>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="index.html">主页</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">药品管理</li>
+        </ol>
     </nav>
-</header>
-<div class="inner-banner">
-</div>
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item">
-            <a href="index.html">主页</a>
-        </li>
-        <li class="breadcrumb-item active" aria-current="page">药品管理</li>
-    </ol>
-</nav>
-<section class="gallery  py-lg-5">
-    <div id="app" class="container py-4">
-        <div>
-            <template style="margin-top: 200px">
-                <!--搜索表单-->
-                <el-form :inline="true" :model="medicine" class="demo-form-inline" style="margin-left: 20px">
+    <section class="gallery  py-lg-5">
+        <div class="container py-4">
+            <div>
+                <template style="margin-top: 200px">
+                    <!--搜索表单-->
+                    <el-form :inline="true" :model="medicine" class="demo-form-inline" style="margin-left: 20px">
 
-                    <el-form-item label="根据药品ID搜索">
-                        <el-input v-model="medicine.medicineID" placeholder="ID"></el-input>
-                    </el-form-item>
-                    <el-form-item label="根据药品名称搜索">
-                        <el-input v-model="medicine.name" placeholder="名称"></el-input>
-                    </el-form-item>
+                        <el-form-item label="根据药品ID搜索">
+                            <el-input v-model="medicine.medicineID" placeholder="ID"></el-input>
+                        </el-form-item>
+                        <el-form-item label="根据药品名称搜索">
+                            <el-input v-model="medicine.name" placeholder="名称"></el-input>
+                        </el-form-item>
 
-                    <el-form-item label="供货商">
-                        <el-input v-model="medicine.supplier" placeholder="供货商">
-                        </el-input>
-                    </el-form-item>
+                        <el-form-item label="供货商">
+                            <el-input v-model="medicine.supplier" placeholder="供货商">
+                            </el-input>
+                        </el-form-item>
 
-                    <el-form-item label="产地">
-                        <el-input v-model="medicine.address" placeholder="产地">
-                        </el-input>
-                    </el-form-item>
+                        <el-form-item label="产地">
+                            <el-input v-model="medicine.address" placeholder="产地">
+                            </el-input>
+                        </el-form-item>
 
-                    <el-form-item>
-                        <el-button type="primary" @click="onSubmit">查询</el-button>
-                        <el-button type="primary" @click="onReset">重置</el-button>
-                        <el-button type="primary" href="#" data-toggle="modal" data-target="#add"
-                                   @click="beforeAdd">
-                            新增
-                        </el-button>
-                    </el-form-item>
-                </el-form>
-                <!--内容-->
-                <el-table
-                        :data="medicines"
-                        style="width: 100%"
-                        :row-class-name="tableRowClassName"
-                        @selection-change="handleSelectionChange"
-                >
-                    <el-table-column
-                            type="selection"
-                            width="55">
-                    </el-table-column>
-                    <el-table-column
-                            type="index"
-                            width="50">
-                    </el-table-column>
-                    <el-table-column
-                            prop="medicineID"
-                            label="药品ID"
-                            align="center"
-                    >
-                    </el-table-column>
-                    <el-table-column
-                            prop="name"
-                            label="药品名称"
-                            align="center"
-                    >
-                    </el-table-column>
-                    <el-table-column
-                            prop="count"
-                            label="数量"
-                            align="center"
-                    >
-                    </el-table-column>
-                    <el-table-column
-                            prop="useCount"
-                            label="已用数量"
-                            align="center"
-                    >
-                    </el-table-column>
-                    <el-table-column
-                            prop="address"
-                            label="产地"
-                            align="center"
-                    >
-                    </el-table-column>
-                    </el-table-column>
-                    <el-table-column
-                            prop="supplier"
-                            label="供货商"
-                            align="center"
-                    >
-                    </el-table-column>
-                    <el-table-column
-                            prop="userID"
-                            align="center"
-                            label="入库人ID">
-                    </el-table-column>
-
-                    <el-table-column
-                            prop="user.username"
-                            align="center"
-                            label="入库人姓名">
-                    </el-table-column>
-
-                    <el-table-column
-                            prop="createTime"
-                            align="center"
-                            label="创建时间">
-                    </el-table-column>
-
-                    <el-table-column
-                            prop="modifyTime"
-                            align="center"
-                            label="修改时间">
-                    </el-table-column>
-
-                    <el-table-column
-                            prop="price"
-                            align="center"
-                            label="价格">
-                    </el-table-column>
-
-                    <el-table-column
-                            align="center"
-                            label="操作">
-                        <el-row slot-scope="scope">
-                            <el-button type="primary" data-toggle="modal" data-target="#add"
-                                       @click="beforeUpdate(scope.row)">编辑
+                        <el-form-item>
+                            <el-button type="primary" @click="onSubmit">查询</el-button>
+                            <el-button type="primary" @click="onReset">重置</el-button>
+                            <el-button type="primary" href="#" data-toggle="modal" data-target="#add"
+                                       @click="beforeAdd">
+                                新增
                             </el-button>
-                            <br><br>
-                            <el-button type="primary" @click="deleteMedicine(scope.row)">删除</el-button>
-                        </el-row>
-                    </el-table-column>
-                </el-table>
-                <!--新增,编辑-->
-                <div class="modal fade" id="add" tabindex="-1" role="dialog" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" v-if="updateFlag==0">新增药品</h5>
-                                <h5 class="modal-title" v-else>编辑药品</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="form-group" v-if="updateFlag==0">
-                                    <label class="col-form-label">药品ID</label>
-                                    <input type="number" class="form-control" v-model="medicine.medicineID"
-                                           placeholder=" "
-                                           name="Name"
-                                           required="">
+                        </el-form-item>
+                    </el-form>
+                    <!--内容-->
+                    <el-table
+                            :data="medicines"
+                            style="width: 100%"
+                            :row-class-name="tableRowClassName"
+                            @selection-change="handleSelectionChange"
+                    >
+                        <el-table-column
+                                type="selection"
+                                width="55">
+                        </el-table-column>
+                        <el-table-column
+                                type="index"
+                                width="50">
+                        </el-table-column>
+                        <el-table-column
+                                prop="medicineID"
+                                label="药品ID"
+                                align="center"
+                        >
+                        </el-table-column>
+                        <el-table-column
+                                prop="name"
+                                label="药品名称"
+                                align="center"
+                        >
+                        </el-table-column>
+                        <el-table-column
+                                prop="count"
+                                label="数量"
+                                align="center"
+                        >
+                        </el-table-column>
+                        <el-table-column
+                                prop="useCount"
+                                label="已用数量"
+                                align="center"
+                        >
+                        </el-table-column>
+                        <el-table-column
+                                prop="address"
+                                label="产地"
+                                align="center"
+                        >
+                        </el-table-column>
+                        </el-table-column>
+                        <el-table-column
+                                prop="supplier"
+                                label="供货商"
+                                align="center"
+                        >
+                        </el-table-column>
+                        <el-table-column
+                                prop="userID"
+                                align="center"
+                                label="入库人ID">
+                        </el-table-column>
+
+                        <el-table-column
+                                prop="user.username"
+                                align="center"
+                                label="入库人姓名">
+                        </el-table-column>
+
+                        <el-table-column
+                                prop="createTime"
+                                align="center"
+                                label="创建时间">
+                        </el-table-column>
+
+                        <el-table-column
+                                prop="modifyTime"
+                                align="center"
+                                label="修改时间">
+                        </el-table-column>
+
+                        <el-table-column
+                                prop="price"
+                                align="center"
+                                label="价格">
+                        </el-table-column>
+
+                        <el-table-column
+                                align="center"
+                                label="操作">
+                            <el-row slot-scope="scope">
+                                <el-button type="primary" data-toggle="modal" data-target="#add"
+                                           @click="beforeUpdate(scope.row)">编辑
+                                </el-button>
+                                <br><br>
+                                <el-button type="primary" @click="deleteMedicine(scope.row)">删除</el-button>
+                            </el-row>
+                        </el-table-column>
+                    </el-table>
+                    <!--新增,编辑-->
+                    <div class="modal fade" id="add" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" v-if="updateFlag==0">新增药品</h5>
+                                    <h5 class="modal-title" v-else>编辑药品</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
                                 </div>
-                                <div class="form-group">
-                                    <label class="col-form-label">药品名称</label>
-                                    <input type="text" class="form-control" v-model="medicine.name" placeholder=" "
-                                           name="Password"
-                                           required="">
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-form-label">入库数量</label>
-                                    <input type="number" class="form-control" v-model="medicine.count" placeholder=" "
-                                           name="Password"
-                                           required="">
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-form-label">产地</label>
-                                    <input type="text" class="form-control" v-model="medicine.address" placeholder=" "
-                                           name="Password"
-                                           required="">
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-form-label">供应商</label>
-                                    <input type="text" class="form-control" v-model="medicine.supplier" placeholder=" "
-                                           name="Password"
-                                           required="">
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-form-label">价格</label>
-                                    <input type="number" class="form-control" v-model="medicine.price" placeholder=" "
-                                           name="Password"
-                                           required="">
-                                </div>
-                                <div class="right-w3l">
-                                    <input @click="addMedicine" type="submit" class="form-control" value="确定">
+                                <div class="modal-body">
+                                    <div class="form-group" v-if="updateFlag==0">
+                                        <label class="col-form-label">药品ID</label>
+                                        <input type="number" class="form-control" v-model="medicine.medicineID"
+                                               placeholder=" "
+                                               name="Name"
+                                               required="">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-form-label">药品名称</label>
+                                        <input type="text" class="form-control" v-model="medicine.name" placeholder=" "
+                                               name="Password"
+                                               required="">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-form-label">入库数量</label>
+                                        <input type="number" class="form-control" v-model="medicine.count"
+                                               placeholder=" "
+                                               name="Password"
+                                               required="">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-form-label">产地</label>
+                                        <input type="text" class="form-control" v-model="medicine.address"
+                                               placeholder=" "
+                                               name="Password"
+                                               required="">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-form-label">供应商</label>
+                                        <input type="text" class="form-control" v-model="medicine.supplier"
+                                               placeholder=" "
+                                               name="Password"
+                                               required="">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-form-label">价格</label>
+                                        <input type="number" class="form-control" v-model="medicine.price"
+                                               placeholder=" "
+                                               name="Password"
+                                               required="">
+                                    </div>
+                                    <div class="right-w3l">
+                                        <input @click="addMedicine" type="submit" class="form-control" value="确定">
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-            </template>
+                </template>
+            </div>
         </div>
-    </div>
-</section>
-
+    </section>
+</div>
 
 <script src="../js/jquery-2.2.3.min.js"></script>
 <script src="../js/jquery.chocolat.js"></script>

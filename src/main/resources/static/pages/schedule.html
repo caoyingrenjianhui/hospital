@@ -27,115 +27,118 @@
     <script src="../js/axios-0.18.0.js"></script>
 </head>
 <body>
-<header>
-    <nav class="navbar navbar-expand-lg navbar-light bg-gradient-secondary">
-        <h1>
-            <a class="navbar-brand text-white" href="index.html">
-                百康诊所
-            </a>
-        </h1>
-        <button class="navbar-toggler ml-md-auto" type="button" data-toggle="collapse"
-                data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ml-lg-auto text-center">
-                <li class="nav-item  mr-3 mt-lg-0 mt-3">
-                    <a class="nav-link" href="index.html">主页
-                        <span class="sr-only">(current)</span>
-                    </a>
-                </li>
-                <li class="nav-item dropdown mr-3 mt-lg-0 mt-3">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                       data-toggle="dropdown" aria-haspopup="true"
-                       aria-expanded="false">
-                        人员信息
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="doctor.html">医生</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="patient.html">患者</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown active mr-3 mt-lg-0 mt-3" v-if="userType==2">
-                    <a class="nav-link dropdown-toggle" role="button" href="#"
-                       data-toggle="dropdown" aria-haspopup="true"
-                       aria-expanded="false">
-                        管理
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="medicine.html">药品管理</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="schedule.html">排班</a>
-                    </div>
-                </li>
-                <li>
-                    <a class="nav-link" href="login.html">登录</a>
-                </li>
-                <li><a href="" class="nav-link" id="username"></a></li>
-            </ul>
-        </div>
-    </nav>
-</header>
-<div class="inner-banner">
-</div>
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item">
-            <a href="index.html">主页</a>
-        </li>
-        <li class="breadcrumb-item active" aria-current="page">排班</li>
-    </ol>
-</nav>
-<script src="../js/jquery-2.2.3.min.js"></script>
-<script src="../js/minimal-slider.js"></script>
-<link rel="stylesheet" href="../css/jquery-ui.css"/>
-<script src="../js/jquery-ui.js"></script>
-<section class="wthree-row w3-contact py-lg-5">
-    <div id="app" class="container py-4">
-        <template>
-            <div>
-                <h3>医护人员排班</h3>
-                <div>
-                    <button @click="fetchSchedule()">获取排班信息</button>
-
-                    <template>
-                        <el-table
-                                v-if="schedule.length"
-                                :data="schedule"
-                                border
-                                style="width: 100%"
-                        >
-                            <el-table-column label="医生ID" prop="doctorID"></el-table-column>
-                            <el-table-column label="日期" prop="shiftDate"></el-table-column>
-                            <el-table-column label="班次" prop="shiftType"></el-table-column>
-                        </el-table>
-                    </template>
-                </div>
+<div id="app">
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-gradient-secondary">
+            <h1>
+                <a class="navbar-brand text-white" href="index.html">
+                    百康诊所
+                </a>
+            </h1>
+            <button class="navbar-toggler ml-md-auto" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-lg-auto text-center">
+                    <li class="nav-item  mr-3 mt-lg-0 mt-3">
+                        <a class="nav-link" href="index.html">主页
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown mr-3 mt-lg-0 mt-3">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true"
+                           aria-expanded="false">
+                            人员信息
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="doctor.html">医生</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="patient.html">患者</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown active mr-3 mt-lg-0 mt-3" v-if="userType==2">
+                        <a class="nav-link dropdown-toggle" role="button" href="#"
+                           data-toggle="dropdown" aria-haspopup="true"
+                           aria-expanded="false">
+                            管理
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="medicine.html">药品管理</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="schedule.html">排班</a>
+                        </div>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="login.html">登录</a>
+                    </li>
+                    <li class="nav-item active  mr-3 mt-lg-0 mt-3">
+                        <a href="information.html" class="nav-link" id="username"></a>
+                    </li>
+                </ul>
             </div>
-        </template>
-        <template>
-            <div>
-                <el-select v-model="schedule.doctorID" placeholder="请选择医生">
-                    <el-option
-                            v-for="doctor in doctors"
-                            :key="doctor.doctorID"
-                            :label="doctor.name"
-                            :value="doctor.doctorID"
-                    ></el-option>
-                </el-select>
-                <el-date-picker v-model="schedule.shiftDate" type="date" placeholder="选择排班日期"></el-date-picker>
-                <el-select v-model="schedule.shiftType" placeholder="选择班次类型">
-                    <el-option label="上午班" value="上午班"></el-option>
-                    <el-option label="下午班" value="下午班"></el-option>
-                </el-select>
-                <el-button type="primary" @click="submitSchedule">提交排班</el-button>
-            </div>
-        </template>
+        </nav>
+    </header>
+    <div class="inner-banner">
     </div>
-</section>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="index.html">主页</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">排班</li>
+        </ol>
+    </nav>
+    <script src="../js/jquery-2.2.3.min.js"></script>
+    <script src="../js/minimal-slider.js"></script>
+    <link rel="stylesheet" href="../css/jquery-ui.css"/>
+    <script src="../js/jquery-ui.js"></script>
+    <section class="wthree-row w3-contact py-lg-5">
+        <div class="container py-4">
+            <template>
+                <div>
+                    <h3>医护人员排班</h3>
+                    <div>
+                        <button @click="fetchSchedule()">获取排班信息</button>
 
+                        <template>
+                            <el-table
+                                    v-if="schedule.length"
+                                    :data="schedule"
+                                    border
+                                    style="width: 100%"
+                            >
+                                <el-table-column label="医生ID" prop="doctorID"></el-table-column>
+                                <el-table-column label="日期" prop="shiftDate"></el-table-column>
+                                <el-table-column label="班次" prop="shiftType"></el-table-column>
+                            </el-table>
+                        </template>
+                    </div>
+                </div>
+            </template>
+            <template>
+                <div>
+                    <el-select v-model="schedule.doctorID" placeholder="请选择医生">
+                        <el-option
+                                v-for="doctor in doctors"
+                                :key="doctor.doctorID"
+                                :label="doctor.name"
+                                :value="doctor.doctorID"
+                        ></el-option>
+                    </el-select>
+                    <el-date-picker v-model="schedule.shiftDate" type="date" placeholder="选择排班日期"></el-date-picker>
+                    <el-select v-model="schedule.shiftType" placeholder="选择班次类型">
+                        <el-option label="上午班" value="上午班"></el-option>
+                        <el-option label="下午班" value="下午班"></el-option>
+                    </el-select>
+                    <el-button type="primary" @click="submitSchedule">提交排班</el-button>
+                </div>
+            </template>
+        </div>
+    </section>
+</div>
 
 <script>
     new Vue({

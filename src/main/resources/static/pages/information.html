@@ -28,113 +28,197 @@
     <script src="../js/axios-0.18.0.js"></script>
 </head>
 <body>
-<header>
-    <nav class="navbar navbar-expand-lg navbar-light bg-gradient-secondary">
-        <h1>
-            <a class="navbar-brand text-white" href="index.html">
-                百康诊所
-            </a>
-        </h1>
-        <button class="navbar-toggler ml-md-auto" type="button" data-toggle="collapse"
-                data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ml-lg-auto text-center">
-                <li class="nav-item active  mr-3 mt-lg-0 mt-3">
-                    <a class="nav-link" href="index.html">主页
-                        <span class="sr-only">(current)</span>
-                    </a>
-                </li>
-                <li class="nav-item dropdown mr-3 mt-lg-0 mt-3">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                       data-toggle="dropdown" aria-haspopup="true"
-                       aria-expanded="false">
-                        人员信息
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="doctor.html">医生</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="patient.html">患者</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown mr-3 mt-lg-0 mt-3" v-if="userType==2">
-                    <a class="nav-link dropdown-toggle" role="button" href="#"
-                       data-toggle="dropdown" aria-haspopup="true"
-                       aria-expanded="false">
-                        管理
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="medicine.html">药品管理</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="schedule.html">排班</a>
-                    </div>
-                </li>
-                <li>
-                    <a class="nav-link" href="login.html">登录</a>
-                </li>
-                <li><a href="information.html" class="nav-link" id="username"></a></li>
-            </ul>
-        </div>
-    </nav>
-</header>
-<script src="../js/jquery-2.2.3.min.js"></script>
-<script src="../js/minimal-slider.js"></script>
-<link rel="stylesheet" href="../css/jquery-ui.css"/>
-<script src="../js/jquery-ui.js"></script>
-<section class="wthree-row w3-contact py-lg-5">
-    <div id="app" style="margin-top: 100px">
-        <template>
-            <div>
-                <el-form :model="user" :inline="true" align="center">
-                    <el-form-item label="姓名">
-                        <el-input v-model="user.username" :disabled="!editing"></el-input>
-                    </el-form-item>
-                    <br>
-                    <el-form-item label="电话">
-                        <el-input v-model="user.phone" :disabled="!editing"></el-input>
-                    </el-form-item>
-                    <br>
-                    <el-form-item label="邮箱">
-                        <el-input v-model="user.email" :disabled="!editing"></el-input>
-                    </el-form-item>
-                    <br>
-                    <el-form-item label="地址">
-                        <el-input v-model="user.address" :disabled="!editing"></el-input>
-                    </el-form-item>
-                    <br>
-                    <el-form-item>
-                        <el-button v-if="!editing" type="primary" @click="toggleEditing">修改信息</el-button>
-                        <el-button v-else type="primary" @click="updateUser">保存</el-button>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button type="danger" @click="showChangePasswordDialog">修改密码</el-button>
-                    </el-form-item>
-                </el-form>
-
-                <el-dialog title="修改密码" :visible.sync="changePasswordDialogVisible">
-                    <el-form ref="passwordForm" label-width="100px">
-                        <el-form-item label="原密码" prop="oldPassword">
-                            <el-input type="password" v-model="user.oldPassword"></el-input>
-                        </el-form-item>
-                        <el-form-item label="新密码" prop="newPassword">
-                            <el-input type="password" v-model="user.password"></el-input>
-                        </el-form-item>
-                        <el-form-item label="重复密码" prop="confirmPassword">
-                            <el-input type="password" v-model="user.rePassword"></el-input>
-                        </el-form-item>
-                    </el-form>
-                    <div slot="footer" class="dialog-footer">
-                        <el-button @click="changePasswordDialogVisible = false">取消</el-button>
-                        <el-button type="primary" @click="changePassword">确认修改</el-button>
-                    </div>
-                </el-dialog>
+<div id="app">
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-gradient-secondary">
+            <h1>
+                <a class="navbar-brand text-white" href="index.html">
+                    百康诊所
+                </a>
+            </h1>
+            <button class="navbar-toggler ml-md-auto" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-lg-auto text-center">
+                    <li class="nav-item  mr-3 mt-lg-0 mt-3">
+                        <a class="nav-link" href="index.html">主页
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown mr-3 mt-lg-0 mt-3">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true"
+                           aria-expanded="false">
+                            人员信息
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="doctor.html">医生</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="patient.html">患者</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown mr-3 mt-lg-0 mt-3" v-if="userType==2">
+                        <a class="nav-link dropdown-toggle" role="button" href="#"
+                           data-toggle="dropdown" aria-haspopup="true"
+                           aria-expanded="false">
+                            管理
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="medicine.html">药品管理</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="schedule.html">排班</a>
+                        </div>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="login.html">登录</a>
+                    </li>
+                    <li class="nav-item active  mr-3 mt-lg-0 mt-3">
+                        <a href="information.html" class="nav-link" id="username"></a>
+                    </li>
+                </ul>
             </div>
-        </template>
-    </div>
-</section>
+        </nav>
+    </header>
+    <script src="../js/jquery-2.2.3.min.js"></script>
+    <script src="../js/minimal-slider.js"></script>
+    <link rel="stylesheet" href="../css/jquery-ui.css"/>
+    <script src="../js/jquery-ui.js"></script>
+    <section class="wthree-row w3-contact py-lg-5">
+        <div style="margin-top: 100px">
+            <template>
+                <div>
+                    <div style="display: flex; justify-content: center;">
+                        <el-form :model="user" :inline="true" align="center">
+                            <el-form-item label="姓名">
+                                <el-input v-model="user.username" :disabled="!editing"></el-input>
+                            </el-form-item>
+                            <br>
+                            <el-form-item label="电话">
+                                <el-input v-model="user.phone" :disabled="!editing"></el-input>
+                            </el-form-item>
+                            <br>
+                            <el-form-item label="邮箱">
+                                <el-input v-model="user.email" :disabled="!editing"></el-input>
+                            </el-form-item>
+                            <br>
+                            <el-form-item label="地址">
+                                <el-input v-model="user.address" :disabled="!editing"></el-input>
+                            </el-form-item>
+                            <br>
+                            <el-form-item>
+                                <el-button v-if="!editing" type="primary" @click="toggleEditing">修改信息</el-button>
+                                <el-button v-else type="primary" @click="updateUser">保存</el-button>
+                            </el-form-item>
+                            <el-form-item>
+                                <el-button type="danger" @click="showChangePasswordDialog">修改密码</el-button>
+                            </el-form-item>
+                        </el-form>
+                    </div>
+                    <el-table
+                            v-if="userType!=1"
+                            :data="appointments"
+                            style="width: 100%"
+                            :row-class-name="tableRowClassName"
+                            @selection-change="handleSelectionChange"
+                    >
+                        <el-table-column
+                                type="selection"
+                                width="55">
+                        </el-table-column>
+                        <el-table-column
+                                type="index"
+                                width="50">
+                        </el-table-column>
 
+                        <el-table-column
+                                prop="doctorID"
+                                label="医生ID"
+                                align="center"
+                        >
+                        </el-table-column>
+
+                        <el-table-column
+                                prop="appointmentDate"
+                                label="预约日期"
+                                align="center"
+                        >
+                        </el-table-column>
+
+                        <el-table-column
+                                prop="appointmentNotes"
+                                align="center"
+                                label="备注">
+                        </el-table-column>
+
+                        <el-table-column
+                                align="center"
+                                label="操作">
+                            <el-row slot-scope="scope">
+                                <el-button type="primary" data-toggle="modal" data-target="#add"
+                                           @click="beforeUpdate(scope.row)">编辑
+                                </el-button>
+                                <br><br>
+                                <el-button type="primary" @click="deleteAppointment(scope.row.appointmentID)">删除
+                                </el-button>
+                            </el-row>
+                        </el-table-column>
+                    </el-table>
+
+                    <el-dialog title="修改密码" :visible.sync="changePasswordDialogVisible">
+                        <el-form ref="passwordForm" label-width="100px">
+                            <el-form-item label="原密码" prop="oldPassword">
+                                <el-input type="password" v-model="user.oldPassword"></el-input>
+                            </el-form-item>
+                            <el-form-item label="新密码" prop="newPassword">
+                                <el-input type="password" v-model="user.password"></el-input>
+                            </el-form-item>
+                            <el-form-item label="重复密码" prop="confirmPassword">
+                                <el-input type="password" v-model="user.rePassword"></el-input>
+                            </el-form-item>
+                        </el-form>
+                        <div slot="footer" class="dialog-footer">
+                            <el-button @click="changePasswordDialogVisible = false">取消</el-button>
+                            <el-button type="primary" @click="changePassword">确认修改</el-button>
+                        </div>
+                    </el-dialog>
+                </div>
+            </template>
+            <div class="modal fade" id="add" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header text-center">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div>
+                            <h3>修改预约</h3>
+                            <div class="stats">
+                                <select class="form-control date mb-3" v-model="appointment.appointmentDate"
+                                        required="">
+                                    <option v-for="date in availableDates" :key="date" :value="date.shiftDate">{{
+                                        date.shiftDate }}
+                                    </option>
+                                </select>
+                                <label class="col-form-label">备注</label>
+                                <input type="text" class="form-control" v-model="appointment.appointmentNotes"
+                                       placeholder=" "
+                                       required="">
+                                <button type="submit" @click="updateAppointment" class="btn btn-agile btn-block w-100">
+                                    确定
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
 
 <script src="../js/jquery-2.2.3.min.js"></script>
 <script src="../js/jquery.chocolat.js"></script>
@@ -180,12 +264,16 @@
     new Vue({
         el: "#app",
         methods: {
+            hideModel() {
+                $('#add').modal('hide');
+                $('#appointment').modal('hide');
+            },
             toggleEditing() {
                 this.editing = !this.editing;
             },
             updateUser() {
                 axios({
-                    method: 'post',
+                    method: 'put',
                     url: 'http://localhost:9080/user/update',
                     data: this.user,
                     headers: { // 设置请求头
@@ -205,8 +293,9 @@
                 this.user.password = null
             },
             changePassword() {
+                let _this = this
                 axios({
-                    method: 'post',
+                    method: 'put',
                     url: 'http://localhost:9080/user/updatePassword',
                     data: this.user,
                     headers: { // 设置请求头
@@ -215,11 +304,66 @@
                 }).then(function (response) {
                     if (response.data.code == 20031) {
                         this.user = response.data.data
+                        _this.changePasswordDialogVisible = false;
                     } else {
                         alert(response.data.msg)
                     }
                 });
             },
+            beforeUpdate(rowDate) {
+                this.appointment = rowDate
+                let _this = this
+                axios({
+                    method: 'get',
+                    url: 'http://localhost:9080/schedule/weeklyScheduleByDoctorID/' + this.appointment.doctorID,
+                    headers: { // 设置请求头
+                        Authorization: localStorage.getItem("token")
+                    }
+                }).then(function (response) {
+                    if (response.data.code == 20041) {
+                        _this.availableDates = response.data.data
+                        _this.appointment.doctorID = doctorID
+                        _this.appointment.userID = localStorage.getItem("userID")
+                    } else {
+                        alert(response.data.msg)
+                    }
+                });
+            },
+            updateAppointment() {
+                let _this = this
+                axios({
+                    method: 'put',
+                    url: 'http://localhost:9080/appointments/update',
+                    data: this.appointment,
+                    headers: { // 设置请求头
+                        Authorization: localStorage.getItem("token")
+                    }
+                }).then(function (response) {
+                    if (response.data.code == 20031) {
+                        _this.onReset()
+                    } else {
+                        alert(response.data.msg)
+                    }
+                });
+                this.hideModel()
+            },
+            deleteAppointment(appointmentID) {
+                let _this = this
+                axios({
+                    method: 'delete',
+                    url: 'http://localhost:9080/appointments/delete/' + appointmentID,
+                    headers: { // 设置请求头
+                        Authorization: localStorage.getItem("token")
+                    }
+                }).then(function (response) {
+                    if (response.data.code == 20021) {
+                        _this.onReset()
+                    } else {
+                        alert(response.data.msg)
+                    }
+                });
+                this.hideModel()
+            }
         },
         data() {
             return {
@@ -227,6 +371,7 @@
                 userId: localStorage.getItem('userID'),
                 editing: false,
                 changePasswordDialogVisible: false,
+                availableDates: [], // 存储可用的预约日期
                 user: {
                     userID: '',
                     username: '',
@@ -239,6 +384,14 @@
                     createTime: '',
                     modifyTime: ''
                 },
+                appointments: [],
+                appointment: {
+                    doctorID: '',
+                    userID: '',
+                    appointmentDate: '',
+                    appointmentNotes: ''
+                },
+
             }
         },
         mounted: function () {
@@ -251,6 +404,15 @@
                 }
             }).then(function (response) {
                 _this.user = response.data.data
+            });
+            axios({
+                method: 'get',
+                url: 'http://localhost:9080/appointments/getAll',
+                headers: { // 设置请求头
+                    Authorization: localStorage.getItem("token")
+                }
+            }).then(function (response) {
+                _this.appointments = response.data.data
             });
         }
     })

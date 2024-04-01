@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
+import java.util.List;
 
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.Data;
@@ -44,6 +45,9 @@ public class Patient implements Serializable {
     private String symptoms;
 
     private String medicine;
+
+    @TableField(exist = false)
+    private List<Medicines> medicines;
 
     private String createTime;
 

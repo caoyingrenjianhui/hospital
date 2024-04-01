@@ -33,7 +33,7 @@ public class Appointments implements Serializable {
     @TableField(value = "userID")
     private Integer userID;
 
-    private LocalDate appointmentDate;
+    private String appointmentDate;
 
     private String appointmentNotes;
 

@@ -6,6 +6,8 @@ import com.example.service.IMedicinesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * <p>
  *  前端控制器
@@ -49,6 +51,11 @@ public class MedicinesController {
     @PostMapping("/updateCount")
     public Result updateCount(@RequestBody Medicines medicines){
         return medicinesService.updateCount(medicines);
+    }
+
+    @PutMapping("/updateMedicine")
+    public Result updateMedicine(@RequestBody List<Medicines> medicines){
+        return medicinesService.update(medicines);
     }
 
 }

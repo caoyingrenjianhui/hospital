@@ -4,12 +4,14 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.controller.Code;
 import com.example.controller.Result;
 import com.example.dao.DoctorDao;
+import com.example.dao.MedicinesDao;
 import com.example.dao.UserDao;
 import com.example.domain.Doctor;
 import com.example.domain.Medicines;
 import com.example.domain.Patient;
 import com.example.dao.PatientDao;
 import com.example.domain.User;
+import com.example.service.IMedicinesService;
 import com.example.service.IPatientService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.utils.ThreadLocalUtil;
@@ -38,6 +40,10 @@ public class PatientServiceImpl extends ServiceImpl<PatientDao, Patient> impleme
     private UserDao userDao;
     @Autowired
     private DoctorDao doctorDao;
+    @Autowired
+    private MedicinesDao medicinesDao;
+    @Autowired
+    private IMedicinesService medicinesService;
 
     @Override
     public Result add(Patient patient) {
@@ -77,9 +83,34 @@ public class PatientServiceImpl extends ServiceImpl<PatientDao, Patient> impleme
                 User selectById = userDao.selectById(doctor.getUserID());
                 doctor.setUser(selectById);
                 patient.setDoctor(doctor);
+                setMedicines(patient);
             }
         }
         return new Result(list, Code.GET_OK, "查询成功");
+    }
+
+    private void setMedicines(Patient patient) {
+        List<Medicines> medicines = new ArrayList<>();
+        if (patient.getMedicine() != null) {
+            String[] split = patient.getMedicine().split(";");
+            for (String medicineInfo : split) {
+                String[] parts = medicineInfo.split(":");
+                if (parts.length == 3) {
+                    String id = parts[0];
+                    int quantity = Integer.parseInt(parts[2]);
+                    // 在这里可以将药品 ID 和数量进行处理，例如存储到集合中或者进行其他操作
+                    System.out.println("药品ID: " + id + ", 数量: " + quantity);
+                    Medicines select = medicinesDao.selectById(id);
+                    select.setUseCount(quantity);
+                    medicines.add(select);
+                } else {
+                    // 处理药品信息格式错误的情况
+                    System.out.println("药品信息格式错误: " + medicineInfo);
+                }
+
+            }
+        }
+        patient.setMedicines(medicines);
     }
 
     @Override
@@ -102,7 +133,24 @@ public class PatientServiceImpl extends ServiceImpl<PatientDao, Patient> impleme
             return new Result(null, Code.UPDATE_ERR, "无此病人的病例");
         }
         patient.setModifyTime(LocalDate.now().toString());
+        StringBuilder sb = new StringBuilder();
+        for (Medicines medicine : patient.getMedicines()) {
+            sb.append(medicine.getMedicineID()).append(":").append(medicine.getName()).append(":").append(medicine.getUseCount()).append(";");
+        }
+        String medicinesString = sb.toString();
+        patient.setMedicine(medicinesString);
         patientDao.updateById(patient);
+        if (selectById.getMedicine() != null) {
+            for (String medicineInfo : selectById.getMedicine().split(";")) {
+                if (!medicinesString.contains(medicineInfo)) {
+                    String[] parts = medicineInfo.split(":");
+                    Medicines medicines = new Medicines();
+                    medicines.setMedicineID(Integer.valueOf(parts[0]));
+                    medicines.setUseCount(-Integer.valueOf(parts[2]));
+                    medicinesService.updateCount(medicines);
+                }
+            }
+        }
         return new Result(patient, Code.UPDATE_OK, "修改成功");
     }
 
@@ -122,6 +170,7 @@ public class PatientServiceImpl extends ServiceImpl<PatientDao, Patient> impleme
                 User selectById = userDao.selectById(doctor.getUserID());
                 doctor.setUser(selectById);
                 patient.setDoctor(doctor);
+                setMedicines(patient);
             }
         }
         return new Result(list, Code.GET_OK, "查询成功");
@@ -159,6 +208,7 @@ public class PatientServiceImpl extends ServiceImpl<PatientDao, Patient> impleme
         for (Patient p : list) {
             User user = userDao.selectById(p.getUserID());
             p.setUser(user);
+            setMedicines(p);
         }
         return new Result(list, Code.GET_OK, "查询成功");
     }

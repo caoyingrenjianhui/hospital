@@ -60,11 +60,6 @@ public class UserController {
         return userService.update(user);
     }
 
-    @PatchMapping("/updatePhoto")
-    public Result updatePhoto(@RequestParam String photo) {
-        return userService.updatePhoto(photo);
-    }
-
     @PutMapping("updatePassword")
     public Result updatePassword(@RequestBody User user, @RequestHeader("Authorization") String token) {
         return userService.updatePassword(user, token);

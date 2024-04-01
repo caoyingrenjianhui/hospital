@@ -2,14 +2,11 @@ package com.example.controller;
 
 
 import com.example.domain.Appointments;
+import com.example.domain.Doctor;
 import com.example.domain.Medicines;
 import com.example.service.IAppointmentsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -30,5 +27,19 @@ public class AppointmentsController {
         return appointmentsService.add(appointments);
     }
 
+    @PutMapping("/update")
+    public Result update(@RequestBody Appointments appointments){
+        return appointmentsService.update(appointments);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public Result delete(@PathVariable Integer id){
+        return appointmentsService.delete(id);
+    }
+
+    @GetMapping("/getAll")
+    public Result getAll(){
+        return appointmentsService.getAll();
+    }
 }
 

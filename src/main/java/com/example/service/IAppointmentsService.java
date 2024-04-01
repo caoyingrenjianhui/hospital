@@ -15,4 +15,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface IAppointmentsService extends IService<Appointments> {
 
     Result add(Appointments appointments);
+
+    Result update(Appointments appointments);
+
+    Result delete(Integer id);
+
+    Result getAll();
 }
