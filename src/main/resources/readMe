@@ -1,0 +1,111 @@
+create table if not exists appointments
+(
+	appointmentID int auto_increment
+		primary key,
+	doctorID int null,
+	userID varchar(8) null,
+	appointment_date date null,
+	appointment_notes text null,
+	isdel int default 0 null
+);
+
+create table if not exists doctor
+(
+	doctorID int auto_increment
+		primary key,
+	userID varchar(8) null,
+	department varchar(50) null,
+	specialization varchar(100) null,
+	create_time date null,
+	modify_time date null,
+	isdel int default 0 null
+);
+
+create table if not exists medicines
+(
+	medicineID int not null
+		primary key,
+	name varchar(50) null,
+	count int null,
+	use_count int default 0 null,
+	address varchar(50) null,
+	supplier varchar(50) null,
+	userID varchar(8) null,
+	create_time date null,
+	modify_time date null,
+	price decimal(10,2) null,
+	isdel int default 0 null
+);
+
+create table if not exists patient
+(
+	patientID int auto_increment
+		primary key,
+	userID varchar(8) null,
+	doctorID int null,
+	symptoms varchar(200) null,
+	medicine varchar(50) null,
+	create_time date null,
+	modify_time date null,
+	cost decimal(10,2) default 0.00 null,
+	isdel int default 0 null
+)
+comment '0';
+
+create table if not exists schedule
+(
+	scheduleID int auto_increment
+		primary key,
+	doctorID int null,
+	shift_date date null,
+	shift_type varchar(50) null,
+	create_time date null,
+	modify_time date null,
+	isdel int null
+);
+
+create table if not exists user
+(
+	userID varchar(8) not null
+		primary key,
+	username varchar(50) null,
+	password varchar(50) null,
+	email varchar(100) null,
+	phone varchar(20) null,
+	address varchar(100) null,
+	create_time date null,
+	modify_time date null,
+	user_type int null,
+	isdel int null
+);
+
+INSERT INTO hospital.appointments (appointmentID, doctorID, userID, appointment_date, appointment_notes, isdel) VALUES (1, 1, '5', '2024-04-01', '', 0);
+INSERT INTO hospital.appointments (appointmentID, doctorID, userID, appointment_date, appointment_notes, isdel) VALUES (2, 1, '5', '2024-04-01', '', 0);
+INSERT INTO hospital.appointments (appointmentID, doctorID, userID, appointment_date, appointment_notes, isdel) VALUES (3, 1, '5', '2024-04-01', '', 0);
+INSERT INTO hospital.appointments (appointmentID, doctorID, userID, appointment_date, appointment_notes, isdel) VALUES (4, 2, '5', '2024-04-01', '', 0);
+INSERT INTO hospital.appointments (appointmentID, doctorID, userID, appointment_date, appointment_notes, isdel) VALUES (5, 1, '2', '2024-04-01', '222', 1);
+INSERT INTO hospital.appointments (appointmentID, doctorID, userID, appointment_date, appointment_notes, isdel) VALUES (6, 1, '2', '2024-04-01', '哈哈哈111', 0);
+
+INSERT INTO hospital.doctor (doctorID, userID, department, specialization, create_time, modify_time, isdel) VALUES (1, '1', '1', '神经科相关病症', '2024-03-28', null, 0);
+INSERT INTO hospital.doctor (doctorID, userID, department, specialization, create_time, modify_time, isdel) VALUES (2, '4', '2', null, '2024-03-29', null, 0);
+INSERT INTO hospital.doctor (doctorID, userID, department, specialization, create_time, modify_time, isdel) VALUES (3, '6', '3', 'x小儿科', '2024-03-31', '2024-03-31', 1);
+
+INSERT INTO hospital.medicines (medicineID, name, count, use_count, address, supplier, userID, create_time, modify_time, price, isdel) VALUES (1, '布洛芬', 999, 1, '广东', '大菠萝公司哈哈哈', '1', '2024-03-29', '2024-04-01', 20.00, 0);
+INSERT INTO hospital.medicines (medicineID, name, count, use_count, address, supplier, userID, create_time, modify_time, price, isdel) VALUES (2, '止痛药', 994, 6, '未知', '某公司', '1', '2024-03-31', null, 200.00, 0);
+INSERT INTO hospital.medicines (medicineID, name, count, use_count, address, supplier, userID, create_time, modify_time, price, isdel) VALUES (3, '999感冒灵', 19997, 3, '上海', '某公司111', '1', '2024-03-31', '2024-04-01', 10.00, 0);
+INSERT INTO hospital.medicines (medicineID, name, count, use_count, address, supplier, userID, create_time, modify_time, price, isdel) VALUES (4, '44', 44, 0, '4', '4', '5', '2024-03-31', '2024-03-31', 4.00, 1);
+
+INSERT INTO hospital.patient (patientID, userID, doctorID, symptoms, medicine, create_time, modify_time, cost, isdel) VALUES (1, '2', 1, '发烧', '2:止痛药:1;', '2024-03-28', '2024-04-01', 200.00, 0);
+INSERT INTO hospital.patient (patientID, userID, doctorID, symptoms, medicine, create_time, modify_time, cost, isdel) VALUES (2, '3', 2, '头疼', null, '2024-03-29', null, null, 0);
+
+INSERT INTO hospital.schedule (scheduleID, doctorID, shift_date, shift_type, create_time, modify_time, isdel) VALUES (1, 1, '2024-04-01', '上午班', '2024-03-28', '2024-03-28', 0);
+INSERT INTO hospital.schedule (scheduleID, doctorID, shift_date, shift_type, create_time, modify_time, isdel) VALUES (2, 2, '2024-04-01', '下午班', '2024-03-28', '2024-03-28', 0);
+INSERT INTO hospital.schedule (scheduleID, doctorID, shift_date, shift_type, create_time, modify_time, isdel) VALUES (3, 1, '2024-03-30', 'Morning', '2024-03-31', null, null);
+
+INSERT INTO hospital.user (userID, username, password, email, phone, address, create_time, modify_time, user_type, isdel) VALUES ('1', '医生1', 'e10adc3949ba59abbe56e057f20f883e', 'n.hhl@qq.com', '1', '香港特别行政区玉林市城子河区', '2024-03-24', '2024-03-31', 1, 0);
+INSERT INTO hospital.user (userID, username, password, email, phone, address, create_time, modify_time, user_type, isdel) VALUES ('2', '患者11', 'e10adc3949ba59abbe56e057f20f883e', 'n.hhl@qq.com', '18167284243', '香港特别行政区玉林市城子河区', '2024-03-27', '2024-04-01', 0, 0);
+INSERT INTO hospital.user (userID, username, password, email, phone, address, create_time, modify_time, user_type, isdel) VALUES ('3', '患者2', 'e10adc3949ba59abbe56e057f20f883e', '', '3', '', '2024-03-27', '2024-03-28', 0, 0);
+INSERT INTO hospital.user (userID, username, password, email, phone, address, create_time, modify_time, user_type, isdel) VALUES ('4', '医生2', 'e10adc3949ba59abbe56e057f20f883e', null, '4', null, '2024-03-29', null, 1, 0);
+INSERT INTO hospital.user (userID, username, password, email, phone, address, create_time, modify_time, user_type, isdel) VALUES ('5', '管理员', 'e10adc3949ba59abbe56e057f20f883e', null, '5', null, '2024-03-29', null, 2, 0);
+INSERT INTO hospital.user (userID, username, password, email, phone, address, create_time, modify_time, user_type, isdel) VALUES ('6', '医生3', '1679091c5a880faf6fb5e6087eb1b2dc', '1', '6', '6', '2024-03-31', null, 0, 0);
+INSERT INTO hospital.user (userID, username, password, email, phone, address, create_time, modify_time, user_type, isdel) VALUES ('7', '患者3', '8f14e45fceea167a5a36dedd4bea2543', '7', '7', '7', '2024-03-31', null, 0, 0);
