@@ -472,7 +472,7 @@
                 let _this = this
                 if (_this.updateFlag == 1) {
                     axios({
-                        method: 'post',
+                        method: 'put',
                         url: 'http://localhost:9080/doctor/update',
                         data: this.doctor,
                         headers: { // 设置请求头

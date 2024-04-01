@@ -147,7 +147,14 @@
             return {
                 userType: localStorage.getItem("userType"),
                 selectedDate: '',
-                schedule: {},
+                schedule: {
+                    scheduleID: '',
+                    doctorID: '',
+                    shiftDate: '',
+                    shiftType: '',
+                    createTime: '',
+                    modifyTime: ''
+                },
                 doctors: [] // 从后端获取的医生列表
             };
         },
