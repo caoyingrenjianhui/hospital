@@ -406,6 +406,7 @@
                         _this.availableDates = response.data.data
                         _this.appointment.doctorID = doctorID
                         _this.appointment.userID = localStorage.getItem("userID")
+                        alert(response.data.msg)
                     } else {
                         alert(response.data.msg)
                     }
@@ -442,6 +443,7 @@
                 }).then(function (response) {
                     if (response.data.code == 20041) {
                         _this.doctors = response.data.data
+                        alert(response.data.msg)
                     } else {
                         alert(response.data.msg)
                     }
@@ -481,6 +483,7 @@
                     }).then(function (response) {
                         if (response.data.code == 20031) {
                             this.onReset()
+                            alert(response.data.msg)
                         } else {
                             alert(response.data.msg)
                         }
@@ -496,6 +499,7 @@
                     }).then(function (response) {
                         if (response.data.code == 20011) {
                             _this.onReset()
+                            alert(response.data.msg)
                         } else {
                             alert(response.data.msg)
                         }
@@ -518,6 +522,7 @@
                 }).then(function (response) {
                     if (response.data.code == 20021) {
                         _this.onSubmit()
+                        alert(response.data.msg)
                     } else {
                         alert(response.data.msg)
                     }
