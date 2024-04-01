@@ -36,7 +36,9 @@ public class MedicinesServiceImpl extends ServiceImpl<MedicinesDao, Medicines> i
 
     @Override
     public Result add(Medicines medicines) {
-        medicines.setCreateTime(LocalDate.now().toString());
+        if (medicines.getAddress() == null || medicines.getCount() == null || medicines.getName() == null || medicines.getSupplier() == null ||
+                medicines.getAddress() == "" || medicines.getName() == "" || medicines.getSupplier() == "")
+            medicines.setCreateTime(LocalDate.now().toString());
         Map<String, Object> map = ThreadLocalUtil.get();
         medicines.setUserID((String) map.get("userID"));
         if (medicinesDao.selectById(medicines.getMedicineID()) != null) {

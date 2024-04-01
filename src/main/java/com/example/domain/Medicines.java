@@ -26,7 +26,7 @@ public class Medicines implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "medicineID", type = IdType.ASSIGN_ID)
+    @TableId(value = "medicineID", type = IdType.AUTO)
     private Integer medicineID;
 
     private String name;
