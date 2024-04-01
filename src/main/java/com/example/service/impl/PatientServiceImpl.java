@@ -209,6 +209,10 @@ public class PatientServiceImpl extends ServiceImpl<PatientDao, Patient> impleme
             User user = userDao.selectById(p.getUserID());
             p.setUser(user);
             setMedicines(p);
+            Doctor doctor = doctorDao.selectById(p.getDoctorID());
+            User selectById = userDao.selectById(doctor.getUserID());
+            doctor.setUser(selectById);
+            patient.setDoctor(doctor);
         }
         return new Result(list, Code.GET_OK, "查询成功");
     }
