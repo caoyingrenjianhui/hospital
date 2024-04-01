@@ -208,11 +208,11 @@
                                            @click="beforeUpdateMedicine(scope.row)">开药
                                 </el-button>
                                 <br><br>
-                                <el-button type="primary" data-toggle="modal" data-target="#add"
+                                <el-button type="primary" data-toggle="modal" data-target="#add" v-if="userType==2"
                                            @click="beforeUpdate(scope.row)">编辑
                                 </el-button>
                                 <br><br>
-                                <el-button type="primary" @click="deletePatient(scope.row.doctorID)">删除</el-button>
+                                <el-button type="primary" v-if="userType==2" @click="deletePatient(scope.row.doctorID)">删除</el-button>
                             </el-row>
                         </el-table-column>
                     </el-table>
