@@ -271,6 +271,19 @@
             toggleEditing() {
                 this.editing = !this.editing;
             },
+            //重置查询
+            onReset() {
+                let _this = this
+                axios({
+                    method: 'get',
+                    url: 'http://localhost:9080/appointments/getAll',
+                    headers: { // 设置请求头
+                        Authorization: localStorage.getItem("token")
+                    }
+                }).then(function (response) {
+                    _this.appointments = response.data.data
+                });
+            },
             updateUser() {
                 axios({
                     method: 'put',
