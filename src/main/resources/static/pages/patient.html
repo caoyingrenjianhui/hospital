@@ -401,6 +401,7 @@
             },
             // 查询方法
             onSubmit() {
+                this.patient.us
                 let _this = this
                 axios({
                     method: 'post',
@@ -439,6 +440,21 @@
                 this.updateFlag = 1
                 console.log(this.patient)
             },
+            getMyPatient(){
+                let _this = this
+                axios({
+                    method: 'get',
+                    url: 'http://localhost:9080/patient/getPatient',
+                    headers: { // 设置请求头
+                        Authorization: localStorage.getItem("token")
+                    }
+                    // responseType: 'stream'
+                }).then(function (response) {
+                    console.log("发送成功")
+                    //前边的data和后边的data不同，后边的data才自己自定义的
+                    _this.patients = response.data.data
+                });
+            },
             addPatient() {
                 let _this = this
                 if (this.updateFlag == 1) {
@@ -451,7 +467,8 @@
                         }
                     }).then(function (response) {
                         if (response.data.code == 20031) {
-                            _this.onReset()
+                            _this.beforeAdd()
+                            _this.getMyPatient()
                         } else {
                             alert(response.data.msg)
                         }
@@ -466,7 +483,8 @@
                         }
                     }).then(function (response) {
                         if (response.data.code == 20011) {
-                            _this.onReset()
+                            _this.beforeAdd()
+                            _this.getMyPatient()
                         } else {
                             alert(response.data.msg)
                         }
