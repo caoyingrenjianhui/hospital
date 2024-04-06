@@ -73,6 +73,9 @@ public class DoctorServiceImpl extends ServiceImpl<DoctorDao, Doctor> implements
         int update = doctorDao.updateById(doctor);
         int i = doctorDao.deleteById(id);
         if (i != 0) {
+            User user = userDao.selectById(doctor.getUserID());
+            user.setUserType(UserType.common.getCode());
+            userDao.updateById(user);
             return new Result(null, Code.DELETE_OK, "删除成功");
         } else {
             return new Result(null, Code.DELETE_ERR, "删除失败");

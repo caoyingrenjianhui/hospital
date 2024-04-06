@@ -120,7 +120,7 @@
                             <el-button type="primary" @click="onSubmit()">查询</el-button>
                             <el-button type="primary" @click="onReset()">重置</el-button>
                             <el-button type="primary" data-toggle="modal" data-target="#add"
-                                       @click="beforeAdd">
+                                       @click="beforeAdd" v-if="userType==1">
                                 新增
                             </el-button>
                         </el-form-item>
@@ -212,7 +212,9 @@
                                            @click="beforeUpdate(scope.row)">编辑
                                 </el-button>
                                 <br><br>
-                                <el-button type="primary" v-if="userType==2" @click="deletePatient(scope.row.doctorID)">删除</el-button>
+                                <el-button type="primary" v-if="userType==2" @click="deletePatient(scope.row.doctorID)">
+                                    删除
+                                </el-button>
                             </el-row>
                         </el-table-column>
                     </el-table>
@@ -495,7 +497,7 @@
             beforeUpdateMedicine(rowDate) {
                 this.patient = rowDate
             },
-            removeMedicine(index,medicine) {
+            removeMedicine(index, medicine) {
                 this.patient.medicines.splice(index, 1);
                 this.patient.cost = this.patient.cost - (medicine.price * medicine.useCount)
             },
