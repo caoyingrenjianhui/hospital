@@ -14,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
@@ -49,7 +51,8 @@ public class ScheduleServiceImpl extends ServiceImpl<ScheduleDao, Schedule> impl
         String endDateStr = endDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         // 调用 MyBatis-Plus 的方法来查询一周内的排班信息
         List<Schedule> schedules = scheduleDao.selectList(new QueryWrapper<Schedule>()
-                .between("shift_date", startDateStr, endDateStr));
+                .ge("shift_date", startDateStr)
+                .le("shift_date", endDateStr));
         return new Result(schedules, Code.GET_OK, "查询成功");
     }
 
@@ -78,16 +81,19 @@ public class ScheduleServiceImpl extends ServiceImpl<ScheduleDao, Schedule> impl
             return new Result(null, Code.SAVE_ERR, "新增失败，系统中无此医生");
         }
         schedule.setCreateTime(LocalDate.now().toString());
-
+        schedule.setModifyTime(null);
         try {
             // 解析前端传递的日期字符串
             SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
             Date date = inputFormat.parse(schedule.getShiftDate());
-
-            // 格式化日期为数据库支持的格式
-            SimpleDateFormat databaseFormat = new SimpleDateFormat("yyyy-MM-dd");
-            String databaseDateString = databaseFormat.format(date);
-            schedule.setShiftDate(databaseDateString);
+            Instant instant = date.toInstant();
+            ZoneId zoneId = ZoneId.systemDefault();
+            LocalDate localDate = instant.atZone(zoneId).toLocalDate();
+            LocalDate nextDay = localDate.plusDays(1);
+            Date nextDate = Date.from(nextDay.atStartOfDay(zoneId).toInstant());
+            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String nextDayFormatted = outputFormat.format(nextDate);
+            schedule.setShiftDate(nextDayFormatted);
         } catch (Exception e) {
             System.out.println("日期转换失败：" + e.getMessage());
         }

@@ -105,8 +105,8 @@
 
                         <template>
                             <el-table
-                                    v-if="schedule.length"
-                                    :data="schedule"
+                                    v-if="schedules.length"
+                                    :data="schedules"
                                     border
                                     style="width: 100%"
                             >
@@ -155,6 +155,7 @@
                     createTime: '',
                     modifyTime: ''
                 },
+                schedules:[],
                 doctors: [] // 从后端获取的医生列表
             };
         },
@@ -173,7 +174,7 @@
                         Authorization: localStorage.getItem("token")
                     }
                 }).then(function (response) {
-                    _this.schedule = response.data.data
+                    _this.schedules = response.data.data
                 });
             },
             submitSchedule() {

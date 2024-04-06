@@ -61,7 +61,7 @@ create table if not exists schedule
 	shift_type varchar(50) null,
 	create_time date null,
 	modify_time date null,
-	isdel int null
+	isdel int default 0 null
 );
 
 create table if not exists user

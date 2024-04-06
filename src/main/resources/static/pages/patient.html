@@ -519,7 +519,7 @@
                     }
                 }).then(function (res) {
                     if (res.data.code == 20031) {
-                        _this.onReset()
+                        _this.beforeAdd()
                         _this.hideModel()
                     } else {
                         alert(res.data.msg)
