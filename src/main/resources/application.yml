@@ -10,7 +10,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql:///hospital
     username: root
-    password: 2222
+    password: root
     type: com.alibaba.druid.pool.DruidDataSource
   servlet:
     multipart:

@@ -7,7 +7,6 @@ import com.example.dao.DoctorDao;
 import com.example.domain.Doctor;
 import com.example.domain.Schedule;
 import com.example.dao.ScheduleDao;
-import com.example.domain.UserType;
 import com.example.service.IScheduleService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,6 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * <p>
@@ -97,11 +95,42 @@ public class ScheduleServiceImpl extends ServiceImpl<ScheduleDao, Schedule> impl
         } catch (Exception e) {
             System.out.println("日期转换失败：" + e.getMessage());
         }
+        QueryWrapper<Schedule> wrapper = new QueryWrapper<>();
+        wrapper.eq("shift_date", schedule.getShiftDate());
+        wrapper.eq("shift_type", schedule.getShiftType());
+        wrapper.eq("doctorID", schedule.getDoctorID());
+        List<Schedule> schedules = scheduleDao.selectList(wrapper);
+        if (schedules.size() != 0) {
+            return new Result(doctor, Code.SAVE_ERR, "新增失败，系统中已有相同排班");
+        }
         int insert = scheduleDao.insert(schedule);
         if (insert != 0) {
             return new Result(doctor, Code.SAVE_OK, "新增成功");
         } else {
             return new Result(doctor, Code.SAVE_ERR, "新增失败，请联系管理员");
+        }
+    }
+
+    @Override
+    public Result update(Schedule schedule) {
+        int i = scheduleDao.updateById(schedule);
+        if (i != 0) {
+            return new Result(null, Code.UPDATE_OK, "修改成功");
+        } else {
+            return new Result(null, Code.UPDATE_ERR, "修改失败");
+        }
+    }
+
+    @Override
+    public Result delete(Integer id) {
+        Schedule schedule = scheduleDao.selectById(id);
+        schedule.setModifyTime(LocalDate.now().toString());
+        int update = scheduleDao.updateById(schedule);
+        int i = scheduleDao.deleteById(id);
+        if (i != 0) {
+            return new Result(null, Code.DELETE_OK, "删除成功");
+        } else {
+            return new Result(null, Code.DELETE_ERR, "删除失败");
         }
     }
 }

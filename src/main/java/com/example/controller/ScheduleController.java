@@ -41,5 +41,16 @@ public class ScheduleController {
     public Result createSchedule(@RequestBody Schedule schedule) {
         return scheduleService.createSchedule(schedule);
     }
+
+    @PostMapping("/update")
+    public Result updateSchedule(@RequestBody Schedule schedule) {
+        return scheduleService.update(schedule);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public Result delete(@PathVariable Integer id){
+        return scheduleService.delete(id);
+    }
+
 }
 

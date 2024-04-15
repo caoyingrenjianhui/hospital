@@ -21,4 +21,8 @@ public interface IScheduleService extends IService<Schedule> {
     Result weeklyScheduleByDoctorID(Integer id);
 
     Result createSchedule(Schedule schedule);
+
+    Result update(Schedule schedule);
+
+    Result delete(Integer id);
 }

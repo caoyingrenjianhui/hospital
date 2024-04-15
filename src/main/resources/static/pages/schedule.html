@@ -113,8 +113,43 @@
                                 <el-table-column label="医生ID" prop="doctorID"></el-table-column>
                                 <el-table-column label="日期" prop="shiftDate"></el-table-column>
                                 <el-table-column label="班次" prop="shiftType"></el-table-column>
+                                <el-table-column
+                                        align="center"
+                                        label="操作">
+                                    <el-row slot-scope="scope">
+                                        <el-button type="primary" data-toggle="modal" data-target="#update" v-if="userType==2"
+                                                   @click="beforeUpdate(scope.row)">编辑
+                                        </el-button>
+                                        <el-button type="primary" v-if="userType==2" @click="deleteSchedule(scope.row.scheduleID)">删除</el-button>
+                                    </el-row>
+                                </el-table-column>
                             </el-table>
                         </template>
+
+                        <div class="modal fade" id="update" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">编辑</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <input v-model="schedule.scheduleID" class="form-control" placeholder=" "
+                                               required="" disabled>
+                                        <el-date-picker v-model="schedule.shiftDate" type="date" placeholder="选择排班日期"></el-date-picker>
+                                        <el-select v-model="schedule.shiftType" placeholder="选择班次类型">
+                                            <el-option label="上午班" value="上午班"></el-option>
+                                            <el-option label="下午班" value="下午班"></el-option>
+                                        </el-select>
+                                        <div class="right-w3l">
+                                            <input @click="confirm" type="submit" class="form-control" value="确定">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </template>
@@ -160,6 +195,43 @@
             };
         },
         methods: {
+            beforeUpdate(rowDate) {
+                this.schedule = rowDate
+            },
+            deleteSchedule(scheduleID) {
+                let _this = this
+                axios({
+                    method: 'delete',
+                    url: 'http://localhost:9080/schedule/delete/' + scheduleID,
+                    headers: { // 设置请求头
+                        Authorization: localStorage.getItem("token")
+                    }
+                }).then(function (response) {
+                    if (response.data.code == 20021) {
+                        _this.onReset()
+                    } else {
+                        alert(response.data.msg)
+                    }
+                });
+            },
+            confirm(){
+                let _this = this
+                axios({
+                    method: 'post',
+                    url: 'http://localhost:9080/schedule/update',
+                    data: this.schedule,
+                    headers: { // 设置请求头
+                        Authorization: localStorage.getItem("token")
+                    }
+                }).then(function (response) {
+                    if (response.data.code == 20031) {
+                        _this.onReset()
+                    } else {
+                        alert(response.data.msg)
+                    }
+                });
+                $('#update').modal('hide');
+            },
             //重置查询
             onReset() {
                 this.schedule = {}

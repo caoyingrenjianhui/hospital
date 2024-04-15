@@ -41,5 +41,11 @@ public class AppointmentsController {
     public Result getAll(){
         return appointmentsService.getAll();
     }
+
+    @GetMapping("/getMyAppointment")
+    public Result getMyAppointment(){
+        return appointmentsService.getMyAppointment();
+    }
+
 }
 

@@ -21,4 +21,6 @@ public interface IAppointmentsService extends IService<Appointments> {
     Result delete(Integer id);
 
     Result getAll();
+
+    Result getMyAppointment();
 }

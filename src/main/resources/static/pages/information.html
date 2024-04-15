@@ -118,7 +118,6 @@
                         </el-form>
                     </div>
                     <el-table
-                            v-if="userType!=1"
                             :data="appointments"
                             style="width: 100%"
                             :row-class-name="tableRowClassName"
@@ -158,10 +157,10 @@
                                 label="操作">
                             <el-row slot-scope="scope">
                                 <el-button type="primary" data-toggle="modal" data-target="#add"
-                                           @click="beforeUpdate(scope.row)">编辑
+                                           @click="beforeUpdate(scope.row)" v-if="userType!=1">编辑
                                 </el-button>
                                 <br><br>
-                                <el-button type="primary" @click="deleteAppointment(scope.row.appointmentID)">删除
+                                <el-button type="primary" @click="deleteAppointment(scope.row.appointmentID)" v-if="userType!=1">删除
                                 </el-button>
                             </el-row>
                         </el-table-column>
@@ -274,15 +273,27 @@
             //重置查询
             onReset() {
                 let _this = this
-                axios({
-                    method: 'get',
-                    url: 'http://localhost:9080/appointments/getAll',
-                    headers: { // 设置请求头
-                        Authorization: localStorage.getItem("token")
-                    }
-                }).then(function (response) {
-                    _this.appointments = response.data.data
-                });
+                if (this.userType==1){
+                    axios({
+                        method: 'get',
+                        url: 'http://localhost:9080/appointments/getMyAppointment',
+                        headers: { // 设置请求头
+                            Authorization: localStorage.getItem("token")
+                        }
+                    }).then(function (response) {
+                        _this.appointments = response.data.data
+                    });
+                }else {
+                    axios({
+                        method: 'get',
+                        url: 'http://localhost:9080/appointments/getAll',
+                        headers: { // 设置请求头
+                            Authorization: localStorage.getItem("token")
+                        }
+                    }).then(function (response) {
+                        _this.appointments = response.data.data
+                    });
+                }
             },
             updateUser() {
                 axios({
@@ -418,15 +429,27 @@
             }).then(function (response) {
                 _this.user = response.data.data
             });
-            axios({
-                method: 'get',
-                url: 'http://localhost:9080/appointments/getAll',
-                headers: { // 设置请求头
-                    Authorization: localStorage.getItem("token")
-                }
-            }).then(function (response) {
-                _this.appointments = response.data.data
-            });
+            if (this.userType==1){
+                axios({
+                    method: 'get',
+                    url: 'http://localhost:9080/appointments/getMyAppointment',
+                    headers: { // 设置请求头
+                        Authorization: localStorage.getItem("token")
+                    }
+                }).then(function (response) {
+                    _this.appointments = response.data.data
+                });
+            }else {
+                axios({
+                    method: 'get',
+                    url: 'http://localhost:9080/appointments/getAll',
+                    headers: { // 设置请求头
+                        Authorization: localStorage.getItem("token")
+                    }
+                }).then(function (response) {
+                    _this.appointments = response.data.data
+                });
+            }
         }
     })
 </script>

@@ -421,6 +421,7 @@
                     }
                 }).then(function (response) {
                     if (response.data.code == 20011) {
+                        alert(response.data.msg)
                         this.onReset()
                     } else {
                         alert(response.data.msg)
