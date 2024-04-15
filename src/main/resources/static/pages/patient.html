@@ -212,9 +212,7 @@
                                            @click="beforeUpdate(scope.row)">编辑
                                 </el-button>
                                 <br><br>
-                                <el-button type="primary" v-if="userType==2" @click="deletePatient(scope.row.doctorID)">
-                                    删除
-                                </el-button>
+                                <el-button type="primary" v-if="userType!=1" @click="deletePatient(scope.row.doctorID)">删除</el-button>
                             </el-row>
                         </el-table-column>
                     </el-table>
@@ -539,8 +537,7 @@
                     }
                 }).then(function (res) {
                     if (res.data.code == 20031) {
-                        _this.beforeAdd()
-                        _this.hideModel()
+                        location.reload()
                     } else {
                         alert(res.data.msg)
                     }
