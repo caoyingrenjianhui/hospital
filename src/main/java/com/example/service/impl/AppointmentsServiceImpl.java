@@ -44,6 +44,7 @@ public class AppointmentsServiceImpl extends ServiceImpl<AppointmentsDao, Appoin
         wrapper.eq("doctorID", appointments.getDoctorID());
         wrapper.eq("userID", appointments.getUserID());
         wrapper.eq("appointment_date", appointments.getAppointmentDate());
+        wrapper.eq("shift_type", appointments.getShiftType());
         List<Appointments> list = appointmentsDao.selectList(wrapper);
         if (list.size() != 0) {
             return new Result(doctor, Code.SAVE_ERR, "预约失败，已有相同预约记录");
@@ -51,6 +52,7 @@ public class AppointmentsServiceImpl extends ServiceImpl<AppointmentsDao, Appoin
         QueryWrapper<Appointments> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("doctorID", appointments.getDoctorID());
         queryWrapper.eq("appointment_date", appointments.getAppointmentDate());
+        queryWrapper.eq("shift_type", appointments.getShiftType());
         List<Appointments> selectList = appointmentsDao.selectList(queryWrapper);
         if (selectList.size() >= 10) {
             return new Result(doctor, Code.SAVE_ERR, "预约失败，该医生当天已约满");
