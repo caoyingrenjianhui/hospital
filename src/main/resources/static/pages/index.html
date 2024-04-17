@@ -61,6 +61,11 @@
                             <a class="dropdown-item" href="patient.html">患者</a>
                         </div>
                     </li>
+                    <li class="nav-item mr-3 mt-lg-0 mt-3">
+                        <a class="nav-link" href="appointmentDoctor.html">预约
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
                     <li class="nav-item  mr-3 mt-lg-0 mt-3">
                         <a class="nav-link" href="appointment.html">我的预约
                             <span class="sr-only">(current)</span>
@@ -281,9 +286,9 @@
         });
 
     });
-    // 从 localStorage 中获取用户名
-    const username = localStorage.getItem('name');
-    console.log(localStorage.getItem('name'))
+    // 从 sessionStorage 中获取用户名
+    const username = sessionStorage.getItem('name');
+    console.log(sessionStorage.getItem('name'))
     // 显示用户名在页面上
     if (username != null) {
         document.getElementById('username').textContent = username;
@@ -293,11 +298,11 @@
 
     let userType; // 声明一个变量用于存储 userType 的值
 
-    // 获取 localStorage 中的 userType，并将其转换为数字类型
-    if (localStorage.getItem("userType") != null) {
-        userType = parseInt(localStorage.getItem("userType"));
+    // 获取 sessionStorage 中的 userType，并将其转换为数字类型
+    if (sessionStorage.getItem("userType") != null) {
+        userType = parseInt(sessionStorage.getItem("userType"));
     } else {
-        userType = 0; // 如果 localStorage 中没有 userType，则设置默认值为 0 或其他适当的默认值
+        userType = 0; // 如果 sessionStorage 中没有 userType，则设置默认值为 0 或其他适当的默认值
     }
     console.log(userType)
 </script>
@@ -313,17 +318,16 @@
         methods: {
             beforeDestroy() {
                 // 移除页面关闭事件监听器，防止内存泄漏
-                window.removeEventListener('beforeunload', this.clearLocalStorage);
+                window.removeEventListener('beforeunload', this.clearsessionStorage);
             },
-            clearLocalStorage() {
-                localStorage.removeItem("password");
-                localStorage.removeItem("name");
+            clearsessionStorage() {
+                sessionStorage.clear()
             }
         },
         data() {
             return {
-                userType: localStorage.getItem('userType'),
-                userId: localStorage.getItem('userID'),
+                userType: sessionStorage.getItem('userType'),
+                userId: sessionStorage.getItem('userID'),
             }
         },
         mounted: function () {
@@ -332,13 +336,13 @@
                 method: 'get',
                 url: 'http://localhost:9080/doctor/getAll',
                 headers: { // 设置请求头
-                    Authorization: localStorage.getItem("token")
+                    Authorization: sessionStorage.getItem("token")
                 }
                 // responseType: 'stream'
             }).then(function (response) {
                 _this.doctors = response.data.data
             });
-            window.addEventListener('beforeunload', this.clearLocalStorage);
+            // window.addEventListener('beforeunload', this.clearsessionStorage);
         }
     })
 </script>

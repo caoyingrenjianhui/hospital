@@ -49,6 +49,11 @@
                             <a class="dropdown-item" href="patient.html">患者</a>
                         </div>
                     </li>
+                    <li class="nav-item mr-3 mt-lg-0 mt-3">
+                        <a class="nav-link" href="appointmentDoctor.html">预约
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
                     <li class="nav-item  mr-3 mt-lg-0 mt-3">
                         <a class="nav-link" href="appointment.html">我的预约
                             <span class="sr-only">(current)</span>
@@ -160,26 +165,8 @@
                         >
                         </el-table-column>
                         <el-table-column
-                                prop="userID"
-                                label="身份证号"
-                                align="center"
-                        >
-                        </el-table-column>
-                        <el-table-column
                                 prop="user.username"
                                 label="姓名"
-                                align="center"
-                        >
-                        </el-table-column>
-                        <el-table-column
-                                prop="user.phone"
-                                label="电话"
-                                align="center"
-                        >
-                        </el-table-column>
-                        <el-table-column
-                                prop="user.address"
-                                label="地址"
                                 align="center"
                         >
                         </el-table-column>
@@ -197,12 +184,14 @@
                         </el-table-column>
 
                         <el-table-column
+                                v-if="userType==2"
                                 prop="createTime"
                                 align="center"
                                 label="创建时间">
                         </el-table-column>
 
                         <el-table-column
+                                v-if="userType==2"
                                 prop="modifyTime"
                                 align="center"
                                 label="修改时间">
@@ -215,6 +204,11 @@
                                 <el-button type="primary" data-toggle="modal" data-target="#appointment"
                                            @click="beforeAppointment(scope.row.doctorID)">
                                     预约
+                                </el-button>
+                                <br><br>
+                                <el-button type="primary" data-toggle="modal" data-target="#view"
+                                           @click="beforeView(scope.row)">
+                                    查看履历
                                 </el-button>
                                 <br><br>
                                 <el-button type="primary" data-toggle="modal" data-target="#add" v-if="userType==2"
@@ -264,7 +258,7 @@
             <div class="modal fade" id="add" tabindex="-1" role="dialog" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
-                        <div class="modal-header">
+                        <div class="modal-header bg-primary text-white">
                             <h5 class="modal-title" v-if="updateFlag==0">新增医生</h5>
                             <h5 class="modal-title" v-else>编辑医生</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -274,30 +268,36 @@
                         <div class="modal-body">
                             <div class="form-group" v-if="updateFlag==0">
                                 <label class="col-form-label">医生身份证号</label>
-                                <input type="text" class="form-control" v-model="doctor.userID" placeholder=" "
-                                       required="">
+                                <input type="text" class="form-control" v-model="doctor.userID" placeholder="请输入医生身份证号"
+                                       required>
                             </div>
                             <div class="form-group">
-                                <el-select v-model="doctor.department" placeholder="科室">
-                                    <el-option value="神经科">神经科</el-option>
-                                    <el-option value="牙科">牙科</el-option>
-                                    <el-option value="心脏病学">心脏病学</el-option>
-                                    <el-option value="小儿科">小儿科</el-option>
-                                    <el-option value="肺病学">肺病学</el-option>
-                                    <el-option value="眼科学">眼科学</el-option>
-                                    <el-option value="诊断">诊断</el-option>
-                                    <el-option value="创伤学">创伤学</el-option>
-                                </el-select>
+                                <label class="col-form-label">科室</label>
+                                <select class="form-control" v-model="doctor.department" required>
+                                    <option value="">请选择科室</option>
+                                    <option value="神经科">神经科</option>
+                                    <option value="心脏病学">心脏病学</option>
+                                    <option value="小儿科">小儿科</option>
+                                    <option value="肺病学">肺病学</option>
+                                    <option value="眼科学">眼科学</option>
+                                    <option value="诊断">诊断</option>
+                                    <option value="创伤学">创伤学</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-form-label">履历</label>
+                                <input type="text" class="form-control" v-model="doctor.record" placeholder="请输入医生履历信息"
+                                       required>
                             </div>
                             <div class="form-group">
                                 <label class="col-form-label">擅长</label>
-                                <input type="text" class="form-control" v-model="doctor.specialization" placeholder=" "
-                                       name="Password"
-                                       required="">
+                                <input type="text" class="form-control" v-model="doctor.specialization" placeholder="请输入医生擅长领域"
+                                       required>
                             </div>
-                            <div class="right-w3l">
-                                <input @click="addDoctor" type="submit" class="form-control" value="确定">
-                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                            <button type="button" class="btn btn-primary" @click="addDoctor">确定</button>
                         </div>
                     </div>
                 </div>
@@ -333,6 +333,28 @@
                     </div>
                 </div>
             </div>
+
+            <div class="modal fade" id="view" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header text-center">
+                            <h4 class="modal-title">医生履历</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="record" class="col-form-label">履历</label>
+                                <input type="text" id="record" class="form-control" v-model="record" disabled placeholder="请输入医生的履历信息" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 </div>
@@ -364,9 +386,9 @@
         });
 
     });
-    // 从 localStorage 中获取用户名
-    const username = localStorage.getItem('name');
-    console.log(localStorage.getItem('name'))
+    // 从 sessionStorage 中获取用户名
+    const username = sessionStorage.getItem('name');
+    console.log(sessionStorage.getItem('name'))
     // 显示用户名在页面上
     if (username != null) {
         document.getElementById('username').textContent = username;
@@ -397,6 +419,9 @@
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
+            beforeView(rowDate){
+                this.record = rowDate.record
+            },
             //查询可预约的时间
             beforeAppointment(doctorID) {
                 let _this = this
@@ -404,13 +429,13 @@
                     method: 'get',
                     url: 'http://localhost:9080/schedule/weeklyScheduleByDoctorID/' + doctorID,
                     headers: { // 设置请求头
-                        Authorization: localStorage.getItem("token")
+                        Authorization: sessionStorage.getItem("token")
                     }
                 }).then(function (response) {
                     if (response.data.code == 20041) {
                         _this.availableDates = response.data.data
                         _this.appointment.doctorID = doctorID
-                        _this.appointment.userID = localStorage.getItem("userID")
+                        _this.appointment.userID = sessionStorage.getItem("userID")
                     } else {
                         alert(response.data.msg)
                     }
@@ -424,7 +449,7 @@
                     url: 'http://localhost:9080/appointments/add',
                     data: this.appointment,
                     headers: { // 设置请求头
-                        Authorization: localStorage.getItem("token")
+                        Authorization: sessionStorage.getItem("token")
                     }
                 }).then(function (response) {
                     if (response.data.code == 20011) {
@@ -444,7 +469,7 @@
                     url: 'http://localhost:9080/doctor/select',
                     data: this.doctor,
                     headers: { // 设置请求头
-                        Authorization: localStorage.getItem("token")
+                        Authorization: sessionStorage.getItem("token")
                     }
                 }).then(function (response) {
                     if (response.data.code == 20041) {
@@ -484,7 +509,7 @@
                         url: 'http://localhost:9080/doctor/update',
                         data: this.doctor,
                         headers: { // 设置请求头
-                            Authorization: localStorage.getItem("token")
+                            Authorization: sessionStorage.getItem("token")
                         }
                     }).then(function (response) {
                         if (response.data.code == 20031) {
@@ -499,7 +524,7 @@
                         url: 'http://localhost:9080/doctor/add',
                         data: this.doctor,
                         headers: { // 设置请求头
-                            Authorization: localStorage.getItem("token")
+                            Authorization: sessionStorage.getItem("token")
                         }
                     }).then(function (response) {
                         if (response.data.code == 20011) {
@@ -521,7 +546,7 @@
                     method: 'delete',
                     url: 'http://localhost:9080/doctor/delete/' + doctorID,
                     headers: { // 设置请求头
-                        Authorization: localStorage.getItem("token")
+                        Authorization: sessionStorage.getItem("token")
                     }
                 }).then(function (response) {
                     if (response.data.code == 20021) {
@@ -533,17 +558,17 @@
             },
             beforeDestroy() {
                 // 移除页面关闭事件监听器，防止内存泄漏
-                window.removeEventListener('beforeunload', this.clearLocalStorage);
+                window.removeEventListener('beforeunload', this.clearsessionStorage);
             },
-            clearLocalStorage() {
-                localStorage.removeItem("password");
-                localStorage.removeItem("name");
+            clearsessionStorage() {
+                sessionStorage.clear()
             }
         },
         data() {
             return {
-                userType: localStorage.getItem('userType'),
-                userId: localStorage.getItem('userID'),
+                record:"",
+                userType: sessionStorage.getItem('userType'),
+                userId: sessionStorage.getItem('userID'),
                 updateFlag: 0,
                 // 当前页码
                 currentPage: 1,
@@ -591,13 +616,13 @@
                 method: 'get',
                 url: 'http://localhost:9080/doctor/getAll',
                 headers: { // 设置请求头
-                    Authorization: localStorage.getItem("token")
+                    Authorization: sessionStorage.getItem("token")
                 }
                 // responseType: 'stream'
             }).then(function (response) {
                 _this.doctors = response.data.data
             });
-            window.addEventListener('beforeunload', this.clearLocalStorage);
+            // window.addEventListener('beforeunload', this.clearsessionStorage);
         }
     })
 </script>

@@ -58,6 +58,11 @@
                             <a class="dropdown-item" href="patient.html">患者</a>
                         </div>
                     </li>
+                    <li class="nav-item mr-3 mt-lg-0 mt-3">
+                        <a class="nav-link" href="appointmentDoctor.html">预约
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
                     <li class="nav-item  mr-3 mt-lg-0 mt-3">
                         <a class="nav-link" href="appointment.html">我的预约
                             <span class="sr-only">(current)</span>
@@ -399,9 +404,9 @@
         });
 
     });
-    // 从 localStorage 中获取用户名
-    const username = localStorage.getItem('name');
-    console.log(localStorage.getItem('name'))
+    // 从 sessionStorage 中获取用户名
+    const username = sessionStorage.getItem('name');
+    console.log(sessionStorage.getItem('name'))
     // 显示用户名在页面上
     if (username != null) {
         document.getElementById('username').textContent = username;
@@ -441,7 +446,7 @@
                     url: 'http://localhost:9080/patient/select',
                     data: this.patient,
                     headers: { // 设置请求头
-                        Authorization: localStorage.getItem("token")
+                        Authorization: sessionStorage.getItem("token")
                     }
                 }).then(function (response) {
                     if (response.data.code == 20041) {
@@ -479,7 +484,7 @@
                     method: 'get',
                     url: 'http://localhost:9080/patient/getPatient',
                     headers: { // 设置请求头
-                        Authorization: localStorage.getItem("token")
+                        Authorization: sessionStorage.getItem("token")
                     }
                     // responseType: 'stream'
                 }).then(function (response) {
@@ -496,7 +501,7 @@
                         url: 'http://localhost:9080/patient/update',
                         data: this.patient,
                         headers: { // 设置请求头
-                            Authorization: localStorage.getItem("token")
+                            Authorization: sessionStorage.getItem("token")
                         }
                     }).then(function (response) {
                         if (response.data.code == 20031) {
@@ -512,7 +517,7 @@
                         url: 'http://localhost:9080/patient/add',
                         data: this.patient,
                         headers: { // 设置请求头
-                            Authorization: localStorage.getItem("token")
+                            Authorization: sessionStorage.getItem("token")
                         }
                     }).then(function (response) {
                         if (response.data.code == 20011) {
@@ -535,7 +540,7 @@
                     method: 'delete',
                     url: 'http://localhost:9080/patient/delete/' + patientID,
                     headers: { // 设置请求头
-                        Authorization: localStorage.getItem("token")
+                        Authorization: sessionStorage.getItem("token")
                     }
                 }).then(function (response) {
                     if (response.data.code == 20021) {
@@ -568,7 +573,7 @@
                     url: 'http://localhost:9080/patient/update',
                     data: this.patient,
                     headers: { // 设置请求头
-                        Authorization: localStorage.getItem("token")
+                        Authorization: sessionStorage.getItem("token")
                     }
                 }).then(function (res) {
                     if (res.data.code == 20031) {
@@ -583,7 +588,7 @@
                     url: 'http://localhost:9080/medicines/updateMedicine',
                     data: this.patient.medicines,
                     headers: { // 设置请求头
-                        Authorization: localStorage.getItem("token")
+                        Authorization: sessionStorage.getItem("token")
                     }
                 }).then(function (res) {
                     if (res.data.code == 20031) {
@@ -595,17 +600,16 @@
             },
             beforeDestroy() {
                 // 移除页面关闭事件监听器，防止内存泄漏
-                window.removeEventListener('beforeunload', this.clearLocalStorage);
+                window.removeEventListener('beforeunload', this.clearsessionStorage);
             },
-            clearLocalStorage() {
-                localStorage.removeItem("password");
-                localStorage.removeItem("name");
+            clearsessionStorage() {
+                sessionStorage.clear()
             }
         },
         data() {
             return {
-                userType: localStorage.getItem('userType'),
-                userId: localStorage.getItem('userID'),
+                userType: sessionStorage.getItem('userType'),
+                userId: sessionStorage.getItem('userID'),
                 updateFlag: 0,
                 quantity: 0,
                 totalPrice: 0,
@@ -690,12 +694,12 @@
         },
         mounted: function () {
             let _this = this;
-            if (localStorage.getItem("userType") == 1) {
+            if (sessionStorage.getItem("userType") == 1) {
                 axios({
                     method: 'get',
                     url: 'http://localhost:9080/patient/getPatient',
                     headers: { // 设置请求头
-                        Authorization: localStorage.getItem("token")
+                        Authorization: sessionStorage.getItem("token")
                     }
                     // responseType: 'stream'
                 }).then(function (response) {
@@ -708,7 +712,7 @@
                     method: 'get',
                     url: 'http://localhost:9080/patient/getAll',
                     headers: { // 设置请求头
-                        Authorization: localStorage.getItem("token")
+                        Authorization: sessionStorage.getItem("token")
                     }
                     // responseType: 'stream'
                 }).then(function (response) {
@@ -722,7 +726,7 @@
                 method: 'get',
                 url: 'http://localhost:9080/medicines/getAll',
                 headers: { // 设置请求头
-                    Authorization: localStorage.getItem("token")
+                    Authorization: sessionStorage.getItem("token")
                 }
                 // responseType: 'stream'
             }).then(function (response) {
@@ -730,7 +734,7 @@
                 //前边的data和后边的data不同，后边的data才自己自定义的
                 _this.medicines = response.data.data
             });
-            window.addEventListener('beforeunload', this.clearLocalStorage);
+            // window.addEventListener('beforeunload', this.clearsessionStorage);
         }
     })
 </script>

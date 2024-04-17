@@ -40,7 +40,7 @@ public class MedicinesServiceImpl extends ServiceImpl<MedicinesDao, Medicines> i
                 medicines.getAddress() == "" || medicines.getName() == "" || medicines.getSupplier() == "")
             medicines.setCreateTime(LocalDate.now().toString());
         Map<String, Object> map = ThreadLocalUtil.get();
-        medicines.setUserID((String) map.get("userID"));
+        medicines.setUserID((Integer) map.get("userID"));
         if (medicinesDao.selectById(medicines.getMedicineID()) != null) {
             return new Result(medicines, Code.SAVE_ERR, "新增失败，已有此ID的药品");
         }
@@ -60,7 +60,7 @@ public class MedicinesServiceImpl extends ServiceImpl<MedicinesDao, Medicines> i
             if (selectById != null) {
                 medicine.setModifyTime(LocalDate.now().toString());
                 Map<String, Object> map = ThreadLocalUtil.get();
-                selectById.setUserID((String) map.get("userID"));
+                selectById.setUserID((Integer) map.get("userID"));
                 selectById.setCount(selectById.getCount() - medicine.getUseCount());
                 selectById.setUseCount(selectById.getUseCount() + medicine.getUseCount());
                 medicinesDao.updateById(selectById);
@@ -138,7 +138,7 @@ public class MedicinesServiceImpl extends ServiceImpl<MedicinesDao, Medicines> i
         }
         medicines.setModifyTime(LocalDate.now().toString());
         Map<String, Object> map = ThreadLocalUtil.get();
-        medicines.setUserID((String) map.get("userID"));
+        medicines.setUserID((Integer) map.get("userID"));
         medicinesDao.updateById(medicines);
         return new Result(medicines, Code.UPDATE_OK, "修改成功");
     }

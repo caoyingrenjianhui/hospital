@@ -42,7 +42,9 @@ public class AppointmentsServiceImpl extends ServiceImpl<AppointmentsDao, Appoin
 //        限制预约个数
         QueryWrapper<Appointments> wrapper = new QueryWrapper<>();
         wrapper.eq("doctorID", appointments.getDoctorID());
-        wrapper.eq("userID", appointments.getUserID());
+        Map<String, Object> map = ThreadLocalUtil.get();
+        String userID = (String) map.get("userID");
+        wrapper.eq("userID", userID);
         wrapper.eq("appointment_date", appointments.getAppointmentDate());
         wrapper.eq("shift_type", appointments.getShiftType());
         List<Appointments> list = appointmentsDao.selectList(wrapper);
@@ -57,6 +59,7 @@ public class AppointmentsServiceImpl extends ServiceImpl<AppointmentsDao, Appoin
         if (selectList.size() >= 10) {
             return new Result(doctor, Code.SAVE_ERR, "预约失败，该医生当天已约满");
         }
+        appointments.setUserID(Integer.valueOf(userID));
         int insert = appointmentsDao.insert(appointments);
         if (insert != 0) {
             return new Result(doctor, Code.SAVE_OK, "预约成功");

@@ -47,5 +47,11 @@ public class DoctorController {
         return doctorsService.select(doctor);
     }
 
+    @PostMapping("/select/appointment")
+    public Result selectAppointment(@RequestBody Doctor doctor){
+        return doctorsService.selectAppointment(doctor);
+    }
+
+
 }
 

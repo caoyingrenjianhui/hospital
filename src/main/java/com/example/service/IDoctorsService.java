@@ -23,4 +23,6 @@ public interface IDoctorsService extends IService<Doctor> {
     Result delete(Integer id);
 
     Result select(Doctor doctor);
+
+    Result selectAppointment(Doctor doctor);
 }

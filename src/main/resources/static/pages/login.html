@@ -196,11 +196,11 @@
                         if (res.data.code == 20041) {
                             console.log("成功")
                             this.user = res.data.data
-                            localStorage.setItem("password", this.user.password)
-                            localStorage.setItem("name", this.user.username)
-                            localStorage.setItem("token", this.user.token)
-                            localStorage.setItem("userType",this.user.userType)
-                            localStorage.setItem("userID",this.user.userID)
+                            sessionStorage.setItem("password", this.user.password)
+                            sessionStorage.setItem("name", this.user.username)
+                            sessionStorage.setItem("token", this.user.token)
+                            sessionStorage.setItem("userType",this.user.userType)
+                            sessionStorage.setItem("userID",this.user.userID)
                             location.href = "index.html"
                             if (this.user.userType == 0) {
                                 //如果是管理员
@@ -243,9 +243,9 @@
         methods: {
             /*注册按钮的方法*/
             addUser() {
-                //将名字和密码存入localstorage中
-                localStorage.setItem("password", this.password)
-                localStorage.setItem("name", this.name);
+                //将名字和密码存入sessionStorage中
+                sessionStorage.setItem("password", this.password)
+                sessionStorage.setItem("name", this.name);
                 //调用存储
                 if (this.user != null) {
                     if (this.user.username.length == 0) {
@@ -290,11 +290,10 @@
         methods: {
             beforeDestroy() {
                 // 移除页面关闭事件监听器，防止内存泄漏
-                window.removeEventListener('beforeunload', this.clearLocalStorage);
+                window.removeEventListener('beforeunload', this.clearsessionStorage);
             },
-            clearLocalStorage() {
-                localStorage.removeItem("password");
-                localStorage.removeItem("name");
+            clearsessionStorage() {
+                sessionStorage.clear()
             },
             /*重置按钮按钮的方法*/
             reset() {
@@ -320,7 +319,7 @@
             }
         },
         mounted: function () {
-            window.addEventListener('beforeunload', this.clearLocalStorage);
+            // window.addEventListener('beforeunload', this.clearsessionStorage);
         }
     })
 </script>

@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="zxx">
+<meta charset="UTF-8">
+<head>
+    <title>医生信息</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8"/>
+    <meta name="keywords" content=""/>
+    <link href="../css/bootstrap.css" type="text/css" rel="stylesheet" media="all">
+    <link href="../css/style.css" type="text/css" rel="stylesheet" media="all">
+    <link href="../css/fontawesome-all.min.css" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900" rel="stylesheet">
+    <script src="../js/vue.js"></script>
+    <script src="../element-ui/lib/index.js"></script>
+    <link rel="stylesheet" href="../element-ui/lib/theme-chalk/index.css">
+    <script src="../js/axios-0.18.0.js"></script>
+</head>
+<body>
+<div id="app">
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-gradient-secondary">
+            <h1>
+                <a class="navbar-brand text-white" href="index.html">
+                    百康诊所
+                </a>
+            </h1>
+            <button class="navbar-toggler ml-md-auto" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-lg-auto text-center">
+                    <li class="nav-item mr-3 mt-lg-0 mt-3">
+                        <a class="nav-link" href="index.html">主页
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown mr-3 mt-lg-0 mt-3">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true"
+                           aria-expanded="false">
+                            人员信息
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="doctor.html">医生</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="patient.html">患者</a>
+                        </div>
+                    </li>
+                    <li class="nav-item active mr-3 mt-lg-0 mt-3">
+                        <a class="nav-link" href="appointmentDoctor.html">预约
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item  mr-3 mt-lg-0 mt-3">
+                        <a class="nav-link" href="appointment.html">我的预约
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown mr-3 mt-lg-0 mt-3" v-if="userType==2">
+                        <a class="nav-link dropdown-toggle" role="button" href="#"
+                           data-toggle="dropdown" aria-haspopup="true"
+                           aria-expanded="false">
+                            管理
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="medicine.html">药品管理</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="schedule.html">排班</a>
+                        </div>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="login.html">登录</a>
+                    </li>
+                    <li class="nav-item mr-3 mt-lg-0 mt-3">
+                        <a href="information.html" class="nav-link" id="username"></a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <div class="inner-banner">
+    </div>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="index.html">主页</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">医生信息</li>
+        </ol>
+    </nav>
+    <section class="wthree-row w3-contact py-lg-5">
+        <div class="container py-4">
+            <div>
+                <template style="margin-top: 200px">
+                    <!--搜索表单-->
+                    <el-form :inline="true" :model="doctor" class="demo-form-inline" style="margin-left: 20px">
+
+                        <el-form-item label="科室">
+                            <el-select v-model="doctor.department" placeholder="科室">
+                                <el-option value="神经科">神经科</el-option>
+                                <el-option value="心脏病学">心脏病学</el-option>
+                                <el-option value="小儿科">小儿科</el-option>
+                                <el-option value="肺病学">肺病学</el-option>
+                                <el-option value="眼科学">眼科学</el-option>
+                                <el-option value="诊断">诊断</el-option>
+                                <el-option value="创伤学">创伤学</el-option>
+                            </el-select>
+                        </el-form-item>
+
+                        <el-date-picker v-model="doctor.shiftDate" type="date" placeholder="选择日期"></el-date-picker>
+
+                        <el-select v-model="doctor.shiftType" placeholder="选择班次类型">
+                            <el-option label="上午班" value="上午班"></el-option>
+                            <el-option label="下午班" value="下午班"></el-option>
+                        </el-select>
+
+                        <el-form-item>
+                            <el-button type="primary" @click="onSubmit">查询</el-button>
+                            <el-button type="primary" @click="onReset">重置</el-button>
+                        </el-form-item>
+                    </el-form>
+
+                    <el-table
+                            :data="schedules"
+                            border
+                            style="width: 100%"
+                    >
+                        <el-table-column label="医生ID" prop="doctorID"></el-table-column>
+                        <el-table-column label="日期" prop="shiftDate"></el-table-column>
+                        <el-table-column label="班次" prop="shiftType"></el-table-column>
+                        <el-table-column
+                                align="center"
+                                label="操作">
+                            <el-row slot-scope="scope">
+                                <el-button type="primary" data-toggle="modal" data-target="#appointment"
+                                           v-if="userType==0"
+                                           @click="beforeAppointment(scope.row)">预约
+                                </el-button>
+                            </el-row>
+                        </el-table-column>
+                    </el-table>
+                </template>
+            </div>
+
+            <div class="modal fade" id="appointment" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header text-center">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <h3 class="text-center">预约</h3>
+                            <div class="form-group">
+                                <label for="appointmentNotes">备注</label>
+                                <input type="text" id="appointmentNotes" class="form-control" v-model="appointment.appointmentNotes" placeholder="请输入备注" required>
+                            </div>
+                            <div class="form-group text-center">
+                                <button type="submit" @click="appointmentDoctor" class="btn btn-primary btn-block">预约</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</div>
+
+<script src="../js/jquery-2.2.3.min.js"></script>
+<script src="../js/jquery.chocolat.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $('.gallery-grid1 a').Chocolat();
+    });
+</script>
+<script src="../js/move-top.js"></script>
+<script src="../js/easing.js"></script>
+<script>
+    jQuery(document).ready(function ($) {
+        $(".scroll").click(function (event) {
+            event.preventDefault();
+
+            $('html,body').animate({
+                scrollTop: $(this.hash).offset().top
+            }, 1000);
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $().UItoTop({
+            easingType: 'easeOutQuart'
+        });
+
+    });
+    // 从 sessionStorage 中获取用户名
+    const username = sessionStorage.getItem('name');
+    console.log(sessionStorage.getItem('name'))
+    // 显示用户名在页面上
+    if (username != null) {
+        document.getElementById('username').textContent = username;
+    } else {
+        document.getElementById('username').textContent = 'Guest';
+    }
+</script>
+<script src="../js/SmoothScroll.min.js"></script>
+<script src="../js/bootstrap.js"></script>
+
+<script>
+    new Vue({
+        el: "#app",
+        methods: {
+            hideModel() {
+                $('#add').modal('hide');
+                $('#appointment').modal('hide');
+            },
+            tableRowClassName({row, rowIndex}) {
+                if (rowIndex === 1) {
+                    return 'warning-row';
+                } else if (rowIndex === 3) {
+                    return 'success-row';
+                }
+                return '';
+            },
+            // 复选框选中后执行的方法
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
+            },
+            beforeAppointment(rowDate) {
+                this.appointment.doctorID = rowDate.doctorID
+                this.appointment.appointmentDate = rowDate.shiftDate
+                this.appointment.shiftType = rowDate.shiftType
+            },
+            appointmentDoctor() {
+                let _this = this
+                axios({
+                    method: 'post',
+                    url: 'http://localhost:9080/appointments/add',
+                    data: this.appointment,
+                    headers: { // 设置请求头
+                        Authorization: sessionStorage.getItem("token")
+                    }
+                }).then(function (response) {
+                    if (response.data.code == 20011) {
+                        alert(response.data.msg)
+                        _this.onReset()
+                    } else {
+                        alert(response.data.msg)
+                    }
+                });
+                this.hideModel()
+            },
+            // 查询方法
+            onSubmit() {
+                let _this = this
+                axios({
+                    method: 'post',
+                    url: 'http://localhost:9080/doctor/select/appointment',
+                    data: this.doctor,
+                    headers: { // 设置请求头
+                        Authorization: sessionStorage.getItem("token")
+                    }
+                }).then(function (response) {
+                    if (response.data.code == 20041) {
+                        _this.schedules = response.data.data
+                    } else {
+                        alert(response.data.msg)
+                    }
+                });
+            },
+            //重置查询
+            onReset() {
+                this.beforeAdd()
+            },
+            beforeAdd() {
+                this.appointment1 = {}
+                this.updateFlag = 0
+                this.availableDates = []
+                this.appointment = {}
+                this.doctor.doctorID = null
+                this.doctor.userID = null
+                this.doctor.user = {}
+                this.doctor.department = null
+                this.doctor.specialization = null
+                this.doctor.createTime = null
+                this.doctor.modifyTime = null
+            },
+            beforeUpdate(rowDate) {
+                this.doctor = rowDate
+                this.updateFlag = 1
+            },
+            addDoctor() {
+                let _this = this
+                if (_this.updateFlag == 1) {
+                    axios({
+                        method: 'put',
+                        url: 'http://localhost:9080/doctor/update',
+                        data: this.doctor,
+                        headers: { // 设置请求头
+                            Authorization: sessionStorage.getItem("token")
+                        }
+                    }).then(function (response) {
+                        if (response.data.code == 20031) {
+                            this.onReset()
+                        } else {
+                            alert(response.data.msg)
+                        }
+                    });
+                } else {
+                    axios({
+                        method: 'post',
+                        url: 'http://localhost:9080/doctor/add',
+                        data: this.doctor,
+                        headers: { // 设置请求头
+                            Authorization: sessionStorage.getItem("token")
+                        }
+                    }).then(function (response) {
+                        if (response.data.code == 20011) {
+                            _this.onReset()
+                        } else {
+                            alert(response.data.msg)
+                        }
+                    });
+                }
+                this.hideModel()
+            },
+            beforeUpdate(rowDate) {
+                this.doctor = rowDate
+                this.updateFlag = 1
+            },
+            deleteDoctor(doctorID) {
+                let _this = this
+                axios({
+                    method: 'delete',
+                    url: 'http://localhost:9080/doctor/delete/' + doctorID,
+                    headers: { // 设置请求头
+                        Authorization: sessionStorage.getItem("token")
+                    }
+                }).then(function (response) {
+                    if (response.data.code == 20021) {
+                        _this.onSubmit()
+                    } else {
+                        alert(response.data.msg)
+                    }
+                });
+            },
+            beforeDestroy() {
+                // 移除页面关闭事件监听器，防止内存泄漏
+                window.removeEventListener('beforeunload', this.clearsessionStorage);
+            },
+            clearsessionStorage() {
+                sessionStorage.clear()
+            }
+        },
+        data() {
+            return {
+                record: "",
+                userType: sessionStorage.getItem('userType'),
+                userId: sessionStorage.getItem('userID'),
+                updateFlag: 0,
+                // 当前页码
+                currentPage: 1,
+                availableDates: [], // 存储可用的预约日期
+                appointment: {},
+                // 复选框选中数据集合
+                multipleSelection: [],
+                // 表格数据
+                doctors: [{}],
+                doctor: {},
+                schedule: {},
+                schedules: [],
+            }
+        },
+        mounted: function () {
+            let _this = this
+            axios({
+                method: 'get',
+                url: 'http://localhost:9080/schedule/weeklySchedule',
+                headers: { // 设置请求头
+                    Authorization: sessionStorage.getItem("token")
+                }
+            }).then(function (response) {
+                _this.schedules = response.data.data
+            });
+        }
+    })
+</script>
+
+<script src="../js/SmoothScroll.min.js"></script>
+<script src="../js/bootstrap.js"></script>
+</body>
+</html>

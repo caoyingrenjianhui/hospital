@@ -187,7 +187,7 @@ public class PatientServiceImpl extends ServiceImpl<PatientDao, Patient> impleme
 
         QueryWrapper<Patient> wrapper = new QueryWrapper<>();
         if (users != null) {
-            List<String> userIds = new ArrayList<>();
+            List<Integer> userIds = new ArrayList<>();
             for (User user : users) {
                 userIds.add(user.getUserID());
             }

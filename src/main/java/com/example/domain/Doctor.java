@@ -28,7 +28,7 @@ public class Doctor implements Serializable {
     private Integer doctorID;
 
     @TableField(value = "userID")
-    private String userID;
+    private Integer userID;
 
     @TableField(exist = false)
     private User user;
@@ -40,6 +40,14 @@ public class Doctor implements Serializable {
     private String createTime;
 
     private String modifyTime;
+
+    private String record;
+
+    @TableField(exist = false)
+    private String shiftDate;
+
+    @TableField(exist = false)
+    private String shiftType;
 
     @TableLogic
     private Integer isdel;

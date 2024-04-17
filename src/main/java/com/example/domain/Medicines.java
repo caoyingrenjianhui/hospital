@@ -40,7 +40,7 @@ public class Medicines implements Serializable {
     private String supplier;
 
     @TableField(value = "userID")
-    private String userID;
+    private Integer userID;
 
     @TableField(exist = false)
     private User user;

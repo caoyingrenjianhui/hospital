@@ -59,6 +59,11 @@
                             <a class="dropdown-item" href="patient.html">患者</a>
                         </div>
                     </li>
+                    <li class="nav-item mr-3 mt-lg-0 mt-3">
+                        <a class="nav-link" href="appointmentDoctor.html">预约
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
                     <li class="nav-item  mr-3 mt-lg-0 mt-3">
                         <a class="nav-link" href="appointment.html">我的预约
                             <span class="sr-only">(current)</span>
@@ -185,7 +190,7 @@
         el: "#app",
         data() {
             return {
-                userType: localStorage.getItem("userType"),
+                userType: sessionStorage.getItem("userType"),
                 selectedDate: '',
                 schedule: {
                     scheduleID: '',
@@ -209,7 +214,7 @@
                     method: 'delete',
                     url: 'http://localhost:9080/schedule/delete/' + scheduleID,
                     headers: { // 设置请求头
-                        Authorization: localStorage.getItem("token")
+                        Authorization: sessionStorage.getItem("token")
                     }
                 }).then(function (response) {
                     if (response.data.code == 20021) {
@@ -226,7 +231,7 @@
                     url: 'http://localhost:9080/schedule/update',
                     data: this.schedule,
                     headers: { // 设置请求头
-                        Authorization: localStorage.getItem("token")
+                        Authorization: sessionStorage.getItem("token")
                     }
                 }).then(function (response) {
                     if (response.data.code == 20031) {
@@ -248,7 +253,7 @@
                     method: 'get',
                     url: 'http://localhost:9080/schedule/weeklySchedule',
                     headers: { // 设置请求头
-                        Authorization: localStorage.getItem("token")
+                        Authorization: sessionStorage.getItem("token")
                     }
                 }).then(function (response) {
                     _this.schedules = response.data.data
@@ -262,7 +267,7 @@
                     url: 'http://localhost:9080/schedule/add',
                     data: this.schedule,
                     headers: { // 设置请求头
-                        Authorization: localStorage.getItem("token")
+                        Authorization: sessionStorage.getItem("token")
                     }
                 }).then(function (response) {
                     if (response.data.code == 20011) {
@@ -274,11 +279,10 @@
             },
             beforeDestroy() {
                 // 移除页面关闭事件监听器，防止内存泄漏
-                window.removeEventListener('beforeunload', this.clearLocalStorage);
+                window.removeEventListener('beforeunload', this.clearsessionStorage);
             },
-            clearLocalStorage() {
-                localStorage.removeItem("password");
-                localStorage.removeItem("name");
+            clearsessionStorage() {
+                sessionStorage.clear()
             }
         },
         mounted: function () {
@@ -287,13 +291,13 @@
                 method: 'get',
                 url: 'http://localhost:9080/doctor/getAll',
                 headers: { // 设置请求头
-                    Authorization: localStorage.getItem("token")
+                    Authorization: sessionStorage.getItem("token")
                 }
                 // responseType: 'stream'
             }).then(function (response) {
                 _this.doctors = response.data.data
             });
-            window.addEventListener('beforeunload', this.clearLocalStorage);
+            // window.addEventListener('beforeunload', this.clearsessionStorage);
         }
     });
 </script>
@@ -325,9 +329,9 @@
         });
 
     });
-    // 从 localStorage 中获取用户名
-    const username = localStorage.getItem('name');
-    console.log(localStorage.getItem('name'))
+    // 从 sessionStorage 中获取用户名
+    const username = sessionStorage.getItem('name');
+    console.log(sessionStorage.getItem('name'))
     // 显示用户名在页面上
     if (username != null) {
         document.getElementById('username').textContent = username;

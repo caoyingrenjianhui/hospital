@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.controller.Code;
 import com.example.controller.Result;
 import com.example.dao.DoctorDao;
+import com.example.dao.ScheduleDao;
 import com.example.dao.UserDao;
 import com.example.domain.*;
 import com.example.service.IDoctorsService;
@@ -12,8 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -29,6 +32,8 @@ public class DoctorServiceImpl extends ServiceImpl<DoctorDao, Doctor> implements
     private DoctorDao doctorDao;
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private ScheduleDao scheduleDao;
 
     @Override
     public Result add(Doctor doctor) {
@@ -92,7 +97,7 @@ public class DoctorServiceImpl extends ServiceImpl<DoctorDao, Doctor> implements
 
         QueryWrapper<Doctor> wrapper = new QueryWrapper<>();
         if (users != null) {
-            List<String> userIds = new ArrayList<>();
+            List<Integer> userIds = new ArrayList<>();
             for (User user : users) {
                 userIds.add(user.getUserID());
             }
@@ -117,6 +122,46 @@ public class DoctorServiceImpl extends ServiceImpl<DoctorDao, Doctor> implements
             d.setDepartment(Department.getNameByCode(Integer.valueOf(d.getDepartment())));
         }
         return new Result(list, Code.GET_OK, "查询成功");
+    }
+
+    @Override
+    public Result selectAppointment(Doctor doctor) {
+//        先根据科室查询
+        QueryWrapper<Doctor> wrapper = new QueryWrapper<>();
+        if (doctor.getDepartment() != null) {
+            wrapper.eq("department", doctor.getDepartment());
+        }
+        List<Doctor> doctors = doctorDao.selectList(wrapper);
+        List<Integer> doctorIds = doctors.stream()
+                .map(d -> d.getDoctorID()) // 使用 lambda 表达式获取医生 ID
+                .collect(Collectors.toList());
+//        根据日期查
+        QueryWrapper<Schedule> scheduleQueryWrapper = new QueryWrapper<>();
+        if (doctor.getShiftDate() != null) {
+            scheduleQueryWrapper.eq("shift_date", doctor.getShiftDate());
+        } else {
+            // 获取当前日期
+            LocalDate currentDate = LocalDate.now();
+            // 计算一周后的日期
+            LocalDate endDate = currentDate.plusDays(7);
+            // 转换日期格式为字符串，假设您的日期格式是 "yyyy-MM-dd"
+            String startDateStr = currentDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            String endDateStr = endDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            scheduleQueryWrapper.ge("shift_date", startDateStr);
+            scheduleQueryWrapper.le("shift_date", endDateStr);
+        }
+        if (doctor.getShiftType() != null) {
+            scheduleQueryWrapper.eq("shift_type", doctor.getShiftType());
+        }
+        if (doctorIds.size() == 0) {
+            return new Result(null, Code.GET_ERR, "未查询到排班信息");
+        }
+        scheduleQueryWrapper.in("doctorID", doctorIds);
+        List<Schedule> schedules = scheduleDao.selectList(scheduleQueryWrapper);
+        if (schedules.size() == 0) {
+            return new Result(null, Code.GET_ERR, "未查询到排班信息");
+        }
+        return new Result(schedules, Code.GET_OK, "查询成功");
     }
 
     @Override
