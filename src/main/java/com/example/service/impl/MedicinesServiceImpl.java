@@ -44,6 +44,7 @@ public class MedicinesServiceImpl extends ServiceImpl<MedicinesDao, Medicines> i
         if (medicinesDao.selectById(medicines.getMedicineID()) != null) {
             return new Result(medicines, Code.SAVE_ERR, "新增失败，已有此ID的药品");
         }
+        medicines.setCreateTime(LocalDate.now().toString());
         int insert = medicinesDao.insert(medicines);
         if (insert != 0) {
             return new Result(medicines, Code.SAVE_OK, "新增成功");

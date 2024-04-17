@@ -35,15 +35,14 @@ public class Appointments implements Serializable {
 
     private String appointmentDate;
 
-    /**
-     * 班次类型
-     */
-    private String shiftType;
-
     private String appointmentNotes;
 
     @TableLogic
     private Integer isdel;
 
+    /**
+     * 班次类型
+     */
+    private String shiftType;
 
 }

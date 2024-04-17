@@ -7,6 +7,7 @@ import com.example.dao.DoctorDao;
 import com.example.domain.Doctor;
 import com.example.domain.Schedule;
 import com.example.dao.ScheduleDao;
+import com.example.domain.UserType;
 import com.example.service.IScheduleService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;

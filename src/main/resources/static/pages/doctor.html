@@ -217,11 +217,11 @@
                                     预约
                                 </el-button>
                                 <br><br>
-                                <el-button type="primary" data-toggle="modal" data-target="#add"
+                                <el-button type="primary" data-toggle="modal" data-target="#add" v-if="userType==2"
                                            @click="beforeUpdate(scope.row)">编辑
                                 </el-button>
                                 <br><br>
-                                <el-button type="primary" @click="deleteDoctor(scope.row.doctorID)">删除</el-button>
+                                <el-button type="primary" @click="deleteDoctor(scope.row.doctorID)" v-if="userType==2">删除</el-button>
                             </el-row>
                         </el-table-column>
                     </el-table>
@@ -316,8 +316,8 @@
                             <div class="stats">
                                 <select class="form-control date mb-3" v-model="appointment1"
                                         required="">
-                                    <option v-for="date in availableDates" :key="date" :value="date">日期：{{
-                                        date.shiftDate }}；班次：{{date.shiftType}}
+                                    <option v-for="date in availableDates" :key="date" :value="date">
+                                            日期：{{date.shiftDate }}；班次：{{date.shiftType}}
                                     </option>
                                 </select>
                                 <label class="col-form-label">备注</label>
@@ -416,7 +416,7 @@
                     }
                 });
             },
-            () {
+            appointmentDoctor() {
                 this.appointment.appointmentDate=this.appointment1.shiftDate
                 this.appointment.shiftType=this.appointment1.shiftType
                 axios({
@@ -429,11 +429,11 @@
                 }).then(function (response) {
                     if (response.data.code == 20011) {
                         alert(response.data.msg)
+                        this.onReset()
                     } else {
                         alert(response.data.msg)
                     }
                 });
-                this.onReset()
                 this.hideModel()
             },
             // 查询方法
@@ -460,10 +460,10 @@
                 this.onSubmit()
             },
             beforeAdd() {
+                this.appointment1 = {}
                 this.updateFlag = 0
                 this.availableDates = []
                 this.appointment = {}
-                this.appointment1 = {}
                 this.doctor.doctorID = null
                 this.doctor.userID = null
                 this.doctor.user = {}
@@ -540,7 +540,6 @@
                 // 当前页码
                 currentPage: 1,
                 availableDates: [], // 存储可用的预约日期
-                appointment1:{},
                 appointment: {
                     doctorID: '',
                     userID: '',

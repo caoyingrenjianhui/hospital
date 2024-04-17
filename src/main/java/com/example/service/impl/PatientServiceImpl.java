@@ -80,9 +80,10 @@ public class PatientServiceImpl extends ServiceImpl<PatientDao, Patient> impleme
                 User user = userDao.selectById(patient.getUserID());
                 patient.setUser(user);
                 Doctor doctor = doctorDao.selectById(patient.getDoctorID());
-                User selectById = userDao.selectById(doctor.getUserID());
-                doctor.setUser(selectById);
-                patient.setDoctor(doctor);
+                if (doctor!=null) {
+                    User selectById = userDao.selectById(doctor.getUserID());
+                    doctor.setUser(selectById);
+                }
                 setMedicines(patient);
             }
         }
@@ -210,8 +211,10 @@ public class PatientServiceImpl extends ServiceImpl<PatientDao, Patient> impleme
             p.setUser(user);
             setMedicines(p);
             Doctor doctor = doctorDao.selectById(p.getDoctorID());
-            User selectById = userDao.selectById(doctor.getUserID());
-            doctor.setUser(selectById);
+            if (doctor!=null) {
+                User selectById = userDao.selectById(doctor.getUserID());
+                doctor.setUser(selectById);
+            }
             p.setDoctor(doctor);
         }
         return new Result(list, Code.GET_OK, "查询成功");

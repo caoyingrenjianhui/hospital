@@ -210,14 +210,14 @@
                                 label="操作">
                             <el-row slot-scope="scope">
                                 <el-button type="primary" data-toggle="modal" data-target="#updateMedicine"
-                                           @click="beforeUpdateMedicine(scope.row)">开药
+                                           @click="beforeUpdateMedicine(scope.row)" v-if="userType==1">开药
                                 </el-button>
                                 <br><br>
-                                <el-button type="primary" data-toggle="modal" data-target="#add" v-if="userType==2"
+                                <el-button type="primary" data-toggle="modal" data-target="#add" v-if="userType!=0"
                                            @click="beforeUpdate(scope.row)">编辑
                                 </el-button>
                                 <br><br>
-                                <el-button type="primary" v-if="userType!=1" @click="deletePatient(scope.row.doctorID)">
+                                <el-button type="primary" v-if="userType!=0" @click="deletePatient(scope.row.doctorID)">
                                     删除
                                 </el-button>
                             </el-row>
@@ -473,7 +473,7 @@
                 this.updateFlag = 1
                 console.log(this.patient)
             },
-            getMyPatient() {
+            getMyPatient(){
                 let _this = this
                 axios({
                     method: 'get',
