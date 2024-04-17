@@ -58,6 +58,11 @@
                             <a class="dropdown-item" href="patient.html">患者</a>
                         </div>
                     </li>
+                    <li class="nav-item  mr-3 mt-lg-0 mt-3">
+                        <a class="nav-link active" href="appointment.html">我的预约
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
                     <li class="nav-item dropdown mr-3 mt-lg-0 mt-3" v-if="userType==2">
                         <a class="nav-link dropdown-toggle" role="button" href="#"
                            data-toggle="dropdown" aria-haspopup="true"
@@ -212,7 +217,9 @@
                                            @click="beforeUpdate(scope.row)">编辑
                                 </el-button>
                                 <br><br>
-                                <el-button type="primary" v-if="userType!=1" @click="deletePatient(scope.row.doctorID)">删除</el-button>
+                                <el-button type="primary" v-if="userType!=1" @click="deletePatient(scope.row.doctorID)">
+                                    删除
+                                </el-button>
                             </el-row>
                         </el-table-column>
                     </el-table>
@@ -220,44 +227,72 @@
                 <div v-else>
                     <div v-for="patient in patients">
                         <div v-if="patient.userID==userId">
-                            <el-form :inline="true" align="center">
-                                <el-form-item label="姓名">
-                                    <p>
-                                        <el-input v-model="patient.user.username" disabled></el-input>
-                                    </p>
-                                </el-form-item>
-                                <br>
-                                <el-form-item label="电话">
-                                    <p>
-                                        <el-input v-model="patient.user.phone" disabled></el-input>
-                                    </p>
-                                </el-form-item>
-                                <br>
-                                <el-form-item label="主治医师ID">
-                                    <p>
-                                        <el-input v-model="patient.doctorID" disabled></el-input>
-                                    </p>
-                                </el-form-item>
-                                <br>
-                                <el-form-item label="症状">
-                                    <p>
-                                        <el-input v-model="patient.symptoms" disabled></el-input>
-                                    </p>
-                                </el-form-item>
-                                <br>
-                                <el-form-item label="用药">
-                                    <p>
-                                        <el-input v-model="patient.medicine" disabled></el-input>
-                                    </p>
-                                </el-form-item>
-                                <br>
-                                <el-form-item label="花销">
-                                    <p>
-                                        <el-input v-model="patient.cost" disabled></el-input>
-                                    </p>
-                                </el-form-item>
-                                <br>
-                            </el-form>
+                            <el-table
+                                    :data="patients"
+                                    style="width: 100%"
+                                    :row-class-name="tableRowClassName"
+                                    @selection-change="handleSelectionChange"
+                            >
+                                <el-table-column
+                                        prop="patientID"
+                                        label="患者ID"
+                                        align="center"
+                                >
+                                </el-table-column>
+                                <el-table-column
+                                        prop="doctor.user.username"
+                                        label="主治医师姓名"
+                                        align="center"
+                                >
+                                </el-table-column>
+                                <el-table-column
+                                        prop="userID"
+                                        label="身份证号"
+                                        align="center"
+                                >
+                                </el-table-column>
+                                <el-table-column
+                                        prop="user.username"
+                                        label="姓名"
+                                        align="center"
+                                >
+                                </el-table-column>
+                                <el-table-column
+                                        prop="user.phone"
+                                        label="电话"
+                                        align="center"
+                                >
+                                </el-table-column>
+                                <el-table-column
+                                        prop="user.address"
+                                        label="地址"
+                                        align="center"
+                                >
+                                </el-table-column>
+                                <el-table-column
+                                        prop="symptoms"
+                                        align="center"
+                                        label="症状">
+                                </el-table-column>
+
+                                <el-table-column
+                                        prop="medicine"
+                                        align="center"
+                                        label="用药">
+                                </el-table-column>
+
+                                <el-table-column
+                                        prop="createTime"
+                                        align="center"
+                                        label="创建时间">
+                                </el-table-column>
+
+                                <el-table-column
+                                        prop="modifyTime"
+                                        align="center"
+                                        label="修改时间">
+                                </el-table-column>
+                            </el-table>
                         </div>
                     </div>
                 </div>
@@ -438,7 +473,7 @@
                 this.updateFlag = 1
                 console.log(this.patient)
             },
-            getMyPatient(){
+            getMyPatient() {
                 let _this = this
                 axios({
                     method: 'get',

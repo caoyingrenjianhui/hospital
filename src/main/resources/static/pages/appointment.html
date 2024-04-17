@@ -80,7 +80,7 @@
                     <li>
                         <a class="nav-link" href="login.html">登录</a>
                     </li>
-                    <li class="nav-item active  mr-3 mt-lg-0 mt-3">
+                    <li class="nav-item mr-3 mt-lg-0 mt-3">
                         <a href="information.html" class="nav-link" id="username"></a>
                     </li>
                 </ul>
@@ -95,33 +95,6 @@
         <div style="margin-top: 100px">
             <template>
                 <div>
-                    <div style="display: flex; justify-content: center;">
-                        <el-form :model="user" :inline="true" align="center">
-                            <el-form-item label="姓名">
-                                <el-input v-model="user.username" :disabled="!editing"></el-input>
-                            </el-form-item>
-                            <br>
-                            <el-form-item label="电话">
-                                <el-input v-model="user.phone" :disabled="!editing"></el-input>
-                            </el-form-item>
-                            <br>
-                            <el-form-item label="邮箱">
-                                <el-input v-model="user.email" :disabled="!editing"></el-input>
-                            </el-form-item>
-                            <br>
-                            <el-form-item label="地址">
-                                <el-input v-model="user.address" :disabled="!editing"></el-input>
-                            </el-form-item>
-                            <br>
-                            <el-form-item>
-                                <el-button v-if="!editing" type="primary" @click="toggleEditing">修改信息</el-button>
-                                <el-button v-else type="primary" @click="updateUser">保存</el-button>
-                            </el-form-item>
-                            <el-form-item>
-                                <el-button type="danger" @click="showChangePasswordDialog">修改密码</el-button>
-                            </el-form-item>
-                        </el-form>
-                    </div>
                     <el-table
                             :data="appointments"
                             style="width: 100%"
