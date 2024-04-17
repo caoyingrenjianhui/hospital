@@ -59,7 +59,7 @@
                         </div>
                     </li>
                     <li class="nav-item  mr-3 mt-lg-0 mt-3">
-                        <a class="nav-link active" href="appointment.html">我的预约
+                        <a class="nav-link" href="appointment.html">我的预约
                             <span class="sr-only">(current)</span>
                         </a>
                     </li>
@@ -593,6 +593,14 @@
                     }
                 });
             },
+            beforeDestroy() {
+                // 移除页面关闭事件监听器，防止内存泄漏
+                window.removeEventListener('beforeunload', this.clearLocalStorage);
+            },
+            clearLocalStorage() {
+                localStorage.removeItem("password");
+                localStorage.removeItem("name");
+            }
         },
         data() {
             return {
@@ -722,6 +730,7 @@
                 //前边的data和后边的data不同，后边的data才自己自定义的
                 _this.medicines = response.data.data
             });
+            window.addEventListener('beforeunload', this.clearLocalStorage);
         }
     })
 </script>

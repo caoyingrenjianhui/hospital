@@ -82,12 +82,6 @@
             <div class="modal-body">
                 <div class="login px-4 mx-auto mw-100">
                     <h5 class="modal-title text-center text-dark mb-4">立即注册</h5>
-
-                    <div class="form-group">
-                        <label class="col-form-label">身份证号</label>
-                        <input type="text" class="form-control" id="userID" v-model="user.userID" placeholder=""
-                               required="">
-                    </div>
                     <div class="form-group">
                         <label class="col-form-label">姓名</label>
                         <input type="text" class="form-control" v-model="user.username" placeholder="" required="">
@@ -294,6 +288,14 @@
             }
         },
         methods: {
+            beforeDestroy() {
+                // 移除页面关闭事件监听器，防止内存泄漏
+                window.removeEventListener('beforeunload', this.clearLocalStorage);
+            },
+            clearLocalStorage() {
+                localStorage.removeItem("password");
+                localStorage.removeItem("name");
+            },
             /*重置按钮按钮的方法*/
             reset() {
                 if (this.user != null) {
@@ -316,6 +318,9 @@
                     }
                 }
             }
+        },
+        mounted: function () {
+            window.addEventListener('beforeunload', this.clearLocalStorage);
         }
     })
 </script>

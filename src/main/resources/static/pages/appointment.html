@@ -372,6 +372,14 @@
                     }
                 });
                 this.hideModel()
+            },
+            beforeDestroy() {
+                // 移除页面关闭事件监听器，防止内存泄漏
+                window.removeEventListener('beforeunload', this.clearLocalStorage);
+            },
+            clearLocalStorage() {
+                localStorage.removeItem("password");
+                localStorage.removeItem("name");
             }
         },
         data() {
@@ -435,6 +443,7 @@
                     _this.appointments = response.data.data
                 });
             }
+            window.addEventListener('beforeunload', this.clearLocalStorage);
         }
     })
 </script>

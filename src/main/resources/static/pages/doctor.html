@@ -50,7 +50,7 @@
                         </div>
                     </li>
                     <li class="nav-item  mr-3 mt-lg-0 mt-3">
-                        <a class="nav-link active" href="appointment.html">我的预约
+                        <a class="nav-link" href="appointment.html">我的预约
                             <span class="sr-only">(current)</span>
                         </a>
                     </li>
@@ -530,6 +530,14 @@
                         alert(response.data.msg)
                     }
                 });
+            },
+            beforeDestroy() {
+                // 移除页面关闭事件监听器，防止内存泄漏
+                window.removeEventListener('beforeunload', this.clearLocalStorage);
+            },
+            clearLocalStorage() {
+                localStorage.removeItem("password");
+                localStorage.removeItem("name");
             }
         },
         data() {
@@ -589,6 +597,7 @@
             }).then(function (response) {
                 _this.doctors = response.data.data
             });
+            window.addEventListener('beforeunload', this.clearLocalStorage);
         }
     })
 </script>
