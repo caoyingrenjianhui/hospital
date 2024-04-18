@@ -2,13 +2,12 @@ package com.example.domain;
 
 public enum Department {
     Neurology(0, "神经科"),
-    Dentistry(1, "牙科"),
+    Dentistry(1, "创伤学"),
     Cardiology(2, "心脏病学"),
     Pediatrics(3, "小儿科"),
     Pulmonology(4, "肺病学"),
     Ophthalmology(5, "眼科学"),
-    Diagnostics(6, "诊断"),
-    Traumatology(7, "创伤学");
+    Diagnostics(6, "诊断");
 
     private int code;
     private String name;

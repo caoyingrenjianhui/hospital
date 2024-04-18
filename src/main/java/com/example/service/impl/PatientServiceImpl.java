@@ -3,14 +3,8 @@ package com.example.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.controller.Code;
 import com.example.controller.Result;
-import com.example.dao.DoctorDao;
-import com.example.dao.MedicinesDao;
-import com.example.dao.UserDao;
-import com.example.domain.Doctor;
-import com.example.domain.Medicines;
-import com.example.domain.Patient;
-import com.example.dao.PatientDao;
-import com.example.domain.User;
+import com.example.dao.*;
+import com.example.domain.*;
 import com.example.service.IMedicinesService;
 import com.example.service.IPatientService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -44,6 +38,8 @@ public class PatientServiceImpl extends ServiceImpl<PatientDao, Patient> impleme
     private MedicinesDao medicinesDao;
     @Autowired
     private IMedicinesService medicinesService;
+    @Autowired
+    private PrescriptionDao prescriptionDao;
 
     @Override
     public Result add(Patient patient) {
@@ -59,7 +55,7 @@ public class PatientServiceImpl extends ServiceImpl<PatientDao, Patient> impleme
 //        }
         QueryWrapper<Doctor> wrapper = new QueryWrapper<>();
         Map<String, Object> map = ThreadLocalUtil.get();
-        String userID = (String) map.get("userID");
+        Integer userID = (Integer) map.get("userID");
         wrapper.eq("userID", userID);
         Doctor doctor = doctorDao.selectOne(wrapper);
         patient.setDoctorID(doctor.getDoctorID());
@@ -80,7 +76,7 @@ public class PatientServiceImpl extends ServiceImpl<PatientDao, Patient> impleme
                 User user = userDao.selectById(patient.getUserID());
                 patient.setUser(user);
                 Doctor doctor = doctorDao.selectById(patient.getDoctorID());
-                if (doctor!=null) {
+                if (doctor != null) {
                     User selectById = userDao.selectById(doctor.getUserID());
                     doctor.setUser(selectById);
                 }
@@ -133,14 +129,18 @@ public class PatientServiceImpl extends ServiceImpl<PatientDao, Patient> impleme
         if (selectById == null) {
             return new Result(null, Code.UPDATE_ERR, "无此病人的病例");
         }
-        patient.setModifyTime(LocalDate.now().toString());
+        selectById.setModifyTime(LocalDate.now().toString());
         StringBuilder sb = new StringBuilder();
         for (Medicines medicine : patient.getMedicines()) {
+            Prescription prescription = new Prescription();
+            prescription.setPatientID(selectById.getPatientID());
+            prescription.setDoctorID(selectById.getDoctorID());
+            prescription.setPrescriptionTime(LocalDate.now().toString());
+            prescription.setQuantity(medicine.getUseCount());
+            prescriptionDao.insert(prescription);
             sb.append(medicine.getMedicineID()).append(":").append(medicine.getName()).append(":").append(medicine.getUseCount()).append(";");
         }
         String medicinesString = sb.toString();
-        patient.setMedicine(medicinesString);
-        patientDao.updateById(patient);
         if (selectById.getMedicine() != null) {
             for (String medicineInfo : selectById.getMedicine().split(";")) {
                 if (!medicinesString.contains(medicineInfo)) {
@@ -152,14 +152,16 @@ public class PatientServiceImpl extends ServiceImpl<PatientDao, Patient> impleme
                 }
             }
         }
-        return new Result(patient, Code.UPDATE_OK, "修改成功");
+        selectById.setMedicine(medicinesString);
+        patientDao.updateById(selectById);
+        return new Result(selectById, Code.UPDATE_OK, "修改成功");
     }
 
     @Override
     public Result getPatient() {
 //        获取医生id
         Map<String, Object> map = ThreadLocalUtil.get();
-        String userID = (String) map.get("userID");
+        Integer userID = (Integer) map.get("userID");
         Doctor doctor = doctorDao.selectByUserID(userID);
         QueryWrapper<Patient> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("doctorID", doctor.getDoctorID());
@@ -211,7 +213,7 @@ public class PatientServiceImpl extends ServiceImpl<PatientDao, Patient> impleme
             p.setUser(user);
             setMedicines(p);
             Doctor doctor = doctorDao.selectById(p.getDoctorID());
-            if (doctor!=null) {
+            if (doctor != null) {
                 User selectById = userDao.selectById(doctor.getUserID());
                 doctor.setUser(selectById);
             }

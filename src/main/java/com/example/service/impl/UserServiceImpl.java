@@ -99,7 +99,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
     @Override
     public Result userInfo() {
         Map<String, Object> map = ThreadLocalUtil.get();
-        String userID = (String) map.get("userID");
+        Integer userID = (Integer) map.get("userID");
         User user = userDao.selectById(userID);
         return new Result(user, Code.GET_OK, "查询成功");
     }
@@ -114,7 +114,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
     @Override
     public Result updatePhoto(String photo) {
         Map<String, Object> map = ThreadLocalUtil.get();
-        String userID = (String) map.get("userID");
+        Integer userID = (Integer) map.get("userID");
         userDao.updatePhoto(photo, userID);
         return new Result(null, Code.UPDATE_OK, "头像修改成功");
     }
@@ -129,7 +129,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements IUser
             return new Result(null, Code.UPDATE_ERR, "两次输入密码的新密码不一致");
         }
         Map<String, Object> map = ThreadLocalUtil.get();
-        String userID = (String) map.get("userID");
+        Integer userID = (Integer) map.get("userID");
         User selectById = userDao.selectById(userID);
         if (selectById.getPassword().equals(Md5Util.getMD5String(user.getOldPassword()))) {
             userDao.updatePassword(Md5Util.getMD5String(user.getPassword()), userID);

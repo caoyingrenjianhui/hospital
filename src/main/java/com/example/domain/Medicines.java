@@ -54,5 +54,14 @@ public class Medicines implements Serializable {
     @TableLogic
     private Integer isdel;
 
+    /**
+     * 批号
+     */
+    private String batchNumber;
+
+    /**
+     * 规格
+     */
+    private String specification;
 
 }

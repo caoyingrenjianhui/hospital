@@ -30,8 +30,8 @@ public interface UserDao extends BaseMapper<User> {
     void update(User user);
 
     @Update("update user set photo = #{photo}, modify_time = now() where userID = #{userID}")
-    void updatePhoto(String photo, String userID);
+    void updatePhoto(String photo, Integer userID);
 
     @Update("update user set password = #{password}, modify_time = now() where userID = #{userID}")
-    void updatePassword(String password, String userID);
+    void updatePassword(String password, Integer userID);
 }

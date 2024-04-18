@@ -43,7 +43,7 @@ public class AppointmentsServiceImpl extends ServiceImpl<AppointmentsDao, Appoin
         QueryWrapper<Appointments> wrapper = new QueryWrapper<>();
         wrapper.eq("doctorID", appointments.getDoctorID());
         Map<String, Object> map = ThreadLocalUtil.get();
-        String userID = (String) map.get("userID");
+        Integer userID = (Integer) map.get("userID");
         wrapper.eq("userID", userID);
         wrapper.eq("appointment_date", appointments.getAppointmentDate());
         wrapper.eq("shift_type", appointments.getShiftType());
@@ -88,7 +88,7 @@ public class AppointmentsServiceImpl extends ServiceImpl<AppointmentsDao, Appoin
     public Result getAll() {
         QueryWrapper<Appointments> appointmentsQueryWrapper = new QueryWrapper<>();
         Map<String, Object> map = ThreadLocalUtil.get();
-        String userID = (String) map.get("userID");
+        Integer userID = (Integer) map.get("userID");
         appointmentsQueryWrapper.eq("userID", userID);
         List<Appointments> appointments = appointmentsDao.selectList(appointmentsQueryWrapper);
         return new Result(appointments, Code.GET_OK, "查询成功");
@@ -98,7 +98,7 @@ public class AppointmentsServiceImpl extends ServiceImpl<AppointmentsDao, Appoin
     public Result getMyAppointment() {
         QueryWrapper<Doctor> appointmentsQueryWrapper = new QueryWrapper<>();
         Map<String, Object> map = ThreadLocalUtil.get();
-        String userID = (String) map.get("userID");
+        Integer userID = (Integer) map.get("userID");
         appointmentsQueryWrapper.eq("userID", userID);
         Doctor doctor = doctorDao.selectOne(appointmentsQueryWrapper);
         if (doctor == null) {

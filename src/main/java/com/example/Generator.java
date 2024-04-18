@@ -33,7 +33,7 @@ public class Generator {
 //        设置数据层接口名，%为占位符，指代模块名称
         globalConfig.setMapperName("%sDao");
 //        设置Id生成策略
-        globalConfig.setIdType(IdType.ASSIGN_ID);
+        globalConfig.setIdType(IdType.AUTO);
         autoGenerator.setGlobalConfig(globalConfig);
 
 //        设置包名相关配置
@@ -48,7 +48,7 @@ public class Generator {
 
 //       策略设置
         StrategyConfig strategyConfig = new StrategyConfig();
-//        strategyConfig.setInclude("user");//设置当前参与生成的表名，参数为可变参数
+//        strategyConfig.setInclude("prescription");//设置当前参与生成的表名，参数为可变参数
 //        strategyConfig.setTablePrefix("");//设置数据库表的前缀名称，模块名=数据库表名-前缀名
         strategyConfig.setRestControllerStyle(true);//设置是否启用rest风格
 //        strategyConfig.setVersionFieldName("version");//设置乐观锁字段名

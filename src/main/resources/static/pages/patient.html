@@ -215,7 +215,7 @@
                                 label="操作">
                             <el-row slot-scope="scope">
                                 <el-button type="primary" data-toggle="modal" data-target="#updateMedicine"
-                                           @click="beforeUpdateMedicine(scope.row)" v-if="userType==1">开药
+                                           @click="beforeUpdateMedicine(scope.row)" v-if="shouldShowButton(scope)">开药
                                 </el-button>
                                 <br><br>
                                 <el-button type="primary" data-toggle="modal" data-target="#add" v-if="userType!=0"
@@ -549,6 +549,9 @@
                         alert(response.data.msg)
                     }
                 });
+            },
+            shouldShowButton(scope) {
+                return this.userType === 1 && scope.row.medicine === null;
             },
             beforeUpdateMedicine(rowDate) {
                 this.patient = rowDate
