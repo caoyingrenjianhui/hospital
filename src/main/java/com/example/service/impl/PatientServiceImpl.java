@@ -45,13 +45,13 @@ public class PatientServiceImpl extends ServiceImpl<PatientDao, Patient> impleme
     public Result add(Patient patient) {
         User user = userDao.selectById(patient.getUserID());
         if (user == null) {
-            return new Result(patient, Code.SAVE_ERR, "新增失败，系统中无此人员，请先自行注册或检查身份证号是否正确");
+            return new Result(patient, Code.SAVE_ERR, "新增失败，系统中无此人员，请先自行注册或检查账号是否正确");
         }
 //        QueryWrapper<Patient> patientQueryWrapper = new QueryWrapper<>();
 //        patientQueryWrapper.eq("userID", patient.getUserID());
 //        Patient p = patientDao.selectOne(patientQueryWrapper);
 //        if (p != null) {
-//            return new Result(patient, Code.SAVE_ERR, "新增失败，系统中已经有此患者，请先自行注册或检查身份证号是否正确");
+//            return new Result(patient, Code.SAVE_ERR, "新增失败，系统中已经有此患者，请先自行注册或检查账号是否正确");
 //        }
         QueryWrapper<Doctor> wrapper = new QueryWrapper<>();
         Map<String, Object> map = ThreadLocalUtil.get();
@@ -218,6 +218,28 @@ public class PatientServiceImpl extends ServiceImpl<PatientDao, Patient> impleme
                 doctor.setUser(selectById);
             }
             p.setDoctor(doctor);
+        }
+        return new Result(list, Code.GET_OK, "查询成功");
+    }
+
+    @Override
+    public Result getme() {
+        QueryWrapper<Patient> wrapper = new QueryWrapper<>();
+        Map<String, Object> map = ThreadLocalUtil.get();
+        Integer userID = (Integer) map.get("userID");
+        wrapper.eq("userID", userID);
+        List<Patient> list = patientDao.selectList(wrapper);
+        if (list != null) {
+            for (Patient patient : list) {
+                User user = userDao.selectById(patient.getUserID());
+                patient.setUser(user);
+                Doctor doctor = doctorDao.selectById(patient.getDoctorID());
+                if (doctor != null) {
+                    User selectById = userDao.selectById(doctor.getUserID());
+                    doctor.setUser(selectById);
+                }
+                setMedicines(patient);
+            }
         }
         return new Result(list, Code.GET_OK, "查询成功");
     }

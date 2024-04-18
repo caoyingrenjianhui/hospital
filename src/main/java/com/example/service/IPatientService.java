@@ -26,4 +26,6 @@ public interface IPatientService extends IService<Patient> {
     Result getPatient();
 
     Result select(Patient patient);
+
+    Result getme();
 }

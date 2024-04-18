@@ -1,5 +1,6 @@
 package com.example.service;
 
+import com.example.controller.Result;
 import com.example.domain.Prescription;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -13,4 +14,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IPrescriptionService extends IService<Prescription> {
 
+    Result select(Prescription prescription);
 }

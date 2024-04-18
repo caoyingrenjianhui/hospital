@@ -39,7 +39,7 @@ public class DoctorServiceImpl extends ServiceImpl<DoctorDao, Doctor> implements
     public Result add(Doctor doctor) {
         User user = userDao.selectById(doctor.getUserID());
         if (user == null) {
-            return new Result(doctor, Code.SAVE_ERR, "新增失败，系统中无此人员，请先自行注册或检查身份证号是否正确");
+            return new Result(doctor, Code.SAVE_ERR, "新增失败，系统中无此人员，请先自行注册或检查账号是否正确");
         }
         QueryWrapper<Doctor> patientQueryWrapper = new QueryWrapper<>();
         patientQueryWrapper.eq("userID", doctor.getUserID());

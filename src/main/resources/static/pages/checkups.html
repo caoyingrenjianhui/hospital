@@ -46,7 +46,7 @@
                             <span class="sr-only">(current)</span>
                         </a>
                     </li>
-                    <li class="nav-item dropdown active mr-3 mt-lg-0 mt-3">
+                    <li class="nav-item dropdown mr-3 mt-lg-0 mt-3">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true"
                            aria-expanded="false">
@@ -68,13 +68,8 @@
                             <span class="sr-only">(current)</span>
                         </a>
                     </li>
-                    <li class="nav-item mr-3 mt-lg-0 mt-3">
+                    <li class="nav-item active mr-3 mt-lg-0 mt-3">
                         <a class="nav-link" href="checkups.html">体检
-                            <span class="sr-only">(current)</span>
-                        </a>
-                    </li>
-                    <li class="nav-item mr-3 mt-lg-0 mt-3">
-                        <a class="nav-link" href="myPrescription.html">开药记录
                             <span class="sr-only">(current)</span>
                         </a>
                     </li>
@@ -107,7 +102,7 @@
             <li class="breadcrumb-item">
                 <a href="index.html">主页</a>
             </li>
-            <li class="breadcrumb-item active" aria-current="page">患者信息</li>
+            <li class="breadcrumb-item active" aria-current="page">体检</li>
         </ol>
     </nav>
     <section class="wthree-row pt-sm-3  pb-sm-5 pb-3">
@@ -115,24 +110,24 @@
             <div>
                 <template style="margin-top: 200px" v-if=userType!=0>
                     <!--搜索表单-->
-                    <el-form :inline="true" :model="patient" class="demo-form-inline" style="margin-left: 20px">
+                    <el-form :inline="true" :model="checkups" class="demo-form-inline" style="margin-left: 20px">
 
-                        <el-form-item label="根据患者病例ID搜索">
-                            <el-input v-model="patient.patientID" placeholder="患者病例ID"></el-input>
+                        <el-form-item label="根据体检编号搜索">
+                            <el-input v-model="checkups.checkupId" placeholder="患者病例ID"></el-input>
                         </el-form-item>
 
-                        <el-form-item label="主治医师">
-                            <el-input v-model="patient.doctorID" placeholder="主治医师">
-                            </el-input>
+                        <el-form-item label="体检日期">
+                            <el-date-picker v-model="checkups.checkupDate" type="date"
+                                            placeholder="选择体检日期"></el-date-picker>
                         </el-form-item>
 
-                        <el-form-item label="账号">
-                            <el-input v-model="patient.userID" placeholder="账号">
+                        <el-form-item label="体检人员账号">
+                            <el-input v-model="checkups.userID" placeholder="">
                             </el-input>
                         </el-form-item>
 
                         <el-form-item label="姓名">
-                            <el-input v-model="patient.user.username" placeholder="姓名">
+                            <el-input v-model="checkups.user.username" placeholder="姓名">
                             </el-input>
                         </el-form-item>
 
@@ -147,7 +142,7 @@
                     </el-form>
 
                     <el-table
-                            :data="patients"
+                            :data="checkups"
                             style="width: 100%"
                             :row-class-name="tableRowClassName"
                             @selection-change="handleSelectionChange"
@@ -232,7 +227,7 @@
                                            @click="beforeUpdate(scope.row)">编辑
                                 </el-button>
                                 <br><br>
-                                <el-button type="primary" v-if="userType!=0" @click="deletePatient(scope.row.doctorID)">
+                                <el-button type="primary" v-if="userType!=0" @click="deleteCheckups(scope.row.checkupsId)">
                                     删除
                                 </el-button>
                             </el-row>
@@ -241,7 +236,7 @@
                 </template>
                 <div v-else>
                     <el-table
-                            :data="patients"
+                            :data="checkups"
                             style="width: 100%"
                             :row-class-name="tableRowClassName"
                             @selection-change="handleSelectionChange"
@@ -321,16 +316,46 @@
                         <div class="modal-body">
                             <div class="form-group" v-if="updateFlag==0">
                                 <label class="col-form-label">患者账号</label>
-                                <input v-model="patient.userID" class="form-control" placeholder=" "
+                                <input v-model="checkup.userID" class="form-control" placeholder=" "
                                        required="">
                             </div>
                             <div class="form-group">
-                                <label class="col-form-label">症状</label>
-                                <input class="form-control" v-model="patient.symptoms" placeholder=" "
+                                <label class="col-form-label">体检日期</label>
+                                <el-date-picker v-model="checkups.checkupDate" type="date"
+                                                placeholder="选择体检日期"></el-date-picker>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-form-label">血压</label>
+                                <input class="form-control" v-model="checkup.bloodPressure" placeholder=" "
+                                       required="">
+                            </div>
+                            <div class="form-group">
+                                <label class="col-form-label">心率</label>
+                                <input class="form-control" v-model="checkup.heartRate" placeholder=" "
+                                       required="">
+                            </div>
+                            <div class="form-group">
+                                <label class="col-form-label">身高</label>
+                                <input class="form-control" v-model="checkup.height" placeholder=" "
+                                       required="">
+                            </div>
+                            <div class="form-group">
+                                <label class="col-form-label">体重</label>
+                                <input class="form-control" v-model="checkup.weight" placeholder=" "
+                                       required="">
+                            </div>
+                            <div class="form-group">
+                                <label class="col-form-label">肺活量</label>
+                                <input class="form-control" v-model="checkup.lungCapacity" placeholder=" "
+                                       required="">
+                            </div>
+                            <div class="form-group">
+                                <label class="col-form-label">其他</label>
+                                <input class="form-control" v-model="checkup.otherParameters" placeholder=" "
                                        required="">
                             </div>
                             <div class="right-w3l">
-                                <input @click="addPatient" type="submit" class="form-control" value="确定">
+                                <input @click="Checkups" type="submit" class="form-control" value="确定">
                             </div>
                         </div>
                     </div>
@@ -449,14 +474,14 @@
                 let _this = this
                 axios({
                     method: 'post',
-                    url: 'http://localhost:9080/patient/select',
+                    url: 'http://localhost:9080/checkups/select',
                     data: this.patient,
                     headers: { // 设置请求头
                         Authorization: sessionStorage.getItem("token")
                     }
                 }).then(function (response) {
                     if (response.data.code == 20041) {
-                        _this.patients = response.data.data
+                        _this.checkups = response.data.data
                     } else {
                         alert(response.data.msg)
                     }
@@ -469,50 +494,39 @@
             },
             beforeAdd() {
                 this.updateFlag = 0
-                this.patient.patientID = null
-                this.patient.doctorID = null
-                this.patient.userID = null
-                this.patient.user.username = null
-                this.patient.symptoms = null
-                this.patient.medicine = null
-                this.patient.createTime = null
-                this.patient.modifyTime = null
-                this.patient.cost = null
+                this.checkup={}
             },
             beforeUpdate(rowDate) {
-                this.patient = rowDate
+                this.checkup = rowDate
                 this.updateFlag = 1
-                console.log(this.patient)
             },
-            getMyPatient() {
+            getMyCheckups() {
                 let _this = this
                 axios({
                     method: 'get',
-                    url: 'http://localhost:9080/patient/getPatient',
+                    url: 'http://localhost:9080/checkups/getCheckups',
                     headers: { // 设置请求头
                         Authorization: sessionStorage.getItem("token")
                     }
                     // responseType: 'stream'
                 }).then(function (response) {
-                    console.log("发送成功")
-                    //前边的data和后边的data不同，后边的data才自己自定义的
                     _this.patients = response.data.data
                 });
             },
-            addPatient() {
+            addCheckups() {
                 let _this = this
                 if (this.updateFlag == 1) {
                     axios({
                         method: 'put',
-                        url: 'http://localhost:9080/patient/update',
-                        data: this.patient,
+                        url: 'http://localhost:9080/checkups/update',
+                        data: this.checkup,
                         headers: { // 设置请求头
                             Authorization: sessionStorage.getItem("token")
                         }
                     }).then(function (response) {
                         if (response.data.code == 20031) {
                             _this.beforeAdd()
-                            _this.getMyPatient()
+                            _this.getMyCheckups()
                         } else {
                             alert(response.data.msg)
                         }
@@ -520,15 +534,15 @@
                 } else {
                     axios({
                         method: 'post',
-                        url: 'http://localhost:9080/patient/add',
-                        data: this.patient,
+                        url: 'http://localhost:9080/checkups/add',
+                        data: this.checkup,
                         headers: { // 设置请求头
                             Authorization: sessionStorage.getItem("token")
                         }
                     }).then(function (response) {
                         if (response.data.code == 20011) {
                             _this.beforeAdd()
-                            _this.getMyPatient()
+                            _this.getMyCheckups()
                         } else {
                             alert(response.data.msg)
                         }
@@ -537,14 +551,14 @@
                 this.hideModel()
             },
             beforeUpdate(rowDate) {
-                this.patient = rowDate
+                this.checkup = rowDate
                 this.updateFlag = 1
             },
-            deletePatient(patientID) {
+            deleteCheckups(checkupId) {
                 let _this = this
                 axios({
                     method: 'delete',
-                    url: 'http://localhost:9080/patient/delete/' + patientID,
+                    url: 'http://localhost:9080/checkups/delete/' + checkupId,
                     headers: { // 设置请求头
                         Authorization: sessionStorage.getItem("token")
                     }
@@ -591,21 +605,6 @@
                         alert(res.data.msg)
                     }
                 });
-                //    药品数量减少
-                axios({
-                    method: 'put',
-                    url: 'http://localhost:9080/medicines/updateMedicine',
-                    data: this.patient.medicines,
-                    headers: { // 设置请求头
-                        Authorization: sessionStorage.getItem("token")
-                    }
-                }).then(function (res) {
-                    if (res.data.code == 20031) {
-
-                    } else {
-                        alert(res.data.msg)
-                    }
-                });
             },
             beforeDestroy() {
                 // 移除页面关闭事件监听器，防止内存泄漏
@@ -628,77 +627,11 @@
                 // 复选框选中数据集合
                 multipleSelection: [],
                 // 表格数据
-                patients: [{
-                    patientID: '',
-                    doctorID: '',
-                    userID: '',
-                    user: {
-                        username: '',
-                        phone: '',
-                        address: ''
-                    },
-                    doctor: {},
-                    symptoms: '',
-                    medicine: '',
-                    createTime: '',
-                    modifyTime: '',
-                    cost: ''
-                }],
-                patient: {
-                    patientID: '',
-                    doctorID: '',
-                    userID: '',
-                    user: {
-                        username: '',
-                        phone: '',
-                        address: ''
-                    },
-                    symptoms: '',
-                    medicines: [{}],
-                    medicine: '',
-                    createTime: '',
-                    modifyTime: '',
-                    cost: ''
-                },
-                medicines: [{
-                    medicineID: '',
-                    name: '',
-                    count: '',
-                    useCount: '',
-                    address: '',
-                    supplier: '',
-                    userID: '',
-                    user: {},
-                    createTime: '',
-                    modifyTime: '',
-                    price: ''
-                }],
-                updateMedicines: [{
-                    medicineID: '',
-                    name: '',
-                    count: '',
-                    useCount: '',
-                    address: '',
-                    supplier: '',
-                    userID: '',
-                    user: {},
-                    createTime: '',
-                    modifyTime: '',
-                    price: ''
-                }],
-                medicine: {
-                    medicineID: '',
-                    name: '',
-                    count: '',
-                    useCount: '',
-                    address: '',
-                    supplier: '',
-                    userID: '',
-                    user: {},
-                    createTime: '',
-                    modifyTime: '',
-                    price: ''
-                },
+                checkups: [],
+                checkup: {},
+                medicines: [],
+                updateMedicines: [],
+                medicine: {},
                 mypatients: []
             }
         },

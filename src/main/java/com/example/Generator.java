@@ -48,7 +48,7 @@ public class Generator {
 
 //       策略设置
         StrategyConfig strategyConfig = new StrategyConfig();
-//        strategyConfig.setInclude("prescription");//设置当前参与生成的表名，参数为可变参数
+        strategyConfig.setInclude("checkups");//设置当前参与生成的表名，参数为可变参数
 //        strategyConfig.setTablePrefix("");//设置数据库表的前缀名称，模块名=数据库表名-前缀名
         strategyConfig.setRestControllerStyle(true);//设置是否启用rest风格
 //        strategyConfig.setVersionFieldName("version");//设置乐观锁字段名

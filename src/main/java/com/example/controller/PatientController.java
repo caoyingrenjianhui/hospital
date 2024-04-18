@@ -51,5 +51,10 @@ public class PatientController {
     public Result select(@RequestBody Patient patient){
         return patientService.select(patient);
     }
+
+    @GetMapping("/getme")
+    public Result getme() {
+        return patientService.getme();
+    }
 }
 
