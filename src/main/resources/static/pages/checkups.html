@@ -132,6 +132,9 @@
                         </el-form-item>
 
                         <el-form-item>
+                            <el-button type="primary" v-if="userType!=0" @click="getUserHeartRates()">查看用户的心率波动
+                            </el-button>
+                            <el-button type="primary" v-else @click="getMyHeartRates()">查看用户的心率波动</el-button>
                             <el-button type="primary" @click="onSubmit()">查询</el-button>
                             <el-button type="primary" @click="onReset()">重置</el-button>
                             <el-button type="primary" data-toggle="modal" data-target="#add"
@@ -457,6 +460,80 @@
             // 复选框选中后执行的方法
             handleSelectionChange(val) {
                 this.multipleSelection = val;
+            },
+            getUserHeartRates() {
+                if (this.checkup.userID == null) {
+                    alert("请输入要查看的用户账号")
+                } else {
+                    axios({
+                        method: 'get',
+                        url: 'http://localhost:9080/checkups/getUserHeartRatesWithDate',
+                        data: this.checkup,
+                        headers: { // 设置请求头
+                            Authorization: sessionStorage.getItem("token")
+                        }
+                    }).then(function (response) {
+                        if (response.data.code == 20041) {
+                            _this.checkups = response.data.data
+                        } else {
+                            alert(response.data.msg)
+                        }
+                    });
+                }
+            },
+            openDialog(merchantID) {
+                this.dialogVisible = true;
+                this.showSalesStatistics(merchantID);
+            },
+            async showSalesStatistics(merchantID) {
+                // 异步加载 Chart.js
+                await import('https://cdn.jsdelivr.net/npm/chart.js');
+                let self = this; // 保存 Vue 实例的上下文
+                axios({
+                    method: 'get',
+                    url: 'http://localhost:9080/merchant/byMerchant/'+merchantID,
+                    headers: {
+                        Authorization: localStorage.getItem("token")
+                    }
+                }).then(function (response) {
+                    if (response.data.code == 20041) {
+                        self.data = response.data.data; // 使用保存的上下文访问 Vue 实例的属性
+
+                        const labels = Object.keys(self.data);
+                        const values = Object.values(self.data);
+
+                        // 创建柱形图
+                        const ctx = document.getElementById('salesChart').getContext('2d');
+                        if (this.chartInstance) {
+                            this.chartInstance.destroy();
+                        }
+                        this.chartInstance = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    label: 'Sales',
+                                    data: values,
+                                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                                    borderColor: 'rgba(54, 162, 235, 1)',
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        });
+                    } else {
+                        alert(response.data.msg)
+                    }
+                });
+            },
+            getMyHeartRates() {
+
             },
             // 查询方法
             onSubmit() {

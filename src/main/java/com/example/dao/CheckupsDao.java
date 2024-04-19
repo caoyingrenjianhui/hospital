@@ -20,4 +20,7 @@ public interface CheckupsDao extends BaseMapper<Checkups> {
 
     @Select("select * from checkups where isdel=0")
     List<Checkups> getAll();
+
+    @Select("select * from checkups where checkup_id = #{checkupId} and isdel=0")
+    List<Checkups> selectListByCheckupId(Integer checkupId);
 }

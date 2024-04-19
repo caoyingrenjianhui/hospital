@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -165,4 +166,18 @@ public class CheckupsServiceImpl extends ServiceImpl<CheckupsDao, Checkups> impl
         setUserAndDoctor(list);
         return new Result(list, Code.GET_OK, "查询成功");
     }
+
+    @Override
+    public Result getUserHeartRatesWithDate(Integer checkupId) {
+        List<Checkups> list = checkupsDao.selectListByCheckupId(checkupId);
+
+        // 统计心率数据
+        Map<String, Integer> heartRateData = new HashMap<>();
+        for (Checkups orderItem : list) {
+            heartRateData.put(orderItem.getCheckupDate(), orderItem.getHeartRate());
+        }
+
+        return new Result(heartRateData, Code.GET_OK, "查询成功");
+    }
+
 }

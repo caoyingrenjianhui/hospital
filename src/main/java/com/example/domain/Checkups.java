@@ -38,7 +38,7 @@ public class Checkups implements Serializable {
     @TableField(value = "doctorID")
     private Integer doctorID;
 
-    private LocalDate checkupDate;
+    private String checkupDate;
 
     private Integer bloodPressure;
 

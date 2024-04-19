@@ -55,5 +55,11 @@ public class CheckupsController {
     public Result getAll() {
         return checkupsService.getAll();
     }
+
+    @GetMapping("/getUserHeartRatesWithDate/{checkupId}")
+    public Result getUserHeartRatesWithDategetUserHeartRatesWithDate(@PathVariable Integer checkupId) {
+        return checkupsService.getUserHeartRatesWithDate(checkupId);
+    }
+
 }
 
