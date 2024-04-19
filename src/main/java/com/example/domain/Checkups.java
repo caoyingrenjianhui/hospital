@@ -11,6 +11,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 
 import java.io.Serializable;
 
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -31,8 +32,10 @@ public class Checkups implements Serializable {
     @TableId(value = "checkup_id", type = IdType.AUTO)
     private Integer checkupId;
 
+    @TableField(value = "userID")
     private Integer userID;
 
+    @TableField(value = "doctorID")
     private Integer doctorID;
 
     private LocalDate checkupDate;
@@ -49,6 +52,12 @@ public class Checkups implements Serializable {
 
     private String otherParameters;
 
+    @TableLogic
+    private Integer isdel;
+
     @TableField(exist = false)
     private User user;
+
+    @TableField(exist = false)
+    private Doctor doctor;
 }

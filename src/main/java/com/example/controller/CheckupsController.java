@@ -46,6 +46,14 @@ public class CheckupsController {
         return checkupsService.delete(id);
     }
 
+    @GetMapping("/getme")
+    public Result getme() {
+        return checkupsService.getme();
+    }
 
+    @GetMapping("/getAll")
+    public Result getAll() {
+        return checkupsService.getAll();
+    }
 }
 

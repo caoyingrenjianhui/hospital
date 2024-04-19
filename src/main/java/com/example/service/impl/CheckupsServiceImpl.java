@@ -87,6 +87,9 @@ public class CheckupsServiceImpl extends ServiceImpl<CheckupsDao, Checkups> impl
         queryWrapper.eq("doctorID", doctor.getDoctorID());
         List<Checkups> checkups = checkupsDao.selectList(queryWrapper);
         setUser(checkups);
+        if (checkups.size()==0){
+            return new Result(null, Code.GET_ERR, "未查询到数据");
+        }
         return new Result(checkups, Code.GET_OK, "查询成功");
     }
 
@@ -128,5 +131,38 @@ public class CheckupsServiceImpl extends ServiceImpl<CheckupsDao, Checkups> impl
         } else {
             return new Result(null, Code.DELETE_ERR, "删除失败");
         }
+    }
+
+    @Override
+    public Result getme() {
+        QueryWrapper<Checkups> wrapper = new QueryWrapper<>();
+        Map<String, Object> map = ThreadLocalUtil.get();
+        Integer userID = (Integer) map.get("userID");
+        wrapper.eq("userID", userID);
+        List<Checkups> list = checkupsDao.selectList(wrapper);
+        setUserAndDoctor(list);
+        return new Result(list, Code.GET_OK, "查询成功");
+    }
+
+    private void setUserAndDoctor(List<Checkups> list) {
+        if (list != null) {
+            for (Checkups checkups : list) {
+                User user = userDao.selectById(checkups.getUserID());
+                checkups.setUser(user);
+                Doctor doctor = doctorDao.selectById(checkups.getDoctorID());
+                if (doctor != null) {
+                    User selectById = userDao.selectById(doctor.getUserID());
+                    doctor.setUser(selectById);
+                }
+                checkups.setDoctor(doctor);
+            }
+        }
+    }
+
+    @Override
+    public Result getAll() {
+        List<Checkups> list = checkupsDao.getAll();
+        setUserAndDoctor(list);
+        return new Result(list, Code.GET_OK, "查询成功");
     }
 }

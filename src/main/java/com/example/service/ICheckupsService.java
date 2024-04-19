@@ -23,4 +23,8 @@ public interface ICheckupsService extends IService<Checkups> {
     Result update(Checkups checkups);
 
     Result delete(Integer id);
+
+    Result getme();
+
+    Result getAll();
 }

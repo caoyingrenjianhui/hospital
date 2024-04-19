@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zxx">
 <head>
-    <title>患者信息</title>
+    <title>体检</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8"/>
     <meta name="keywords" content=""/>
@@ -110,7 +110,7 @@
             <div>
                 <template style="margin-top: 200px" v-if=userType!=0>
                     <!--搜索表单-->
-                    <el-form :inline="true" :model="checkups" class="demo-form-inline" style="margin-left: 20px">
+                    <el-form :inline="true" :model="checkup" class="demo-form-inline" style="margin-left: 20px">
 
                         <el-form-item label="根据体检编号搜索">
                             <el-input v-model="checkups.checkupId" placeholder="患者病例ID"></el-input>
@@ -122,12 +122,12 @@
                         </el-form-item>
 
                         <el-form-item label="体检人员账号">
-                            <el-input v-model="checkups.userID" placeholder="">
+                            <el-input v-model="checkup.userID" placeholder="">
                             </el-input>
                         </el-form-item>
 
                         <el-form-item label="姓名">
-                            <el-input v-model="checkups.user.username" placeholder="姓名">
+                            <el-input v-model="checkup.user.username" placeholder="姓名">
                             </el-input>
                         </el-form-item>
 
@@ -211,15 +211,12 @@
                                 align="center"
                                 label="操作">
                             <el-row slot-scope="scope">
-<!--                                <el-button type="primary" data-toggle="modal" data-target="#updateMedicine"-->
-<!--                                           @click="beforeUpdateMedicine(scope.row)" v-if="shouldShowButton(scope)">开药-->
-<!--                                </el-button>-->
-<!--                                <br><br>-->
                                 <el-button type="primary" data-toggle="modal" data-target="#add" v-if="userType!=0"
                                            @click="beforeUpdate(scope.row)">编辑
                                 </el-button>
                                 <br><br>
-                                <el-button type="primary" v-if="userType!=0" @click="deleteCheckups(scope.row.checkupsId)">
+                                <el-button type="primary" v-if="userType!=0"
+                                           @click="deleteCheckups(scope.row.checkupsId)">
                                     删除
                                 </el-button>
                             </el-row>
@@ -313,7 +310,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="col-form-label">体检日期</label>
-                                <el-date-picker v-model="checkups.checkupDate" type="date"
+                                <el-date-picker v-model="checkup.checkupDate" type="date"
                                                 placeholder="选择体检日期"></el-date-picker>
                             </div>
                             <div class="form-group">
@@ -347,57 +344,57 @@
                                        required="">
                             </div>
                             <div class="right-w3l">
-                                <input @click="Checkups" type="submit" class="form-control" value="确定">
+                                <input @click="addCheckups" type="submit" class="form-control" value="确定">
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-<!--            <div class="modal fade" id="updateMedicine" tabindex="-1" role="dialog" aria-hidden="true">-->
-<!--                <div class="modal-dialog modal-dialog-centered" role="document">-->
-<!--                    <div class="modal-content">-->
-<!--                        <div class="modal-header">-->
-<!--                            <h5 class="modal-title">开药</h5>-->
-<!--                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
-<!--                                <span aria-hidden="true">&times;</span>-->
-<!--                            </button>-->
-<!--                        </div>-->
-<!--                        <div class="modal-body">-->
-<!--                            <div class="form-group">-->
-<!--                                <label class="col-form-label">患者姓名</label>-->
-<!--                                <input type="text" :disabled="true" class="form-control" v-model="patient.user.username"-->
-<!--                                       placeholder=" "-->
-<!--                                       required="">-->
-<!--                            </div>-->
-<!--                            <div>-->
-<!--                                <label class="col-form-label">药品：</label>-->
-<!--                                <select id="medicine" v-model="medicine">-->
-<!--                                    <option v-for="medicine in medicines" :key="medicine.id" :value="medicine">-->
-<!--                                        药品名称：{{ medicine.name-->
-<!--                                        }}产地：{{medicine.address}}厂家：{{medicine.supplier}}生产日期：{{medicine.createTime}}批号：{{medicine.batchNumber}}规格：{{medicine.specification}}-->
-<!--                                    </option>-->
-<!--                                </select><br>-->
-<!--                                <label class="col-form-label">数量：</label>-->
-<!--                                <input type="number" id="quantity" v-model="medicine.useCount" required>-->
-<!--                                <button type="submit" @click="commit">继续开药</button>-->
-<!--                            </div>-->
-<!--                            <div>-->
-<!--                                <label class="col-form-label">已开药品：</label>-->
-<!--                                &lt;!&ndash;                                <input type="text" v-model.number="patient.medicine"><br>&ndash;&gt;-->
-<!--                                <div v-for="(medicine, index) in patient.medicines" :key="index">-->
-<!--                                    <span>{{ medicine.name }} : {{medicine.useCount}}</span>-->
-<!--                                    <button @click="removeMedicine(index,medicine)">删除</button>-->
-<!--                                </div>-->
-<!--                                <label class="col-form-label">总价格：</label>-->
-<!--                                <input type="text" v-model.number="patient.cost"> 元-->
-<!--                            </div>-->
-<!--                            <div class="right-w3l">-->
-<!--                                <input @click="updateMedicine" type="submit" class="form-control" value="确定">-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
+            <!--            <div class="modal fade" id="updateMedicine" tabindex="-1" role="dialog" aria-hidden="true">-->
+            <!--                <div class="modal-dialog modal-dialog-centered" role="document">-->
+            <!--                    <div class="modal-content">-->
+            <!--                        <div class="modal-header">-->
+            <!--                            <h5 class="modal-title">开药</h5>-->
+            <!--                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+            <!--                                <span aria-hidden="true">&times;</span>-->
+            <!--                            </button>-->
+            <!--                        </div>-->
+            <!--                        <div class="modal-body">-->
+            <!--                            <div class="form-group">-->
+            <!--                                <label class="col-form-label">患者姓名</label>-->
+            <!--                                <input type="text" :disabled="true" class="form-control" v-model="patient.user.username"-->
+            <!--                                       placeholder=" "-->
+            <!--                                       required="">-->
+            <!--                            </div>-->
+            <!--                            <div>-->
+            <!--                                <label class="col-form-label">药品：</label>-->
+            <!--                                <select id="medicine" v-model="medicine">-->
+            <!--                                    <option v-for="medicine in medicines" :key="medicine.id" :value="medicine">-->
+            <!--                                        药品名称：{{ medicine.name-->
+            <!--                                        }}产地：{{medicine.address}}厂家：{{medicine.supplier}}生产日期：{{medicine.createTime}}批号：{{medicine.batchNumber}}规格：{{medicine.specification}}-->
+            <!--                                    </option>-->
+            <!--                                </select><br>-->
+            <!--                                <label class="col-form-label">数量：</label>-->
+            <!--                                <input type="number" id="quantity" v-model="medicine.useCount" required>-->
+            <!--                                <button type="submit" @click="commit">继续开药</button>-->
+            <!--                            </div>-->
+            <!--                            <div>-->
+            <!--                                <label class="col-form-label">已开药品：</label>-->
+            <!--                                &lt;!&ndash;                                <input type="text" v-model.number="patient.medicine"><br>&ndash;&gt;-->
+            <!--                                <div v-for="(medicine, index) in patient.medicines" :key="index">-->
+            <!--                                    <span>{{ medicine.name }} : {{medicine.useCount}}</span>-->
+            <!--                                    <button @click="removeMedicine(index,medicine)">删除</button>-->
+            <!--                                </div>-->
+            <!--                                <label class="col-form-label">总价格：</label>-->
+            <!--                                <input type="text" v-model.number="patient.cost"> 元-->
+            <!--                            </div>-->
+            <!--                            <div class="right-w3l">-->
+            <!--                                <input @click="updateMedicine" type="submit" class="form-control" value="确定">-->
+            <!--                            </div>-->
+            <!--                        </div>-->
+            <!--                    </div>-->
+            <!--                </div>-->
+            <!--            </div>-->
         </div>
     </section>
 </div>
@@ -467,7 +464,7 @@
                 axios({
                     method: 'post',
                     url: 'http://localhost:9080/checkups/select',
-                    data: this.patient,
+                    data: this.checkup,
                     headers: { // 设置请求头
                         Authorization: sessionStorage.getItem("token")
                     }
@@ -486,7 +483,7 @@
             },
             beforeAdd() {
                 this.updateFlag = 0
-                this.checkup={}
+                this.checkup = {}
             },
             beforeUpdate(rowDate) {
                 this.checkup = rowDate
@@ -502,7 +499,7 @@
                     }
                     // responseType: 'stream'
                 }).then(function (response) {
-                    _this.patients = response.data.data
+                    _this.checkups = response.data.data
                 });
             },
             addCheckups() {
@@ -562,42 +559,6 @@
                     }
                 });
             },
-            shouldShowButton(scope) {
-                return this.userType === 1 && scope.row.medicine === null;
-            },
-            beforeUpdateMedicine(rowDate) {
-                this.patient = rowDate
-            },
-            removeMedicine(index, medicine) {
-                this.patient.medicines.splice(index, 1);
-                this.patient.cost = this.patient.cost - (medicine.price * medicine.useCount)
-            },
-            commit() {
-                let _this = this
-                if (!this.patient.medicines) {
-                    this.patient.medicines = [];
-                }
-                this.patient.medicines.push(this.medicine)
-                this.patient.cost = this.patient.cost + (this.medicine.price * this.medicine.useCount)
-                _this.medicine = {}
-            },
-            updateMedicine() {
-                let _this = this
-                axios({
-                    method: 'put',
-                    url: 'http://localhost:9080/patient/update',
-                    data: this.patient,
-                    headers: { // 设置请求头
-                        Authorization: sessionStorage.getItem("token")
-                    }
-                }).then(function (res) {
-                    if (res.data.code == 20031) {
-                        location.reload()
-                    } else {
-                        alert(res.data.msg)
-                    }
-                });
-            },
             beforeDestroy() {
                 // 移除页面关闭事件监听器，防止内存泄漏
                 window.removeEventListener('beforeunload', this.clearsessionStorage);
@@ -611,20 +572,22 @@
                 userType: sessionStorage.getItem('userType'),
                 userId: sessionStorage.getItem('userID'),
                 updateFlag: 0,
-                quantity: 0,
-                totalPrice: 0,
-                submitted: false,
                 // 当前页码
                 currentPage: 1,
                 // 复选框选中数据集合
                 multipleSelection: [],
                 // 表格数据
                 checkups: [],
-                checkup: {},
+                checkup: {
+                    user: {
+                        username: '',
+                        phone: '',
+                        address: ''
+                    },
+                },
                 medicines: [],
                 updateMedicines: [],
                 medicine: {},
-                mypatients: []
             }
         },
         mounted: function () {
@@ -632,57 +595,37 @@
             if (sessionStorage.getItem("userType") == 1) {
                 axios({
                     method: 'get',
-                    url: 'http://localhost:9080/patient/getPatient',
+                    url: 'http://localhost:9080/checkups/getCheckups',
                     headers: { // 设置请求头
                         Authorization: sessionStorage.getItem("token")
                     }
                     // responseType: 'stream'
                 }).then(function (response) {
-                    console.log("发送成功")
-                    //前边的data和后边的data不同，后边的data才自己自定义的
-                    _this.patients = response.data.data
+                    _this.checkups = response.data.data
                 });
             } else if (sessionStorage.getItem("userType") == 2) {
                 axios({
                     method: 'get',
-                    url: 'http://localhost:9080/patient/getAll',
+                    url: 'http://localhost:9080/checkups/getAll',
                     headers: { // 设置请求头
                         Authorization: sessionStorage.getItem("token")
                     }
                     // responseType: 'stream'
                 }).then(function (response) {
-                    console.log("发送成功")
-                    //前边的data和后边的data不同，后边的data才自己自定义的
-                    _this.patients = response.data.data
-                    console.log(_this.patients)
+                    _this.checkups = response.data.data
                 });
             } else if (sessionStorage.getItem("userType") == 0) {
                 axios({
                     method: 'get',
-                    url: 'http://localhost:9080/patient/getme',
+                    url: 'http://localhost:9080/checkups/getme',
                     headers: { // 设置请求头
                         Authorization: sessionStorage.getItem("token")
                     }
                     // responseType: 'stream'
                 }).then(function (response) {
-                    console.log("发送成功")
-                    //前边的data和后边的data不同，后边的data才自己自定义的
-                    _this.patients = response.data.data
-                    console.log(_this.patients)
+                    _this.checkups = response.data.data
                 });
             }
-            axios({
-                method: 'get',
-                url: 'http://localhost:9080/medicines/getAll',
-                headers: { // 设置请求头
-                    Authorization: sessionStorage.getItem("token")
-                }
-                // responseType: 'stream'
-            }).then(function (response) {
-                console.log("发送成功")
-                //前边的data和后边的data不同，后边的data才自己自定义的
-                _this.medicines = response.data.data
-            });
             // window.addEventListener('beforeunload', this.clearsessionStorage);
         }
     })
