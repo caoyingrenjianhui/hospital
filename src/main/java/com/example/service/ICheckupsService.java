@@ -29,4 +29,6 @@ public interface ICheckupsService extends IService<Checkups> {
     Result getAll();
 
     Result getUserHeartRatesWithDate(Integer checkupId);
+
+    Result getMyHeartRatesWithDate();
 }

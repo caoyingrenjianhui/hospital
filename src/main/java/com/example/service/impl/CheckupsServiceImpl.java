@@ -8,7 +8,6 @@ import com.example.dao.UserDao;
 import com.example.domain.Checkups;
 import com.example.dao.CheckupsDao;
 import com.example.domain.Doctor;
-import com.example.domain.Patient;
 import com.example.domain.User;
 import com.example.service.ICheckupsService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -168,8 +167,23 @@ public class CheckupsServiceImpl extends ServiceImpl<CheckupsDao, Checkups> impl
     }
 
     @Override
-    public Result getUserHeartRatesWithDate(Integer checkupId) {
-        List<Checkups> list = checkupsDao.selectListByCheckupId(checkupId);
+    public Result getUserHeartRatesWithDate(Integer userID) {
+        List<Checkups> list = checkupsDao.selectListByuserID(userID);
+
+        // 统计心率数据
+        Map<String, Integer> heartRateData = new HashMap<>();
+        for (Checkups orderItem : list) {
+            heartRateData.put(orderItem.getCheckupDate(), orderItem.getHeartRate());
+        }
+
+        return new Result(heartRateData, Code.GET_OK, "查询成功");
+    }
+
+    @Override
+    public Result getMyHeartRatesWithDate() {
+        Map<String, Object> map = ThreadLocalUtil.get();
+        Integer userID = (Integer) map.get("userID");
+        List<Checkups> list = checkupsDao.selectListByuserID(userID);
 
         // 统计心率数据
         Map<String, Integer> heartRateData = new HashMap<>();
