@@ -40,6 +40,9 @@ public class ScheduleServiceImpl extends ServiceImpl<ScheduleDao, Schedule> impl
     @Autowired
     private DoctorDao doctorDao;
 
+    @Autowired
+    private DoctorServiceImpl doctorService;
+
     @Override
     public Result selectWeeklySchedule() {
         // 获取当前日期
@@ -54,6 +57,7 @@ public class ScheduleServiceImpl extends ServiceImpl<ScheduleDao, Schedule> impl
         List<Schedule> schedules = scheduleDao.selectList(new QueryWrapper<Schedule>()
                 .ge("shift_date", startDateStr)
                 .le("shift_date", endDateStr));
+        doctorService.setDetail(schedules);
         return new Result(schedules, Code.GET_OK, "查询成功");
     }
 
@@ -73,6 +77,7 @@ public class ScheduleServiceImpl extends ServiceImpl<ScheduleDao, Schedule> impl
         wrapper.eq("doctorID", id);
         wrapper.eq("ishandle", 1);
         List<Schedule> schedules = scheduleDao.selectList(wrapper);
+        doctorService.setDetail(schedules);
         return new Result(schedules, Code.GET_OK, "查询成功");
     }
 

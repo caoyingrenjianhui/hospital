@@ -15,6 +15,11 @@
     <script src="../element-ui/lib/index.js"></script>
     <link rel="stylesheet" href="../element-ui/lib/theme-chalk/index.css">
     <script src="../js/axios-0.18.0.js"></script>
+    <style>
+        #record {
+            height: 200px; /* 设置输入框的高度 */
+        }
+    </style>
 </head>
 <body>
 <div id="app">
@@ -49,7 +54,7 @@
                             <a class="dropdown-item" href="patient.html">患者</a>
                         </div>
                     </li>
-                    <li class="nav-item mr-3 mt-lg-0 mt-3" v-if="userType==1">
+                    <li class="nav-item mr-3 mt-lg-0 mt-3" v-if="userType==0">
                         <a class="nav-link" href="appointmentDoctor.html">预约
                             <span class="sr-only">(current)</span>
                         </a>
@@ -225,7 +230,9 @@
                                            @click="beforeUpdate(scope.row)">编辑
                                 </el-button>
                                 <br><br>
-                                <el-button type="primary" @click="deleteDoctor(scope.row.doctorID)" v-if="userType==2">删除</el-button>
+                                <el-button type="primary" @click="deleteDoctor(scope.row.doctorID)" v-if="userType==2">
+                                    删除
+                                </el-button>
                             </el-row>
                         </el-table-column>
                     </el-table>
@@ -301,7 +308,8 @@
                             </div>
                             <div class="form-group">
                                 <label class="col-form-label">擅长</label>
-                                <input type="text" class="form-control" v-model="doctor.specialization" placeholder="请输入医生擅长领域"
+                                <input type="text" class="form-control" v-model="doctor.specialization"
+                                       placeholder="请输入医生擅长领域"
                                        required>
                             </div>
                         </div>
@@ -327,7 +335,7 @@
                                 <select class="form-control date mb-3" v-model="appointment1"
                                         required="">
                                     <option v-for="date in availableDates" :key="date" :value="date">
-                                            日期：{{date.shiftDate }}；班次：{{date.shiftType}}
+                                        日期：{{date.shiftDate }}；班次：{{date.shiftType}}
                                     </option>
                                 </select>
                                 <label class="col-form-label">备注</label>
@@ -356,7 +364,8 @@
                         <div class="modal-body">
                             <div class="form-group">
                                 <label for="record" class="col-form-label">履历</label>
-                                <input type="text" id="record" class="form-control" v-model="record" disabled placeholder="请输入医生的履历信息" required>
+                                <input type="text" id="record" class="form-control" v-model="record" disabled
+                                       placeholder="请输入医生的履历信息" required>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -429,7 +438,7 @@
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
-            beforeView(rowDate){
+            beforeView(rowDate) {
                 this.record = rowDate.record
             },
             //查询可预约的时间
@@ -452,8 +461,8 @@
                 });
             },
             appointmentDoctor() {
-                this.appointment.appointmentDate=this.appointment1.shiftDate
-                this.appointment.shiftType=this.appointment1.shiftType
+                this.appointment.appointmentDate = this.appointment1.shiftDate
+                this.appointment.shiftType = this.appointment1.shiftType
                 axios({
                     method: 'post',
                     url: 'http://localhost:9080/appointments/add',
@@ -576,7 +585,7 @@
         },
         data() {
             return {
-                record:"",
+                record: "",
                 userType: sessionStorage.getItem('userType'),
                 userId: sessionStorage.getItem('userID'),
                 updateFlag: 0,

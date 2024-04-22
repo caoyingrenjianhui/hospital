@@ -49,7 +49,7 @@
                             <a class="dropdown-item" href="patient.html">患者</a>
                         </div>
                     </li>
-                    <li class="nav-item active mr-3 mt-lg-0 mt-3" v-if="userType==1">
+                    <li class="nav-item active mr-3 mt-lg-0 mt-3" v-if="userType==0">
                         <a class="nav-link" href="appointmentDoctor.html">预约
                             <span class="sr-only">(current)</span>
                         </a>
@@ -98,7 +98,7 @@
             <li class="breadcrumb-item">
                 <a href="index.html">主页</a>
             </li>
-            <li class="breadcrumb-item active" aria-current="page">医生信息</li>
+            <li class="breadcrumb-item active" aria-current="page">预约</li>
         </ol>
     </nav>
     <section class="wthree-row w3-contact py-lg-5">
@@ -139,6 +139,8 @@
                             style="width: 100%"
                     >
                         <el-table-column label="医生ID" prop="doctorID"></el-table-column>
+                        <el-table-column label="医生姓名" prop="doctor.user.username"></el-table-column>
+                        <el-table-column label="医生科室" prop="doctor.department"></el-table-column>
                         <el-table-column label="日期" prop="shiftDate"></el-table-column>
                         <el-table-column label="班次" prop="shiftType"></el-table-column>
                         <el-table-column

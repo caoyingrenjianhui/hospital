@@ -12,9 +12,13 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -129,7 +133,7 @@ public class DoctorServiceImpl extends ServiceImpl<DoctorDao, Doctor> implements
 //        先根据科室查询
         QueryWrapper<Doctor> wrapper = new QueryWrapper<>();
         if (doctor.getDepartment() != null) {
-            wrapper.eq("department", doctor.getDepartment());
+            wrapper.eq("department", Department.getCodeByName(doctor.getDepartment()));
         }
         List<Doctor> doctors = doctorDao.selectList(wrapper);
         List<Integer> doctorIds = doctors.stream()
@@ -138,6 +142,7 @@ public class DoctorServiceImpl extends ServiceImpl<DoctorDao, Doctor> implements
 //        根据日期查
         QueryWrapper<Schedule> scheduleQueryWrapper = new QueryWrapper<>();
         if (doctor.getShiftDate() != null) {
+            setDate(doctor);
             scheduleQueryWrapper.eq("shift_date", doctor.getShiftDate());
         } else {
             // 获取当前日期
@@ -161,7 +166,36 @@ public class DoctorServiceImpl extends ServiceImpl<DoctorDao, Doctor> implements
         if (schedules.size() == 0) {
             return new Result(null, Code.GET_ERR, "未查询到排班信息");
         }
+        setDetail(schedules);
         return new Result(schedules, Code.GET_OK, "查询成功");
+    }
+
+    private void setDate(Doctor doctor) {
+        try {
+            // 解析前端传递的日期字符串
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            Date date = inputFormat.parse(doctor.getShiftDate());
+            Instant instant = date.toInstant();
+            ZoneId zoneId = ZoneId.systemDefault();
+            LocalDate localDate = instant.atZone(zoneId).toLocalDate();
+            LocalDate nextDay = localDate.plusDays(1);
+            Date nextDate = Date.from(nextDay.atStartOfDay(zoneId).toInstant());
+            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String nextDayFormatted = outputFormat.format(nextDate);
+            doctor.setShiftDate(nextDayFormatted);
+        } catch (Exception e) {
+            System.out.println("日期转换失败：" + e.getMessage());
+        }
+    }
+
+    public void setDetail(List<Schedule> schedules) {
+        for (Schedule s : schedules) {
+            Doctor doctor = doctorDao.selectById(s.getDoctorID());
+            User user = userDao.selectById(doctor.getUserID());
+            doctor.setUser(user);
+            doctor.setDepartment(Department.getNameByCode(Integer.valueOf(doctor.getDepartment())));
+            s.setDoctor(doctor);
+        }
     }
 
     @Override

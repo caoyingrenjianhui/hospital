@@ -1,18 +1,21 @@
 package com.example.domain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+
 import java.time.LocalDate;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
+
 import java.io.Serializable;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author 戴金磊
@@ -48,4 +51,7 @@ public class Schedule implements Serializable {
     private Integer isdel;
 
     private Integer ishandle;
+
+    @TableField(exist = false)
+    private Doctor doctor;
 }
