@@ -64,4 +64,6 @@ public class Medicines implements Serializable {
      */
     private String specification;
 
+    private String photo;
+
 }

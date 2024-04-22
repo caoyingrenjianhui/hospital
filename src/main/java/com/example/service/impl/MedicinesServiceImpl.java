@@ -141,4 +141,9 @@ public class MedicinesServiceImpl extends ServiceImpl<MedicinesDao, Medicines> i
         medicinesDao.updateById(medicines);
         return new Result(medicines, Code.UPDATE_OK, "修改成功");
     }
+
+    @Override
+    public void upphoto(Medicines medicines) {
+        medicinesDao.updatePhoto(medicines.getPhoto(), medicines.getMedicineID());
+    }
 }

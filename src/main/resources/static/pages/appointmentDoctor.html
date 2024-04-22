@@ -2,7 +2,7 @@
 <html lang="zxx">
 <meta charset="UTF-8">
 <head>
-    <title>医生信息</title>
+    <title>预约</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8"/>
     <meta name="keywords" content=""/>
@@ -49,12 +49,12 @@
                             <a class="dropdown-item" href="patient.html">患者</a>
                         </div>
                     </li>
-                    <li class="nav-item active mr-3 mt-lg-0 mt-3">
+                    <li class="nav-item active mr-3 mt-lg-0 mt-3" v-if="userType==1">
                         <a class="nav-link" href="appointmentDoctor.html">预约
                             <span class="sr-only">(current)</span>
                         </a>
                     </li>
-                    <li class="nav-item  mr-3 mt-lg-0 mt-3">
+                    <li class="nav-item  mr-3 mt-lg-0 mt-3" v-if="userType==0">
                         <a class="nav-link" href="appointment.html">我的预约
                             <span class="sr-only">(current)</span>
                         </a>
@@ -64,7 +64,7 @@
                             <span class="sr-only">(current)</span>
                         </a>
                     </li>
-                    <li class="nav-item mr-3 mt-lg-0 mt-3">
+                    <li class="nav-item mr-3 mt-lg-0 mt-3" v-if="userType==1">
                         <a class="nav-link" href="myPrescription.html">开药记录
                             <span class="sr-only">(current)</span>
                         </a>

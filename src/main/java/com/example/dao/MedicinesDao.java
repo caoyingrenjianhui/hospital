@@ -4,6 +4,7 @@ import com.example.domain.Medicines;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -20,4 +21,7 @@ public interface MedicinesDao extends BaseMapper<Medicines> {
 
     @Select("select * from Medicines where isdel=0")
     List<Medicines> getAll();
+
+    @Update("update Medicines set photo = #{photo} where medicineID = #{medicineID}")
+    void updatePhoto(String photo, Integer medicineID);
 }

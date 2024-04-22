@@ -29,4 +29,6 @@ public interface IMedicinesService extends IService<Medicines> {
     Result updateCount(Medicines medicines);
 
     Result update(Medicines medicines);
+
+    void upphoto(Medicines medicines);
 }
