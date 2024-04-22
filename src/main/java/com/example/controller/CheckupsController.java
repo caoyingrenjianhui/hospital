@@ -61,7 +61,7 @@ public class CheckupsController {
         return checkupsService.getUserHeartRatesWithDate(checkupId);
     }
 
-    @GetMapping("/getMyHeartRatesWithDate}")
+    @GetMapping("/getMyHeartRatesWithDate")
     public Result getMyHeartRatesWithDate() {
         return checkupsService.getMyHeartRatesWithDate();
     }

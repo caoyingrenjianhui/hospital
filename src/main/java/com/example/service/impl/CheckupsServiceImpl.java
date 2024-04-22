@@ -15,10 +15,11 @@ import com.example.utils.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.*;
 
 /**
  * <p>
@@ -105,11 +106,30 @@ public class CheckupsServiceImpl extends ServiceImpl<CheckupsDao, Checkups> impl
         wrapper.eq("userID", userID);
         Doctor doctor = doctorDao.selectOne(wrapper);
         checkups.setDoctorID(doctor.getDoctorID());
+        setCheckupsDate(checkups);
         int insert = checkupsDao.insert(checkups);
         if (insert != 0) {
             return new Result(checkups, Code.SAVE_OK, "新增成功");
         } else {
             return new Result(checkups, Code.SAVE_ERR, "新增失败，请联系管理员");
+        }
+    }
+
+    private void setCheckupsDate(Checkups checkups) {
+        try {
+            // 解析前端传递的日期字符串
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            Date date = inputFormat.parse(checkups.getCheckupDate());
+            Instant instant = date.toInstant();
+            ZoneId zoneId = ZoneId.systemDefault();
+            LocalDate localDate = instant.atZone(zoneId).toLocalDate();
+            LocalDate nextDay = localDate.plusDays(1);
+            Date nextDate = Date.from(nextDay.atStartOfDay(zoneId).toInstant());
+            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String nextDayFormatted = outputFormat.format(nextDate);
+            checkups.setCheckupDate(nextDayFormatted);
+        } catch (Exception e) {
+            System.out.println("日期转换失败：" + e.getMessage());
         }
     }
 
@@ -119,6 +139,7 @@ public class CheckupsServiceImpl extends ServiceImpl<CheckupsDao, Checkups> impl
         if (selectById == null) {
             return new Result(null, Code.UPDATE_ERR, "无此用户的体检报告");
         }
+        setCheckupsDate(checkups);
         checkupsDao.updateById(checkups);
         return new Result(checkups, Code.UPDATE_OK, "修改成功");
     }

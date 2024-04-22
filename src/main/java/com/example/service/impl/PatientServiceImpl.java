@@ -137,6 +137,7 @@ public class PatientServiceImpl extends ServiceImpl<PatientDao, Patient> impleme
             prescription.setDoctorID(selectById.getDoctorID());
             prescription.setPrescriptionTime(LocalDate.now().toString());
             prescription.setQuantity(medicine.getUseCount());
+            prescription.setMedicineID(medicine.getMedicineID());
             prescriptionDao.insert(prescription);
             sb.append(medicine.getMedicineID()).append(":").append(medicine.getName()).append(":").append(medicine.getUseCount()).append(";");
         }
@@ -167,14 +168,7 @@ public class PatientServiceImpl extends ServiceImpl<PatientDao, Patient> impleme
         queryWrapper.eq("doctorID", doctor.getDoctorID());
         List<Patient> list = patientDao.selectList(queryWrapper);
         if (list != null) {
-            for (Patient patient : list) {
-                User user = userDao.selectById(patient.getUserID());
-                patient.setUser(user);
-                User selectById = userDao.selectById(doctor.getUserID());
-                doctor.setUser(selectById);
-                patient.setDoctor(doctor);
-                setMedicines(patient);
-            }
+            setDetail(list);
         }
         return new Result(list, Code.GET_OK, "查询成功");
     }
@@ -208,6 +202,11 @@ public class PatientServiceImpl extends ServiceImpl<PatientDao, Patient> impleme
         if (list == null) {
             return new Result(null, Code.GET_ERR, "查询不到数据");
         }
+        setDetail(list);
+        return new Result(list, Code.GET_OK, "查询成功");
+    }
+
+    public void setDetail(List<Patient> list) {
         for (Patient p : list) {
             User user = userDao.selectById(p.getUserID());
             p.setUser(user);
@@ -219,7 +218,6 @@ public class PatientServiceImpl extends ServiceImpl<PatientDao, Patient> impleme
             }
             p.setDoctor(doctor);
         }
-        return new Result(list, Code.GET_OK, "查询成功");
     }
 
     @Override
@@ -230,16 +228,7 @@ public class PatientServiceImpl extends ServiceImpl<PatientDao, Patient> impleme
         wrapper.eq("userID", userID);
         List<Patient> list = patientDao.selectList(wrapper);
         if (list != null) {
-            for (Patient patient : list) {
-                User user = userDao.selectById(patient.getUserID());
-                patient.setUser(user);
-                Doctor doctor = doctorDao.selectById(patient.getDoctorID());
-                if (doctor != null) {
-                    User selectById = userDao.selectById(doctor.getUserID());
-                    doctor.setUser(selectById);
-                }
-                setMedicines(patient);
-            }
+            setDetail(list);
         }
         return new Result(list, Code.GET_OK, "查询成功");
     }

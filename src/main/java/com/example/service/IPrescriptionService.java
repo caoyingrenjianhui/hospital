@@ -15,4 +15,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface IPrescriptionService extends IService<Prescription> {
 
     Result select(Prescription prescription);
+
+    Result getMyPrescription();
 }
