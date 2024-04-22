@@ -25,4 +25,6 @@ public interface IScheduleService extends IService<Schedule> {
     Result update(Schedule schedule);
 
     Result delete(Integer id);
+
+    Result approve(Integer id);
 }

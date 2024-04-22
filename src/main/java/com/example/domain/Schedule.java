@@ -47,5 +47,5 @@ public class Schedule implements Serializable {
     @TableLogic
     private Integer isdel;
 
-
+    private Integer ishandle;
 }

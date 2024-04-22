@@ -52,5 +52,10 @@ public class ScheduleController {
         return scheduleService.delete(id);
     }
 
+    @PutMapping("/approve/{id}")
+    public Result approve(@PathVariable Integer id){
+        return scheduleService.approve(id);
+    }
+
 }
 

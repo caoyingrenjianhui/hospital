@@ -81,16 +81,16 @@
                             <span class="sr-only">(current)</span>
                         </a>
                     </li>
-                    <li class="nav-item dropdown mr-3 mt-lg-0 mt-3" v-if="userType==2">
+                    <li class="nav-item dropdown mr-3 mt-lg-0 mt-3">
                         <a class="nav-link dropdown-toggle" role="button" href="#"
                            data-toggle="dropdown" aria-haspopup="true"
                            aria-expanded="false">
                             管理
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="medicine.html">药品管理</a>
+                            <a class="dropdown-item" href="medicine.html" v-if="userType==2">药品管理</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="schedule.html">排班</a>
+                            <a class="dropdown-item" href="schedule.html" v-if="userType!=0">排班</a>
                         </div>
                     </li>
                     <li>

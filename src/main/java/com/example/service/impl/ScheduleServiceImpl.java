@@ -10,6 +10,7 @@ import com.example.dao.ScheduleDao;
 import com.example.domain.UserType;
 import com.example.service.IScheduleService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.utils.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -69,16 +71,17 @@ public class ScheduleServiceImpl extends ServiceImpl<ScheduleDao, Schedule> impl
         QueryWrapper<Schedule> wrapper = new QueryWrapper<>();
         wrapper.between("shift_date", startDateStr, endDateStr);
         wrapper.eq("doctorID", id);
+        wrapper.eq("ishandle", 1);
         List<Schedule> schedules = scheduleDao.selectList(wrapper);
         return new Result(schedules, Code.GET_OK, "查询成功");
     }
 
     @Override
     public Result createSchedule(Schedule schedule) {
-        Doctor doctor = doctorDao.selectById(schedule.getDoctorID());
-        if (doctor == null) {
-            return new Result(null, Code.SAVE_ERR, "新增失败，系统中无此医生");
-        }
+        Map<String, Object> map = ThreadLocalUtil.get();
+        Integer userID = (Integer) map.get("userID");
+        Doctor doctor = doctorDao.selectByUserID(userID);
+        schedule.setDoctorID(doctor.getDoctorID());
         schedule.setCreateTime(LocalDate.now().toString());
         schedule.setModifyTime(null);
         try {
@@ -132,6 +135,19 @@ public class ScheduleServiceImpl extends ServiceImpl<ScheduleDao, Schedule> impl
             return new Result(null, Code.DELETE_OK, "删除成功");
         } else {
             return new Result(null, Code.DELETE_ERR, "删除失败");
+        }
+    }
+
+    @Override
+    public Result approve(Integer id) {
+        Schedule schedule = scheduleDao.selectById(id);
+        schedule.setModifyTime(LocalDate.now().toString());
+        schedule.setIshandle(1);
+        int i = scheduleDao.updateById(schedule);
+        if (i != 0) {
+            return new Result(null, Code.UPDATE_OK, "批准成功");
+        } else {
+            return new Result(null, Code.UPDATE_ERR, "批准失败");
         }
     }
 }

@@ -79,16 +79,16 @@
                             <span class="sr-only">(current)</span>
                         </a>
                     </li>
-                    <li class="nav-item dropdown active mr-3 mt-lg-0 mt-3" v-if="userType==2">
+                    <li class="nav-item active dropdown mr-3 mt-lg-0 mt-3">
                         <a class="nav-link dropdown-toggle" role="button" href="#"
                            data-toggle="dropdown" aria-haspopup="true"
                            aria-expanded="false">
                             管理
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="medicine.html">药品管理</a>
+                            <a class="dropdown-item" href="medicine.html" v-if="userType==2">药品管理</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="schedule.html">排班</a>
+                            <a class="dropdown-item" href="schedule.html" v-if="userType!=0">排班</a>
                         </div>
                     </li>
                     <li>
@@ -133,13 +133,24 @@
                                 <el-table-column label="医生ID" prop="doctorID"></el-table-column>
                                 <el-table-column label="日期" prop="shiftDate"></el-table-column>
                                 <el-table-column label="班次" prop="shiftType"></el-table-column>
+                                <el-table-column label="是否批准" prop="ishandle">
+                                    <template slot-scope="scope">
+                                        <span v-if="scope.row.ishandle == 1">已批准</span>
+                                        <span v-else-if="scope.row.ishandle == 0">未批准</span>
+                                    </template>
+                                </el-table-column>
+
                                 <el-table-column
                                         align="center"
                                         label="操作">
                                     <el-row slot-scope="scope">
+                                        <el-button type="primary" v-if="userType==2"
+                                                   @click="approve(scope.row.scheduleID)">批准
+                                        </el-button>
                                         <el-button type="primary" data-toggle="modal" data-target="#update" v-if="userType==2"
                                                    @click="beforeUpdate(scope.row)">编辑
                                         </el-button>
+                                        <br><br>
                                         <el-button type="primary" v-if="userType==2" @click="deleteSchedule(scope.row.scheduleID)">删除</el-button>
                                     </el-row>
                                 </el-table-column>
@@ -173,22 +184,14 @@
                     </div>
                 </div>
             </template>
-            <template>
+            <template v-if="userType==1">
                 <div>
-                    <el-select v-model="schedule.doctorID" placeholder="请选择医生">
-                        <el-option
-                                v-for="doctor in doctors"
-                                :key="doctor.doctorID"
-                                :label="doctor.name"
-                                :value="doctor.doctorID"
-                        ></el-option>
-                    </el-select>
                     <el-date-picker v-model="schedule.shiftDate" type="date" placeholder="选择排班日期"></el-date-picker>
                     <el-select v-model="schedule.shiftType" placeholder="选择班次类型">
                         <el-option label="上午班" value="上午班"></el-option>
                         <el-option label="下午班" value="下午班"></el-option>
                     </el-select>
-                    <el-button type="primary" @click="submitSchedule">提交排班</el-button>
+                    <el-button type="primary" @click="submitSchedule">提交申请</el-button>
                 </div>
             </template>
         </div>
@@ -217,6 +220,22 @@
         methods: {
             beforeUpdate(rowDate) {
                 this.schedule = rowDate
+            },
+            approve(scheduleID){
+                let _this = this
+                axios({
+                    method: 'put',
+                    url: 'http://localhost:9080/schedule/approve/' + scheduleID,
+                    headers: { // 设置请求头
+                        Authorization: sessionStorage.getItem("token")
+                    }
+                }).then(function (response) {
+                    if (response.data.code == 20031) {
+                        _this.onReset()
+                    } else {
+                        alert(response.data.msg)
+                    }
+                });
             },
             deleteSchedule(scheduleID) {
                 let _this = this
