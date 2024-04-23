@@ -61,11 +61,20 @@ public class CheckupsController {
         return checkupsService.getUserHeartRatesWithDate(checkupId);
     }
 
+    @GetMapping("/getUserBloodPressureWithDate/{checkupId}")
+    public Result getUserBloodPressureWithDate(@PathVariable Integer checkupId) {
+        return checkupsService.getUserBloodPressureWithDate(checkupId);
+    }
+
     @GetMapping("/getMyHeartRatesWithDate")
     public Result getMyHeartRatesWithDate() {
         return checkupsService.getMyHeartRatesWithDate();
     }
 
+    @GetMapping("/getMyBloodPressureWithDate")
+    public Result getMyBloodPressureWithDate() {
+        return checkupsService.getMyBloodPressureWithDate();
+    }
 
 }
 

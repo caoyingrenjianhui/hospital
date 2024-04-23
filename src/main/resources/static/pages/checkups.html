@@ -134,6 +134,8 @@
                         <el-form-item>
                             <el-button type="primary" @click="getUserHeartRates()">查看用户的心率波动
                             </el-button>
+                            <el-button type="primary" @click="getUserBloodPressureRates()">查看用户的血压波动
+                            </el-button>
                             <el-button type="primary" @click="onSubmit()">查询</el-button>
                             <el-button type="primary" @click="onReset()">重置</el-button>
                             <el-button type="primary" data-toggle="modal" data-target="#add"
@@ -227,6 +229,8 @@
                 </template>
                 <div v-else>
                     <el-button type="primary" @click="getMyHeartRates()">查看我的心率波动</el-button>
+                    <el-button type="primary" @click="getMyBloodPressureRates()">查看用户的血压波动
+                    </el-button>
                     <el-table
                             :data="checkups"
                             style="width: 100%"
@@ -259,7 +263,13 @@
                         </el-table-column>
                         <el-table-column
                                 prop="bloodPressure"
-                                label="血压"
+                                label="高压"
+                                align="center"
+                        >
+                        </el-table-column>
+                        <el-table-column
+                                prop="bloodPressureLow"
+                                label="低压"
                                 align="center"
                         >
                         </el-table-column>
@@ -317,8 +327,13 @@
                                                 placeholder="选择体检日期"></el-date-picker>
                             </div>
                             <div class="form-group">
-                                <label class="col-form-label">血压</label>
+                                <label class="col-form-label">高压</label>
                                 <input class="form-control" v-model="checkup.bloodPressure" placeholder=" "
+                                       required="">
+                            </div>
+                            <div class="form-group">
+                                <label class="col-form-label">低压</label>
+                                <input class="form-control" v-model="checkup.bloodPressureLow" placeholder=" "
                                        required="">
                             </div>
                             <div class="form-group">
@@ -516,6 +531,141 @@
                                     borderColor: 'rgba(54, 162, 235, 1)',
                                     borderWidth: 1
                                 }]
+                            },
+                            options: {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        });
+                    } else {
+                        alert(response.data.msg)
+                    }
+                });
+            },
+            getUserBloodPressureRates() {
+                if (this.checkup.userID == null) {
+                    alert("请输入要查看的用户账号")
+                } else {
+                    this.dialogVisible = true;
+                    this.showBloodPressureStatistics();
+                }
+            },
+            async showBloodPressureStatistics() {
+                // 异步加载 Chart.js
+                await import('https://cdn.jsdelivr.net/npm/chart.js');
+                let self = this; // 保存 Vue 实例的上下文
+                axios({
+                    method: 'get',
+                    url: 'http://localhost:9080/checkups/getUserBloodPressureWithDate/' + this.checkup.userID,
+                    headers: {
+                        Authorization: sessionStorage.getItem("token")
+                    }
+                }).then(function (response) {
+                    if (response.data.code == 20041) {
+                        self.data = response.data.data; // 使用保存的上下文访问 Vue 实例的属性
+
+                        const dates = Object.keys(self.data);
+                        const highPressureValues = [];
+                        const lowPressureValues = [];
+
+                        dates.forEach(date => {
+                            highPressureValues.push(self.data[date].highPressure);
+                            lowPressureValues.push(self.data[date].lowPressure);
+                        });
+
+                        const ctx = document.getElementById('salesChart').getContext('2d');
+                        if (this.chartInstance) {
+                            this.chartInstance.destroy();
+                        }
+                        this.chartInstance = new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: dates,
+                                datasets: [{
+                                    label: 'High Pressure',
+                                    data: highPressureValues,
+                                    backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                                    borderColor: 'rgba(255, 99, 132, 1)',
+                                    borderWidth: 1
+                                },
+                                    {
+                                        label: 'Low Pressure',
+                                        data: lowPressureValues,
+                                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                                        borderColor: 'rgba(54, 162, 235, 1)',
+                                        borderWidth: 1
+                                    }]
+                            },
+                            options: {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        });
+                    } else {
+                        alert(response.data.msg)
+                    }
+                });
+            },
+            getMyBloodPressureRates() {
+                this.checkup.userID = this.userId
+                if (this.checkup.userID == null) {
+                    alert("请输入要查看的用户账号")
+                } else {
+                    this.dialogVisible = true;
+                    this.showMyBloodPressure();
+                }
+            },
+            async showMyBloodPressure() {
+                // 异步加载 Chart.js
+                await import('https://cdn.jsdelivr.net/npm/chart.js');
+                let self = this; // 保存 Vue 实例的上下文
+                axios({
+                    method: 'get',
+                    url: 'http://localhost:9080/checkups/getMyHeartRatesWithDate',
+                    headers: {
+                        Authorization: sessionStorage.getItem("token")
+                    }
+                }).then(function (response) {
+                    if (response.data.code == 20041) {
+                        self.data = response.data.data; // 使用保存的上下文访问 Vue 实例的属性
+
+                        const dates = Object.keys(self.data);
+                        const highPressureValues = [];
+                        const lowPressureValues = [];
+
+                        dates.forEach(date => {
+                            highPressureValues.push(self.data[date].highPressure);
+                            lowPressureValues.push(self.data[date].lowPressure);
+                        });
+
+                        const ctx = document.getElementById('salesChart').getContext('2d');
+                        if (this.chartInstance) {
+                            this.chartInstance.destroy();
+                        }
+                        this.chartInstance = new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: dates,
+                                datasets: [{
+                                    label: 'High Pressure',
+                                    data: highPressureValues,
+                                    backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                                    borderColor: 'rgba(255, 99, 132, 1)',
+                                    borderWidth: 1
+                                },
+                                    {
+                                        label: 'Low Pressure',
+                                        data: lowPressureValues,
+                                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                                        borderColor: 'rgba(54, 162, 235, 1)',
+                                        borderWidth: 1
+                                    }]
                             },
                             options: {
                                 scales: {

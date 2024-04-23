@@ -42,6 +42,8 @@ public class Checkups implements Serializable {
 
     private Integer bloodPressure;
 
+    private Integer bloodPressureLow;
+
     private Integer heartRate;
 
     private BigDecimal height;

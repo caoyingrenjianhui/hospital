@@ -215,4 +215,34 @@ public class CheckupsServiceImpl extends ServiceImpl<CheckupsDao, Checkups> impl
         return new Result(heartRateData, Code.GET_OK, "查询成功");
     }
 
+    @Override
+    public Result getUserBloodPressureWithDate(Integer userID) {
+        List<Checkups> list = checkupsDao.selectListByuserID(userID);
+        Map<String, Map<String, Integer>> bloodPressureData = new HashMap<>();
+        for (Checkups checkup : list) {
+            Map<String, Integer> pressureData = new HashMap<>();
+            pressureData.put("highPressure", checkup.getBloodPressure());
+            pressureData.put("lowPressure", checkup.getBloodPressureLow());
+            bloodPressureData.put(checkup.getCheckupDate(), pressureData);
+        }
+
+        return new Result(bloodPressureData, Code.GET_OK, "查询成功");
+    }
+
+    @Override
+    public Result getMyBloodPressureWithDate() {
+        Map<String, Object> map = ThreadLocalUtil.get();
+        Integer userID = (Integer) map.get("userID");
+        List<Checkups> list = checkupsDao.selectListByuserID(userID);
+        Map<String, Map<String, Integer>> bloodPressureData = new HashMap<>();
+        for (Checkups checkup : list) {
+            Map<String, Integer> pressureData = new HashMap<>();
+            pressureData.put("highPressure", checkup.getBloodPressure());
+            pressureData.put("lowPressure", checkup.getBloodPressureLow());
+            bloodPressureData.put(checkup.getCheckupDate(), pressureData);
+        }
+
+        return new Result(bloodPressureData, Code.GET_OK, "查询成功");
+    }
+
 }
