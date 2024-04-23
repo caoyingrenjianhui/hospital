@@ -73,6 +73,16 @@
                             <span class="sr-only">(current)</span>
                         </a>
                     </li>
+                    <li class="nav-item mr-3 mt-lg-0 mt-3" v-if="userType==1">
+                        <a class="nav-link" href="myPrescription.html">开药记录
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item mr-3 mt-lg-0 mt-3" v-if="userType==2">
+                        <a class="nav-link" href="pharmacy.html">药房
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
                     <li class="nav-item dropdown mr-3 mt-lg-0 mt-3">
                         <a class="nav-link dropdown-toggle" role="button" href="#"
                            data-toggle="dropdown" aria-haspopup="true"

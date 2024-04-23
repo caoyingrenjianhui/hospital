@@ -28,4 +28,8 @@ public interface IPatientService extends IService<Patient> {
     Result select(Patient patient);
 
     Result getme();
+
+    Result getAllNotFinish();
+
+    Result finish(Integer id);
 }

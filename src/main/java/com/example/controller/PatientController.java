@@ -56,5 +56,15 @@ public class PatientController {
     public Result getme() {
         return patientService.getme();
     }
+
+    @GetMapping("/getAllNotFinish")
+    public Result getAllNotFinish() {
+        return patientService.getAllNotFinish();
+    }
+
+    @GetMapping("/finish/{id}")
+    public Result finish(@PathVariable Integer id){
+        return patientService.finish(id);
+    }
 }
 

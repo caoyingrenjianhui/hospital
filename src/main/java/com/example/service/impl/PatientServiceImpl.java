@@ -71,18 +71,7 @@ public class PatientServiceImpl extends ServiceImpl<PatientDao, Patient> impleme
     @Override
     public Result getAll() {
         List<Patient> list = patientDao.getAll();
-        if (list != null) {
-            for (Patient patient : list) {
-                User user = userDao.selectById(patient.getUserID());
-                patient.setUser(user);
-                Doctor doctor = doctorDao.selectById(patient.getDoctorID());
-                if (doctor != null) {
-                    User selectById = userDao.selectById(doctor.getUserID());
-                    doctor.setUser(selectById);
-                }
-                setMedicines(patient);
-            }
-        }
+        extracted(list);
         return new Result(list, Code.GET_OK, "查询成功");
     }
 
@@ -231,5 +220,38 @@ public class PatientServiceImpl extends ServiceImpl<PatientDao, Patient> impleme
             setDetail(list);
         }
         return new Result(list, Code.GET_OK, "查询成功");
+    }
+
+    @Override
+    public Result getAllNotFinish() {
+        QueryWrapper<Patient> wrapper = new QueryWrapper<>();
+        wrapper.eq("finish", 0);
+        List<Patient> list = patientDao.selectList(wrapper);
+        extracted(list);
+        return new Result(list, Code.GET_OK, "查询成功");
+    }
+
+    @Override
+    public Result finish(Integer id) {
+        Patient patient = patientDao.selectById(id);
+        patient.setModifyTime(LocalDate.now().toString());
+        patient.setFinish(1);
+        patientDao.updateById(patient);
+        return new Result(patient, Code.UPDATE_OK, "修改成功");
+    }
+
+    private void extracted(List<Patient> list) {
+        if (list != null) {
+            for (Patient patient : list) {
+                User user = userDao.selectById(patient.getUserID());
+                patient.setUser(user);
+                Doctor doctor = doctorDao.selectById(patient.getDoctorID());
+                if (doctor != null) {
+                    User selectById = userDao.selectById(doctor.getUserID());
+                    doctor.setUser(selectById);
+                }
+                setMedicines(patient);
+            }
+        }
     }
 }

@@ -58,5 +58,10 @@ public class Patient implements Serializable {
     @TableLogic
     private Integer isdel;
 
+    /**
+     * 是否缴费
+     */
+    private Integer finish;
+
 
 }

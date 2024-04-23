@@ -66,4 +66,9 @@ public class Medicines implements Serializable {
 
     private String photo;
 
+    /**
+     * 进价
+     */
+    private BigDecimal costPrice;
+
 }
