@@ -73,6 +73,7 @@ public class PrescriptionServiceImpl extends ServiceImpl<PrescriptionDao, Prescr
         if (list.size() == 0) {
             return new Result(null, Code.GET_ERR, "未查询到数据");
         }
+        setDetail(list);
         return new Result(list, Code.GET_OK, "查询成功");
     }
 
@@ -114,6 +115,7 @@ public class PrescriptionServiceImpl extends ServiceImpl<PrescriptionDao, Prescr
             prescription.setPatientName(patient.getUser().getUsername());
             Medicines medicines = medicinesDao.selectById(prescription.getMedicineID());
             prescription.setMedicineName(medicines.getName());
+            prescription.setMedicine(medicines);
         }
     }
 }

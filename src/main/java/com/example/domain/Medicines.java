@@ -71,4 +71,8 @@ public class Medicines implements Serializable {
      */
     private BigDecimal costPrice;
 
+    /**
+     * 品牌
+     */
+    private String brand;
 }

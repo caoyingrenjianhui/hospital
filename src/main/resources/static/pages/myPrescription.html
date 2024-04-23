@@ -150,16 +150,11 @@
                         <el-table-column label="患者姓名" prop="patientName"></el-table-column>
                         <el-table-column label="药品ID" prop="medicineID"></el-table-column>
                         <el-table-column label="药品名称" prop="medicineName"></el-table-column>
-                        <!--                        <el-table-column-->
-                        <!--                                align="center"-->
-                        <!--                                label="操作">-->
-                        <!--                            <el-row slot-scope="scope">-->
-                        <!--                                <el-button type="primary" data-toggle="modal" data-target="#appointment"-->
-                        <!--                                           v-if="userType==0"-->
-                        <!--                                           @click="beforeAppointment(scope.row)">预约-->
-                        <!--                                </el-button>-->
-                        <!--                            </el-row>-->
-                        <!--                        </el-table-column>-->
+                        <el-table-column label="批号" prop="medicine.batchNumber"></el-table-column>
+                        <el-table-column label="规格" prop="medicine.specification"></el-table-column>
+                        <el-table-column label="品牌" prop="medicine.brand"></el-table-column>
+<!--                        <el-table-column label="药品名称" prop="medicine."></el-table-column>-->
+<!--                        <el-table-column label="药品名称" prop="medicine."></el-table-column>-->
                     </el-table>
                 </template>
             </div>
