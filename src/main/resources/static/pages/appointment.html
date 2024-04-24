@@ -85,17 +85,15 @@
                             <span class="sr-only">(current)</span>
                         </a>
                     </li>
-                    <li class="nav-item dropdown mr-3 mt-lg-0 mt-3" v-if="userType!=0">
-                        <a class="nav-link dropdown-toggle" role="button" href="#"
-                           data-toggle="dropdown" aria-haspopup="true"
-                           aria-expanded="false">
-                            管理
+                    <li class="nav-item mr-3 mt-lg-0 mt-3" v-if="userType==2">
+                        <a class="nav-link" href="medicine.html" v-if="userType==2">药品管理
+                            <span class="sr-only">(current)</span>
                         </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="medicine.html" v-if="userType==2">药品管理</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="schedule.html" v-if="userType!=0">排班</a>
-                        </div>
+                    </li>
+                    <li class="nav-item mr-3 mt-lg-0 mt-3" v-if="userType==2">
+                        <a class="nav-link" href="schedule.html" v-if="userType!=0">排班</a>
+                            <span class="sr-only">(current)</span>
+                        </a>
                     </li>
                     <li>
                         <a class="nav-link" href="login.html">登录</a>
@@ -175,7 +173,8 @@
                                            @click="beforeUpdate(scope.row)" v-if="userType!=1">编辑
                                 </el-button>
                                 <br><br>
-                                <el-button type="primary" @click="deleteAppointment(scope.row.appointmentID)" v-if="userType!=1">删除
+                                <el-button type="primary" @click="deleteAppointment(scope.row.appointmentID)"
+                                           v-if="userType!=1">删除
                                 </el-button>
                             </el-row>
                         </el-table-column>
@@ -288,7 +287,7 @@
             //重置查询
             onReset() {
                 let _this = this
-                if (this.userType==1){
+                if (this.userType == 1) {
                     axios({
                         method: 'get',
                         url: 'http://localhost:9080/appointments/getMyAppointment',
@@ -298,7 +297,7 @@
                     }).then(function (response) {
                         _this.appointments = response.data.data
                     });
-                }else {
+                } else {
                     axios({
                         method: 'get',
                         url: 'http://localhost:9080/appointments/getAll',
@@ -451,7 +450,7 @@
             }).then(function (response) {
                 _this.user = response.data.data
             });
-            if (this.userType==1){
+            if (this.userType == 1) {
                 axios({
                     method: 'get',
                     url: 'http://localhost:9080/appointments/getMyAppointment',
@@ -461,7 +460,7 @@
                 }).then(function (response) {
                     _this.appointments = response.data.data
                 });
-            }else {
+            } else {
                 axios({
                     method: 'get',
                     url: 'http://localhost:9080/appointments/getAll',

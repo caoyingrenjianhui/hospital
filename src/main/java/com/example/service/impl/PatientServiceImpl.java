@@ -12,7 +12,9 @@ import com.example.utils.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -238,6 +240,32 @@ public class PatientServiceImpl extends ServiceImpl<PatientDao, Patient> impleme
         patient.setFinish(1);
         patientDao.updateById(patient);
         return new Result(patient, Code.UPDATE_OK, "修改成功");
+    }
+
+    @Override
+    public Result getMouthProfit() {
+        QueryWrapper<Patient> wrapper = new QueryWrapper<>();
+        wrapper.like("finish", 1);
+        LocalDate now = LocalDate.now();
+        String currentYearMonth = now.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+        wrapper.like("modify_time", currentYearMonth);
+        List<Patient> list = patientDao.selectList(wrapper);
+        BigDecimal totalCost = list.stream()
+                .map(Patient::getCost)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return new Result(totalCost, Code.GET_OK, "查询成功");
+    }
+
+    @Override
+    public Result getProfit() {
+        QueryWrapper<Patient> wrapper = new QueryWrapper<>();
+        wrapper.like("finish", 1);
+        LocalDate now = LocalDate.now();
+        List<Patient> list = patientDao.selectList(wrapper);
+        BigDecimal totalCost = list.stream()
+                .map(Patient::getCost)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return new Result(totalCost, Code.GET_OK, "查询成功");
     }
 
     private void extracted(List<Patient> list) {

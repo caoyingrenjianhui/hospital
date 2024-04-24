@@ -32,4 +32,8 @@ public interface IPatientService extends IService<Patient> {
     Result getAllNotFinish();
 
     Result finish(Integer id);
+
+    Result getMouthProfit();
+
+    Result getProfit();
 }

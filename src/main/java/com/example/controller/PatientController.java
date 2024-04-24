@@ -66,5 +66,16 @@ public class PatientController {
     public Result finish(@PathVariable Integer id){
         return patientService.finish(id);
     }
+
+    @GetMapping("/getMouthProfit")
+    public Result getMouthProfit(){
+        return patientService.getMouthProfit();
+    }
+
+    @GetMapping("/getProfit")
+    public Result getProfit(){
+        return patientService.getProfit();
+    }
+
 }
 
