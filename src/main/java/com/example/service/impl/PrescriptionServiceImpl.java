@@ -6,10 +6,7 @@ import com.example.controller.Result;
 import com.example.dao.DoctorDao;
 import com.example.dao.MedicinesDao;
 import com.example.dao.PatientDao;
-import com.example.domain.Doctor;
-import com.example.domain.Medicines;
-import com.example.domain.Patient;
-import com.example.domain.Prescription;
+import com.example.domain.*;
 import com.example.dao.PrescriptionDao;
 import com.example.service.IPatientService;
 import com.example.service.IPrescriptionService;
@@ -18,14 +15,12 @@ import com.example.utils.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>
@@ -108,6 +103,22 @@ public class PrescriptionServiceImpl extends ServiceImpl<PrescriptionDao, Prescr
         return new Result(list, Code.GET_OK, "查询成功");
     }
 
+    @Override
+    public Result getProfitWithDate() {
+        QueryWrapper<Prescription> wrapper = new QueryWrapper<>();
+        wrapper.select("DATE_FORMAT(prescription_time, '%Y-%m') AS month",
+                        "SUM((price - cost_Price) * quantity) AS profit")
+                .groupBy("DATE_FORMAT(prescription_time, '%Y-%m')");
+        List<Map<String, Object>> maps = prescriptionDao.selectMaps(wrapper);
+        Map<String, Integer> profit = new HashMap<>();
+        for (Map<String, Object> map : maps) {
+            String month = (String) map.get("month");
+            Integer monthlyProfit = ((BigDecimal) map.get("profit")).intValue(); // 将利润转换为整数
+            profit.put(month, monthlyProfit);
+        }
+        return new Result(profit, Code.GET_OK, "查询成功");
+    }
+
     private void setDetail(List<Prescription> list) {
         for (Prescription prescription : list) {
             Patient patient = patientDao.selectById(prescription.getPatientID());
@@ -117,5 +128,28 @@ public class PrescriptionServiceImpl extends ServiceImpl<PrescriptionDao, Prescr
             prescription.setMedicineName(medicines.getName());
             prescription.setMedicine(medicines);
         }
+    }
+}
+
+// 定义用于接收每个月利润结果的类
+class ProfitByMonth {
+    private String month; // 月份，例如 "2024-04"
+    private BigDecimal profit; // 利润
+
+    // Getters and Setters
+    public String getMonth() {
+        return month;
+    }
+
+    public void setMonth(String month) {
+        this.month = month;
+    }
+
+    public BigDecimal getProfit() {
+        return profit;
+    }
+
+    public void setProfit(BigDecimal profit) {
+        this.profit = profit;
     }
 }

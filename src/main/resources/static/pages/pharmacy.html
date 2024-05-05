@@ -148,6 +148,8 @@
                     <el-form-item>
                         <el-button type="primary" @click="onSubmit()">查询</el-button>
                         <el-button type="primary" @click="onReset()">重置</el-button>
+                        <el-button type="primary" @click="getProfitWithDate()">查看诊所盈利
+                        </el-button>
                     </el-form-item>
                 </el-form>
 
@@ -262,6 +264,11 @@
                 </div>
             </el-dialog>
         </template>
+
+        <el-dialog :visible.sync="dialogVisible1" title="盈利" width="30%">
+            <canvas id="salesChart" width="100" height="100"></canvas>
+        </el-dialog>
+
     </section>
 </div>
 <script src="../js/jquery-2.2.3.min.js"></script>
@@ -337,6 +344,54 @@
                 }).then(function (response) {
                     if (response.data.code == 20041) {
                         _this.patients = response.data.data
+                    } else {
+                        alert(response.data.msg)
+                    }
+                });
+            },
+            getProfitWithDate() {
+                this.dialogVisible1 = true;
+                this.showSalesStatistics();
+            },
+            async showSalesStatistics() {
+                // 异步加载 Chart.js
+                await import('https://cdn.jsdelivr.net/npm/chart.js');
+                let self = this; // 保存 Vue 实例的上下文
+                axios.get('http://localhost:9080/prescription/getProfitWithDate', {
+                    headers: {
+                        Authorization: sessionStorage.getItem("token")
+                    }
+                }).then(function (response) {
+                    if (response.data.code == 20041) {
+                        self.data = response.data.data; // 使用保存的上下文访问 Vue 实例的属性
+
+                        const labels = Object.keys(self.data);
+                        const values = Object.values(self.data);
+
+                        const ctx = document.getElementById('salesChart').getContext('2d');
+                        if (this.chartInstance) {
+                            this.chartInstance.destroy();
+                        }
+                        this.chartInstance = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    label: '盈利',
+                                    data: values,
+                                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                                    borderColor: 'rgba(54, 162, 235, 1)',
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        });
                     } else {
                         alert(response.data.msg)
                     }
@@ -471,6 +526,7 @@
         },
         data() {
             return {
+                dialogVisible1: false,
                 totalprofit:'',
                 profit:'',
                 isfinish: false,

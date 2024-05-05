@@ -32,5 +32,10 @@ public class PrescriptionController {
         return prescriptionService.getMyPrescription();
     }
 
+    @GetMapping("/getProfitWithDate")
+    public Result getProfitWithDate() {
+        return prescriptionService.getProfitWithDate();
+    }
+
 }
 

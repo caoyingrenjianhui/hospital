@@ -3,6 +3,8 @@ package com.example.domain;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.io.Serializable;
 
@@ -54,5 +56,15 @@ public class Prescription implements Serializable {
 
     @TableLogic
     private Integer isdel;
+
+    /**
+     * 进价
+     */
+    private BigDecimal costPrice;
+
+    /**
+     * 卖价
+     */
+    private BigDecimal price;
 
 }

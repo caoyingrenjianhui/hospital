@@ -129,6 +129,8 @@ public class PatientServiceImpl extends ServiceImpl<PatientDao, Patient> impleme
             prescription.setPrescriptionTime(LocalDate.now().toString());
             prescription.setQuantity(medicine.getUseCount());
             prescription.setMedicineID(medicine.getMedicineID());
+            prescription.setCostPrice(medicine.getCostPrice());
+            prescription.setPrice(medicine.getPrice());
             prescriptionDao.insert(prescription);
             sb.append(medicine.getMedicineID()).append(":").append(medicine.getName()).append(":").append(medicine.getUseCount()).append(";");
         }

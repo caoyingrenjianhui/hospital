@@ -17,4 +17,6 @@ public interface IPrescriptionService extends IService<Prescription> {
     Result select(Prescription prescription);
 
     Result getMyPrescription();
+
+    Result getProfitWithDate();
 }
